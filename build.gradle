@@ -1,0 +1,28 @@
+plugins {
+  id "com.itiviti.dotnet" version "1.7.1"
+}
+
+dotnet {
+  dotnetExecutable = '/usr/local/share/dotnet/dotnet'
+  solution = 'XmlResolver/XmlResolver.sln'
+  configuration = 'Release'
+  verbosity = 'Normal'
+
+  restore {
+  }
+
+  build {
+    //version = project.version
+    //packageVersion = project.version
+  }  
+
+  test {
+    collectCoverage = true
+    nunit {
+      testOutputXml = file("${buildDir}/reports/nunit")
+    }
+  }
+}
+
+//task ntest(type: 'NUnit', dependsOn: ['buildSolution']) {
+//}

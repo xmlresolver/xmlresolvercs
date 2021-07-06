@@ -1,0 +1,228 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+        <PackageReference Include="NuGet.Frameworks" Version="5.10.0" />
+        <PackageReference Include="NUnit" Version="3.13.1" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+        <PackageReference Include="coverlet.collector" Version="3.0.2" />
+
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/log4j2.xml">
+  <Link>resources/log4j2.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/datauri.xml">
+  <Link>resources/datauri.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/catalog.xml">
+  <Link>resources/catalog.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/picat.xml">
+  <Link>resources/picat.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/docker.xml">
+  <Link>resources/docker.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/prop3.properties">
+  <Link>resources/prop3.properties</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample-as-uri.xml">
+  <Link>resources/sample-as-uri.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/xmlns-xml.html">
+  <Link>resources/xmlns-xml.html</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/empty.xml">
+  <Link>resources/empty.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/prop4.properties">
+  <Link>resources/prop4.properties</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/parse/catalog.xml">
+  <Link>resources/parse/catalog.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/parse/doc.xml">
+  <Link>resources/parse/doc.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/parse/doc.xsd">
+  <Link>resources/parse/doc.xsd</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/parse/doc.dtd">
+  <Link>resources/parse/doc.dtd</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/prop1.properties">
+  <Link>resources/prop1.properties</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/namespace">
+  <Link>resources/namespace</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/lookup-test.xml">
+  <Link>resources/lookup-test.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/xml/sample-entities.xml">
+  <Link>resources/xml/sample-entities.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/xml/pi.xml">
+  <Link>resources/xml/pi.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/xml/ch02.xml">
+  <Link>resources/xml/ch02.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/xml/ch01.xml">
+  <Link>resources/xml/ch01.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/xml/sample.xml">
+  <Link>resources/xml/sample.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/xml/sample-dtd.xml">
+  <Link>resources/xml/sample-dtd.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/seqtest2.xml">
+  <Link>resources/seqtest2.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/prop2.properties">
+  <Link>resources/prop2.properties</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/seqtest1.xml">
+  <Link>resources/seqtest1.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/sample.xsd">
+  <Link>resources/sample10/sample.xsd</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/blocks.rnc">
+  <Link>resources/sample10/blocks.rnc</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/sample.xsl">
+  <Link>resources/sample10/sample.xsl</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/catalog.xml">
+  <Link>resources/sample10/catalog.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/index.html">
+  <Link>resources/sample10/index.html</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/sample.rng">
+  <Link>resources/sample10/sample.rng</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/sample.dtd">
+  <Link>resources/sample10/sample.dtd</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/xlink.xsd">
+  <Link>resources/sample10/xlink.xsd</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/blocks.rng">
+  <Link>resources/sample10/blocks.rng</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/default.css">
+  <Link>resources/sample10/default.css</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/sample.xml">
+  <Link>resources/sample10/sample.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/blocks.xsd">
+  <Link>resources/sample10/blocks.xsd</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/sample.rnc">
+  <Link>resources/sample10/sample.rnc</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/sample10/blocks.dtd">
+  <Link>resources/sample10/blocks.dtd</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/cpcatalog.xml">
+  <Link>resources/cpcatalog.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/domresolver.xml">
+  <Link>resources/domresolver.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/documents/picat.xml">
+  <Link>resources/documents/picat.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/documents/dtdtest.xml">
+  <Link>resources/documents/dtdtest.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/documents/pitest.xml">
+  <Link>resources/documents/pitest.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/documents/real-ent.xml">
+  <Link>resources/documents/real-ent.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/documents/doc.dtd">
+  <Link>resources/documents/doc.dtd</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/documents/pitest-pass.xml">
+  <Link>resources/documents/pitest-pass.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/lookup1.xml">
+  <Link>resources/lookup1.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/cm/nexttwo.xml">
+  <Link>resources/cm/nexttwo.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/cm/following.xml">
+  <Link>resources/cm/following.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/cm/prefer-public.xml">
+  <Link>resources/cm/prefer-public.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/cm/deltwo.xml">
+  <Link>resources/cm/deltwo.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/cm/prefer-system.xml">
+  <Link>resources/cm/prefer-system.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/cm/pref-public.xml">
+  <Link>resources/cm/pref-public.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/cm/delone.xml">
+  <Link>resources/cm/delone.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/cm/simple.xml">
+  <Link>resources/cm/simple.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/cm/nextone.xml">
+  <Link>resources/cm/nextone.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/cm/nextroot.xml">
+  <Link>resources/cm/nextroot.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/lookup-delegated.xml">
+  <Link>resources/lookup-delegated.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/xml.xsd">
+  <Link>resources/xml.xsd</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/classpath.xml">
+  <Link>resources/classpath.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/lookup2.xml">
+  <Link>resources/lookup2.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/invalid-catalog.xml">
+  <Link>resources/invalid-catalog.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/rescat.xml">
+  <Link>resources/rescat.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/pfile-rel.properties">
+  <Link>resources/pfile-rel.properties</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/pfile-abs.properties">
+  <Link>resources/pfile-abs.properties</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/lookup-shorter.xml">
+  <Link>resources/lookup-shorter.xml</Link>
+</EmbeddedResource>
+
+        <PackageReference Include="System.IO.Packaging" Version="5.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\XmlResolver\XmlResolver.csproj" />
+    </ItemGroup>
+
+</Project>

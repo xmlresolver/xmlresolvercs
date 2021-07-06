@@ -1,0 +1,15 @@
+using Org.XmlResolver.Catalog.Entry;
+
+namespace Org.XmlResolver.Catalog.Query {
+    public class QueryDocument : QueryCatalog {
+        internal override QueryResult lookup(CatalogManager manager, EntryCatalog catalog) {
+            // <document>
+            foreach (var raw in catalog.Entries(Entry.Entry.EntryType.DOCTYPE)) {
+                EntryDocument entry = (EntryDocument) raw;
+                return new QueryResult(entry.ResourceUri);
+            }
+
+            return EMPTY_RESULT;
+        }
+    }
+}
