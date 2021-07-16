@@ -1,0 +1,15 @@
+using System;
+using System.IO;
+
+namespace UnitTests {
+    public class CacheManager {
+        public FileInfo clearCache(string relpath) {
+            string cache = Path.Combine(Environment.CurrentDirectory, relpath);
+            if (File.Exists(cache)) {
+                Directory.Delete(cache, true);
+            }
+
+            return new FileInfo(cache);
+        }
+    }
+}

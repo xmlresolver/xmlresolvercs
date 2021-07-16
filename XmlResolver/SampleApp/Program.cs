@@ -5,13 +5,32 @@ using System.IO.Packaging;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using Org.XmlResolver;
+using Org.XmlResolver.Cache;
 using Org.XmlResolver.Utils;
 
 namespace SampleApp {
     class Program {
         static void Main(string[] args) {
             Console.WriteLine("Hello World!");
+
+            XmlResolverConfiguration config = new();
+            ResourceCache rcache = new ResourceCache(config);
+            Console.WriteLine("Done");
+
+            // If there are any expired entries that are too old, remove them
+            string entryDir = "/Users/ndw/.xmlresolver.org/cache/entry";
+            string[] entryfiles = Directory.GetFiles(entryDir, "*.xxx", SearchOption.TopDirectoryOnly);
+            foreach (string fn in entryfiles) {
+                FileInfo info = new(fn);
+                long mod = ((DateTimeOffset) info.LastWriteTimeUtc).ToUnixTimeMilliseconds();
+                Console.WriteLine(info.FullName);
+            }
+
+
+
+            /*
 
             XmlResolverConfiguration config = new();
 
@@ -34,6 +53,7 @@ namespace SampleApp {
             while ((line = sr.ReadLine()) != null) {
                 Console.WriteLine(line);
             }
+            */
 
             /*
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -207,7 +227,7 @@ namespace SampleApp {
                         _dependentAssemblyList[a.FullName.MyToName()] = a;
                         InternalGetDependentAssembliesRecursive(a);
                     }
-                    catch (Exception ex) {
+                    catch (Exception) {
                         _missingAssemblyList.Add(new MissingAssembly(r.FullName.Split(',')[0],
                             assembly.FullName.MyToName()));
                     }

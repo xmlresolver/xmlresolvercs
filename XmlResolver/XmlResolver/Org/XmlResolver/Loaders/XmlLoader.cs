@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Xml;
 using NLog;
 using Org.XmlResolver.Catalog.Entry;
@@ -27,6 +26,7 @@ namespace Org.XmlResolver.Loaders {
 
         private bool _preferPublic = true;
         private EntryCatalog catalog = null;
+        private Locator locator = null;
 
         public XmlLoader() {
             catalogMap = new Dictionary<Uri, EntryCatalog>();
@@ -56,6 +56,7 @@ namespace Org.XmlResolver.Loaders {
 
         public EntryCatalog LoadCatalog(Uri caturi, Stream data) {
             catalog = null;
+            locator = null;
             parserStack.Clear();
             baseUriStack.Clear();
             baseUriStack.Push(caturi);
@@ -65,7 +66,6 @@ namespace Org.XmlResolver.Loaders {
             settings.Async = false;
             settings.DtdProcessing = DtdProcessing.Ignore; // FIXME: ???
 
-            
             using (XmlReader reader = XmlReader.Create(data, settings)) {
                 while (reader.Read()) {
                     switch (reader.NodeType) {
@@ -89,7 +89,6 @@ namespace Org.XmlResolver.Loaders {
         }
 
         private void StartElement(XmlReader reader) {
-            String start = reader.Name;
             if (parserStack.Count == 0) {
                 if (reader.NamespaceURI.Equals(ResolverConstants.CATALOG_NS)
                     && reader.LocalName.Equals("catalog")) {
@@ -104,6 +103,12 @@ namespace Org.XmlResolver.Loaders {
                     }
 
                     catalog = new EntryCatalog(baseUriStack.Peek(), id, preferPublicStack.Peek());
+                    
+                    if (reader is IXmlLineInfo && ((IXmlLineInfo) reader).HasLineInfo()) {
+                        locator = new Locator();
+                        catalog.SetLocator(locator);
+                    }
+
                     parserStack.Push(catalog);
                 } else {
                     logger.Log(ResolverLogger.ERROR, "Catalog document is not an XML Catalog (ignored): {0}", reader.Name);
@@ -147,7 +152,6 @@ namespace Org.XmlResolver.Loaders {
         }
         
         private void EndElement(XmlReader reader) {
-            String end = reader.Name;
             parserStack.Pop();
             baseUriStack.Pop();
             preferPublicStack.Pop();
@@ -163,6 +167,13 @@ namespace Org.XmlResolver.Loaders {
             Uri baseUri = baseUriStack.Peek();
             if (reader.GetAttribute("xml:base") != null) {
                 baseUri = UriUtils.Resolve(baseUri, reader.GetAttribute("xml:base"));
+            }
+
+            if (locator != null) {
+                IXmlLineInfo li = (IXmlLineInfo) reader;
+                locator.BaseUri = baseUri;
+                locator.LineNumber = li.LineNumber;
+                locator.LinePosition = li.LinePosition;
             }
 
             bool preferPublic = preferPublicStack.Peek();

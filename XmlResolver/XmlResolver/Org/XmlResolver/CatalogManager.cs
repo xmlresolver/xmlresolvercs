@@ -49,20 +49,20 @@ namespace Org.XmlResolver {
             return _catalogLoader.LoadCatalog(catalog, data);
         }
         
-        public Uri LookupUri(string uri) {
+        public virtual Uri LookupUri(string uri) {
             return LookupNamespaceUri(uri, null, null);
         }
 
-        public Uri LookupNamespaceUri(string uri, string nature, string purpose) {
+        public virtual Uri LookupNamespaceUri(string uri, string nature, string purpose) {
             return new QueryUri(uri, nature, purpose).Search(this).ResultUri();
         }
         
-        public Uri LookupPublic(string systemId, string publicId) {
+        public virtual Uri LookupPublic(string systemId, string publicId) {
             ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, publicId);
             return new QueryPublic(external.SystemId, external.PublicId).Search(this).ResultUri();
         }
 
-        public Uri LookupSystem(string systemId) {
+        public virtual Uri LookupSystem(string systemId) {
             ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, null);
             if (external.SystemId == null) {
                 return null;
@@ -71,12 +71,12 @@ namespace Org.XmlResolver {
             return new QuerySystem(systemId).Search(this).ResultUri();
         }
 
-        public Uri LookupDoctype(string entityName, string systemId, string publicId) {
+        public virtual Uri LookupDoctype(string entityName, string systemId, string publicId) {
             ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, publicId);
             return new QueryDoctype(entityName, external.SystemId, external.PublicId).Search(this).ResultUri();
         }
 
-        public Uri LookupEntity(string entityName, string systemId, string publicId) {
+        public virtual Uri LookupEntity(string entityName, string systemId, string publicId) {
             ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, publicId);
             return new QueryEntity(entityName, external.SystemId, external.PublicId).Search(this).ResultUri();
         }
@@ -86,7 +86,7 @@ namespace Org.XmlResolver {
             return new QueryNotation(notationName, external.SystemId, external.PublicId).Search(this).ResultUri();
         }
 
-        public Uri LookupDocument() {
+        public virtual Uri LookupDocument() {
             return new QueryDocument().Search(this).ResultUri();
         }
 

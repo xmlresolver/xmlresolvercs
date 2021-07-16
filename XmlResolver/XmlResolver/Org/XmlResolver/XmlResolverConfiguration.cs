@@ -23,7 +23,7 @@ namespace Org.XmlResolver {
             ResolverFeature.PARSE_RDDL, ResolverFeature.CLASSPATH_CATALOGS
         };
 
-        private static List<string> classpathCatalogList = null;
+        // private static List<string> classpathCatalogList = null;
         private List<string> catalogs = new();
 
         private bool preferPublic = ResolverFeature.PREFER_PUBLIC.GetDefaultValue();

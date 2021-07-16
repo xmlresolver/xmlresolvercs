@@ -5,10 +5,12 @@ using System.Text;
 
 namespace Org.XmlResolver.Catalog.Entry {
     public class EntryCatalog : Entry {
-        protected static readonly List<Catalog.Entry.Entry> None = new();
-        protected ArrayList entries = new ArrayList();
-        protected Dictionary<EntryType, ArrayList> typedEntries = new();
         private readonly object _syncLock = new object();
+
+        protected static readonly List<Entry> None = new();
+        protected ArrayList entries = new();
+        protected Dictionary<EntryType, List<Entry>> typedEntries = new();
+        protected Locator locator = null;
         
         public readonly bool preferPublic;
         
@@ -16,6 +18,10 @@ namespace Org.XmlResolver.Catalog.Entry {
             preferPublic = prefer;
         }
 
+        public void SetLocator(Locator locator) {
+            this.locator = locator;
+        }
+        
         public override EntryType GetEntryType() {
             return EntryType.CATALOG;
         }
@@ -47,12 +53,16 @@ namespace Org.XmlResolver.Catalog.Entry {
             }
         }
 
-        private void Add(Catalog.Entry.Entry entry) {
+        protected virtual void Add(Catalog.Entry.Entry entry) {
             lock (_syncLock) {
                 entries.Add(entry);
 
+                if (locator != null) {
+                    Console.WriteLine(locator.LineNumber + ": " + locator.LinePosition);
+                }
+
                 if (!typedEntries.ContainsKey(entry.GetEntryType())) {
-                    typedEntries.Add(entry.GetEntryType(), new ArrayList());
+                    typedEntries.Add(entry.GetEntryType(), new());
                 }
                 typedEntries[entry.GetEntryType()].Add(entry);
             }
@@ -69,22 +79,29 @@ namespace Org.XmlResolver.Catalog.Entry {
             }
         }
 
-        private void Error(string message, params string[] rest) {
+        protected virtual void Error(string message, params string[] rest) {
             StringBuilder sb = new();
             sb.Append(BaseUri);
-            // Locator?
+            if (locator != null && locator.LineNumber > 0) {
+                sb.Append(":");
+                sb.Append(locator.LineNumber);
+                if (locator.LinePosition > 0) {
+                    sb.Append(":");
+                    sb.Append(locator.LinePosition);
+                }
+            }
             sb.Append(':');
             sb.Append(string.Format(message, rest));
-            logger.Error(sb.ToString());
+            logger.Log(ResolverLogger.ERROR, sb.ToString());
         }
         
-        public EntryGroup AddGroup(Uri baseUri, string id, bool prefer) {
+        public virtual EntryGroup AddGroup(Uri baseUri, string id, bool prefer) {
             var group = new EntryGroup(baseUri, id, prefer);
             Add(group);
             return group;
         }
         
-        public EntryPublic AddPublic(Uri baseUri, string id, string publicId, string uri, bool prefer) {
+        public virtual EntryPublic AddPublic(Uri baseUri, string id, string publicId, string uri, bool prefer) {
             EntryPublic entry = null;
             if (publicId != null && uri != null) {
                 entry = new EntryPublic(baseUri, id, publicId, uri, prefer);
@@ -95,7 +112,7 @@ namespace Org.XmlResolver.Catalog.Entry {
             return entry;
         }
 
-        public EntrySystem AddSystem(Uri baseUri, string id, string systemId, string uri) {
+        public virtual EntrySystem AddSystem(Uri baseUri, string id, string systemId, string uri) {
             EntrySystem entry = null;
             if (systemId != null && uri != null) {
                 entry = new EntrySystem(baseUri, id, systemId, uri);
@@ -106,7 +123,7 @@ namespace Org.XmlResolver.Catalog.Entry {
             return entry;
         }
 
-        public EntrySystemSuffix AddSystemSuffix(Uri baseUri, string id, string suffix, string uri) {
+        public virtual EntrySystemSuffix AddSystemSuffix(Uri baseUri, string id, string suffix, string uri) {
             EntrySystemSuffix entry = null;
             if (suffix != null && uri != null) {
                 entry = new EntrySystemSuffix(baseUri, id, suffix, uri);
@@ -117,7 +134,7 @@ namespace Org.XmlResolver.Catalog.Entry {
             return entry;
         }
 
-        public EntryRewriteSystem AddRewriteSystem(Uri baseUri, string id, string startString, string prefix) {
+        public virtual EntryRewriteSystem AddRewriteSystem(Uri baseUri, string id, string startString, string prefix) {
         EntryRewriteSystem entry = null;
         if (startString != null && prefix != null) {
             entry = new EntryRewriteSystem(baseUri, id, startString, prefix);
@@ -128,7 +145,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntryDelegateSystem AddDelegateSystem(Uri baseUri, string id, string startString, string catalog) {
+    public virtual EntryDelegateSystem AddDelegateSystem(Uri baseUri, string id, string startString, string catalog) {
         EntryDelegateSystem entry = null;
         if (startString != null && catalog != null) {
             entry = new EntryDelegateSystem(baseUri, id, startString, catalog);
@@ -139,7 +156,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntryDelegatePublic AddDelegatePublic(Uri baseUri, string id, string startString, string catalog, bool prefer) {
+    public virtual EntryDelegatePublic AddDelegatePublic(Uri baseUri, string id, string startString, string catalog, bool prefer) {
         EntryDelegatePublic entry = null;
         if (startString != null && catalog != null) {
             entry = new EntryDelegatePublic(baseUri, id, startString, catalog, prefer);
@@ -150,7 +167,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntryUri AddUri(Uri baseUri, string id, string name, string uri, string nature, string purpose) {
+    public virtual EntryUri AddUri(Uri baseUri, string id, string name, string uri, string nature, string purpose) {
         EntryUri entry = null;
         if (name != null && uri != null) {
             entry = new EntryUri(baseUri, id, name, uri, nature, purpose);
@@ -161,7 +178,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntryRewriteUri AddRewriteUri(Uri baseUri, string id, string start, string prefix) {
+    public virtual EntryRewriteUri AddRewriteUri(Uri baseUri, string id, string start, string prefix) {
         EntryRewriteUri entry = null;
         if (start != null && prefix != null) {
             entry = new EntryRewriteUri(baseUri, id, start, prefix);
@@ -172,7 +189,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntryUriSuffix AddUriSuffix(Uri baseUri, string id, string suffix, string uri) {
+    public virtual EntryUriSuffix AddUriSuffix(Uri baseUri, string id, string suffix, string uri) {
         EntryUriSuffix entry = null;
         if (suffix != null && uri != null) {
             entry = new EntryUriSuffix(baseUri, id, suffix, uri);
@@ -183,7 +200,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntryDelegateUri AddDelegateUri(Uri baseUri, string id, string startString, string catalog) {
+    public virtual EntryDelegateUri AddDelegateUri(Uri baseUri, string id, string startString, string catalog) {
         EntryDelegateUri entry = null;
         if (startString != null && catalog != null) {
             entry = new EntryDelegateUri(baseUri, id, startString, catalog);
@@ -194,7 +211,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntryNextCatalog AddNextCatalog(Uri baseUri, string id, string catalog) {
+    public virtual EntryNextCatalog AddNextCatalog(Uri baseUri, string id, string catalog) {
         EntryNextCatalog entry = null;
         if (catalog != null) {
             entry = new EntryNextCatalog(baseUri, id, catalog);
@@ -205,7 +222,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntryDoctype AddDoctype(Uri baseUri, string id, string name, string uri) {
+    public virtual EntryDoctype AddDoctype(Uri baseUri, string id, string name, string uri) {
         EntryDoctype entry = null;
         if (name != null && uri != null) {
             entry = new EntryDoctype(baseUri, id, name, uri);
@@ -216,7 +233,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntryDocument AddDocument(Uri baseUri, string id, string uri) {
+    public virtual EntryDocument AddDocument(Uri baseUri, string id, string uri) {
         EntryDocument entry = null;
         if (uri != null) {
             entry = new EntryDocument(baseUri, id, uri);
@@ -227,7 +244,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntryDtddecl AddDtdDecl(Uri baseUri, string id, string publicId, string uri) {
+    public virtual EntryDtddecl AddDtdDecl(Uri baseUri, string id, string publicId, string uri) {
         EntryDtddecl entry = null;
         if (publicId != null && uri != null) {
             entry = new EntryDtddecl(baseUri, id, publicId, uri);
@@ -238,7 +255,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntryEntity AddEntity(Uri baseUri, string id, string name, string uri) {
+    public virtual EntryEntity AddEntity(Uri baseUri, string id, string name, string uri) {
         EntryEntity entry = null;
         if (name != null && uri != null) {
             entry = new EntryEntity(baseUri, id, name, uri);
@@ -249,7 +266,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntryLinktype AddLinktype(Uri baseUri, string id, string name, string uri) {
+    public virtual EntryLinktype AddLinktype(Uri baseUri, string id, string name, string uri) {
         EntryLinktype entry = null;
         if (name != null && uri != null) {
             entry = new EntryLinktype(baseUri, id, name, uri);
@@ -260,7 +277,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntryNotation AddNotation(Uri baseUri, string id, string name, string uri) {
+    public virtual EntryNotation AddNotation(Uri baseUri, string id, string name, string uri) {
         EntryNotation entry = null;
         if (name != null && uri != null) {
             entry = new EntryNotation(baseUri, id, name, uri);
@@ -271,7 +288,7 @@ namespace Org.XmlResolver.Catalog.Entry {
         return entry;
     }
 
-    public EntrySgmldecl AddSgmlDecl(Uri baseUri, string id, string uri) {
+    public virtual EntrySgmldecl AddSgmlDecl(Uri baseUri, string id, string uri) {
         EntrySgmldecl entry = null;
         if (uri != null) {
             entry = new EntrySgmldecl(baseUri, id, uri);

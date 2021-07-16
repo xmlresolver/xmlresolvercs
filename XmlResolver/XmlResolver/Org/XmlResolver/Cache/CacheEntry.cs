@@ -7,28 +7,32 @@ namespace Org.XmlResolver.Cache {
     public class CacheEntry {
         public readonly Entry CacheCatalogEntry;
         public readonly Uri CacheUri;
-        public readonly string CacheFile;
+        public readonly FileInfo CacheFile;
+        public readonly Uri LocalFileUri;
         public readonly long Time;
-        public readonly bool Expired;
+        public bool Expired = false;
 
         internal CacheEntry(EntryUri entry, long time) {
             CacheCatalogEntry = entry;
             CacheUri = UriUtils.Resolve(entry.BaseUri, entry.Name);
-            CacheFile = entry.ResourceUri.AbsolutePath;
+            CacheFile = new FileInfo(entry.ResourceUri.AbsolutePath);
+            LocalFileUri = new Uri(new Uri("file:///"), entry.ResourceUri.AbsolutePath);
             Time = time;
         }
 
         internal CacheEntry(EntrySystem entry, long time) {
             CacheCatalogEntry = entry;
             CacheUri = UriUtils.Resolve(entry.BaseUri, entry.SystemId);
-            CacheFile = entry.ResourceUri.AbsolutePath;
+            CacheFile = new FileInfo(entry.ResourceUri.AbsolutePath);
+            LocalFileUri = new Uri(new Uri("file:///"), entry.ResourceUri.AbsolutePath);
             Time = time;
         }
 
         internal CacheEntry(EntryPublic entry, long time) {
             CacheCatalogEntry = entry;
             CacheUri = PublicId.EncodeUrn(entry.PublicId);
-            CacheFile = entry.ResourceUri.AbsolutePath;
+            CacheFile = new FileInfo(entry.ResourceUri.AbsolutePath);
+            LocalFileUri = new Uri(new Uri("file:///"), entry.ResourceUri.AbsolutePath);
             Time = time;
         }
 
@@ -50,7 +54,7 @@ namespace Org.XmlResolver.Cache {
         }
 
         public override string ToString() {
-            return CacheFile;
+            return CacheFile.ToString();
         }
     }
 }

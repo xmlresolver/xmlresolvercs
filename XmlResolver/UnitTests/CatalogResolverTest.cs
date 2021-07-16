@@ -11,12 +11,11 @@ namespace UnitTests {
     public class CatalogResolverTest {
         private static readonly Assembly asm = Assembly.GetExecutingAssembly();
         private static readonly Uri catalog = UriUtils.GetLocationUri("/resources/catalog.xml", asm);
-        XmlResolverConfiguration config = null;
+        private XmlResolverConfiguration config = new XmlResolverConfiguration();
         private Resolver resolver = null;
 
         [SetUp]
         public void Setup() {
-            config = new();
             config.AddCatalog(catalog, UriUtils.GetStream(catalog));
             config.SetFeature(ResolverFeature.URI_FOR_SYSTEM, false);
             resolver = new Resolver(config);
@@ -26,7 +25,7 @@ namespace UnitTests {
         public void uriForSystemFail() {
             config.SetFeature(ResolverFeature.URI_FOR_SYSTEM, false);
             try {
-                object? stream = resolver.GetEntity(new Uri("https://xmlresolver.org/ns/sample-as-uri/sample.dtd"),
+                object stream = resolver.GetEntity(new Uri("https://xmlresolver.org/ns/sample-as-uri/sample.dtd"),
                     null, null);
                 Assert.Null(stream);
             }
@@ -39,7 +38,7 @@ namespace UnitTests {
         public void uriForSystemSuccess() {
             config.SetFeature(ResolverFeature.URI_FOR_SYSTEM, true);
             try {
-                object? stream = resolver.GetEntity(new Uri("https://xmlresolver.org/ns/sample-as-uri/sample.dtd"),
+                object stream = resolver.GetEntity(new Uri("https://xmlresolver.org/ns/sample-as-uri/sample.dtd"),
                     null, null);
                 Assert.NotNull(stream);
             }

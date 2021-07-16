@@ -13,7 +13,7 @@ namespace UnitTests {
         private static readonly Uri catalog1 = UriUtils.GetLocationUri("/resources/lookup1.xml", asm);
         private static readonly Uri catalog2 = UriUtils.GetLocationUri("/resources/lookup2.xml", asm);
 
-        private static string resourcePath = null;
+        //private static string resourcePath = null;
         private static Assembly assembly = null;
         XmlResolverConfiguration config = null;
         private CatalogManager manager = null;

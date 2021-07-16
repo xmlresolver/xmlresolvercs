@@ -27,8 +27,8 @@ namespace Org.XmlResolver {
                 return UncachedResource(new Uri(requestUri), responseUri);
             }
             else {
-                var fs = File.Open(cached.CacheFile, FileMode.Open, FileAccess.Read);
-                return new ResolvedResourceImpl(responseUri, new Uri(cached.CacheFile), fs, cached.ContentType());
+                var fs = File.Open(cached.CacheFile.ToString(), FileMode.Open, FileAccess.Read);
+                return new ResolvedResourceImpl(responseUri, new Uri(cached.CacheFile.ToString()), fs, cached.ContentType());
             }
         }
 

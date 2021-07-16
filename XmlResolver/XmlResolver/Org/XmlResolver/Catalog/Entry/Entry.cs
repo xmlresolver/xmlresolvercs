@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Org.XmlResolver.Catalog.Entry {
     public abstract class Entry {
-        protected static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        protected static ResolverLogger logger = new(NLog.LogManager.GetCurrentClassLogger());
 
         public enum EntryType {
             NULL, CATALOG, DELEGATE_PUBLIC, DELEGATE_SYSTEM, DELEGATE_URI,
@@ -34,7 +34,7 @@ namespace Org.XmlResolver.Catalog.Entry {
             if (NCNAME_RE.IsMatch(name)) {
                 Extra.Add(name, value);
             } else {
-                logger.Error("Property name invalid: " + name);
+                logger.Log(ResolverLogger.ERROR, "Property name invalid: " + name);
             }
         }
 
