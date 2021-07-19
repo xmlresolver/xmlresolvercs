@@ -14,7 +14,7 @@ namespace Org.XmlResolver {
         protected readonly ResolverConfiguration _resolverConfiguration;
         protected CatalogLoader _catalogLoader;
 
-        internal CatalogManager(ResolverConfiguration config) {
+        public CatalogManager(ResolverConfiguration config) {
             _resolverConfiguration = config;
             String loaderClassName = (String) config.GetFeature(ResolverFeature.CATALOG_LOADER_CLASS);
             if (loaderClassName == null || "".Equals(loaderClassName.Trim())) {
@@ -25,7 +25,7 @@ namespace Org.XmlResolver {
             _catalogLoader = (CatalogLoader) Activator.CreateInstance(Type.GetType(loaderClassName));
         }
 
-        internal CatalogManager(CatalogManager current, ResolverConfiguration config) {
+        public CatalogManager(CatalogManager current, ResolverConfiguration config) {
             _catalogLoader = current._catalogLoader;
             _resolverConfiguration = config;
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.Extensions.Configuration;
@@ -350,6 +351,15 @@ namespace Org.XmlResolver {
                     catalogs.Add(catalog);
                 }
             }
+        }
+
+        public void AddAssemblyCatalog(String path) {
+            AddAssemblyCatalog(path, Assembly.GetExecutingAssembly());
+        }
+
+        public void AddAssemblyCatalog(String path, Assembly asm) {
+            Uri cat = UriUtils.GetLocationUri(path, asm);
+            AddCatalog(cat.ToString());
         }
 
         public void AddCatalog(Uri catalog, Stream data) {

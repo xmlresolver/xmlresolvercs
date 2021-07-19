@@ -364,5 +364,31 @@ namespace Org.XmlResolver.Utils {
             
             throw new UriFormatException(uri + ": comma separator missing");
         }
+        
+        public static Uri NewUri(string href) {
+            if (href.StartsWith("file:")) {
+                int pos = 5;
+                while (pos <= href.Length && href[pos] == '/') {
+                    pos++;
+                }
+
+                if (pos > 5) {
+                    pos--;
+                    href = href.Substring(pos);
+                }
+                else {
+                    pos = 0;
+                    href = "/" + href.Substring(5);
+                }
+
+                return new Uri("file://" + href);
+            } 
+            
+            if (href.StartsWith("/")) {
+                return new Uri("file://" + href);
+            }
+            
+            return new Uri(href);
+        }
     }
 }

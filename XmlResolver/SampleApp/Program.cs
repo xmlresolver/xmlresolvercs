@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Packaging;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -15,20 +17,26 @@ namespace SampleApp {
         static void Main(string[] args) {
             Console.WriteLine("Hello World!");
 
+            Uri x = UriUtils.NewUri("file://////Users/ndw/");
+            x = UriUtils.NewUri("/tmp/x/");
+            x = UriUtils.NewUri("file:/tmp/x");
+            x = UriUtils.NewUri("https://nwalsh.com/");
+
+            /*
             XmlResolverConfiguration config = new();
             ResourceCache rcache = new ResourceCache(config);
             Console.WriteLine("Done");
+            */
 
-            // If there are any expired entries that are too old, remove them
-            string entryDir = "/Users/ndw/.xmlresolver.org/cache/entry";
-            string[] entryfiles = Directory.GetFiles(entryDir, "*.xxx", SearchOption.TopDirectoryOnly);
-            foreach (string fn in entryfiles) {
-                FileInfo info = new(fn);
-                long mod = ((DateTimeOffset) info.LastWriteTimeUtc).ToUnixTimeMilliseconds();
-                Console.WriteLine(info.FullName);
+            try {
+                HttpWebRequest req = WebRequest.CreateHttp("https://nwalsh.com/");
+                req.Method = "HEAD";
+                HttpWebResponse resp = (HttpWebResponse) req.GetResponse();
+                Console.WriteLine(resp);
             }
-
-
+            catch (WebException ex) {
+                Console.WriteLine(ex);
+            }
 
             /*
 

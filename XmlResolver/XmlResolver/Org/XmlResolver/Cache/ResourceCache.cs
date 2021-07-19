@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Transactions;
+using System.Security.Cryptography;
+using System.Text;
 using System.Xml;
 using NLog;
 using Org.XmlResolver.Catalog.Entry;
@@ -337,9 +338,53 @@ namespace Org.XmlResolver.Cache {
 
             long cacheTime = entry.Time;
             String cachedEtag = entry.ETag();
-            
-            // FIXME: Attempt to get HEAD and check etag.
 
+            ResourceConnection conn = new ResourceConnection(entry.CacheUri.ToString(), true);
+            conn.Close();
+            string etag = conn.ETag;
+            long lastModified = conn.LastModified;
+            if ("".Equals(etag)) {
+                etag = null;
+            }
+
+            if (lastModified < 0 && (etag == null || cachedEtag == null)) {
+                // Hmm. We're not sure when it was last modified?
+                long maxAge = info.MaxAge;
+                if (maxAge > 0) {
+                    long oldest = ((DateTimeOffset) DateTime.UtcNow).ToUnixTimeMilliseconds() - (maxAge * 1000);
+                    if (maxAge == 0 || cacheTime < oldest) {
+                        return true;
+                    }
+                }
+
+                lastModified = conn.Date;
+            }
+
+            if (conn.StatusCode != 200) {
+                logger.Log(ResolverLogger.CACHE, "Not expired: {0} (HTTP {1})",
+                    entry.CacheUri.ToString(), conn.StatusCode.ToString());
+                return false;
+            }
+
+            bool etagsDiffer = (etag != null && cachedEtag != null && !etag.Equals(cachedEtag));
+
+            if (lastModified < 0) {
+                if (etagsDiffer) {
+                    logger.Log(ResolverLogger.CACHE, "Expired: {0} (no last-modified header, etags differ)",
+                        entry.CacheUri.ToString());
+                    return true;
+                }
+                logger.Log(ResolverLogger.CACHE, "Not expired: {0}", entry.CacheUri.ToString());
+                return false;
+            }
+            
+            if (lastModified > cacheTime || etagsDiffer) {
+                logger.Log(ResolverLogger.CACHE, "Expired: {0}",
+                    entry.CacheUri.ToString());
+                return true;
+            }
+            
+            logger.Log(ResolverLogger.CACHE, "Not expired: {0}", entry.CacheUri.ToString());
             return false;
         }
 
@@ -416,7 +461,10 @@ namespace Org.XmlResolver.Cache {
             CacheEntry entry = FindNamespaceCacheEntry(uri.ToString(), nature, purpose);
             if (entry == null || entry.Expired) {
                 if (CacheUri(uri.ToString())) {
-                    // FIXME: Cache the URI
+                    ResourceConnection conn = new ResourceConnection(uri.ToString());
+                    if (conn.Stream != null && conn.StatusCode == 200) {
+                        entry = AddNamespaceUri(conn, nature, purpose);
+                    }
                 }
                 return null;
             }
@@ -428,7 +476,10 @@ namespace Org.XmlResolver.Cache {
             CacheEntry entry = FindSystemCacheEntry(systemId.ToString());
             if (entry == null || entry.Expired) {
                 if (CacheUri(systemId.ToString())) {
-                    // FIXME: Cache the URI
+                    ResourceConnection conn = new ResourceConnection(systemId.ToString());
+                    if (conn.Stream != null && conn.StatusCode == 200) {
+                        entry = AddSystem(conn);
+                    }
                 }
                 return null;
             }
@@ -616,6 +667,144 @@ namespace Org.XmlResolver.Cache {
             }
             
             File.SetLastWriteTime(cleanupFn, DateTime.Now);
+        }
+        
+        private CacheEntry AddNamespaceUri(ResourceConnection connection, string nature, string purpose) {
+            loadCache();
+            if (cacheDir == null) {
+                logger.Log(ResolverLogger.CACHE, "Attempting to cache URI, but no cache is available");
+                return null;
+            }
+
+            DirectoryLock dlock = new DirectoryLock(cacheDir);
+            try {
+                if (nature == null && purpose == null) {
+                    logger.Log(ResolverLogger.CACHE, "Caching resource for uri: {0}", connection.Uri.ToString());
+                }
+                else {
+                    logger.Log(ResolverLogger.CACHE, "Caching resource for uri: {0} (nature: {1}, purpose: {2})",
+                        connection.Uri.ToString(), nature, purpose);
+                }
+
+                string basefn = cacheBaseName(connection.Uri);
+                string entryFile = Path.Combine(entryDir, basefn + ".xml");
+                string localFile = Path.Combine(dataDir, basefn + pickSuffix(connection.Uri, connection.ContentType));
+                StoreStream(connection.Stream, localFile);
+                connection.Close();
+
+                long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                Entry entry = catalog.AddUri(UriUtils.NewUri(entryFile), connection.Uri.ToString(), localFile, nature, purpose,
+                    now);
+                entry.SetProperty("contentType", connection.ContentType);
+                entry.SetProperty("time", now.ToString());
+                // FIXME: what about redirections?
+                if (connection.ETag != null) {
+                    entry.SetProperty("etag", connection.ETag);
+                }
+
+                FileInfo info = new FileInfo(localFile);
+                entry.SetProperty("filesize", info.Length.ToString());
+                entry.SetProperty("filemodified",
+                    ((DateTimeOffset) info.LastWriteTime).ToUnixTimeMilliseconds().ToString());
+                catalog.WriteCacheEntry(entry, entryFile);
+            }
+            finally {
+                dlock.Release();
+            }
+
+            return FindNamespaceCacheEntry(connection.Uri.ToString(), nature, purpose);
+        }
+
+        private CacheEntry AddSystem(ResourceConnection connection) {
+            loadCache();
+            if (cacheDir == null) {
+                logger.Log(ResolverLogger.CACHE, "Attempting to cache URI, but no cache is available");
+                return null;
+            }
+
+            DirectoryLock dlock = new DirectoryLock(cacheDir);
+            try {
+                logger.Log(ResolverLogger.CACHE, "Caching systemId: %s", connection.Uri.ToString());
+                
+                string basefn = cacheBaseName(connection.Uri);
+                string entryFile = Path.Combine(entryDir, basefn + ".xml");
+                string localFile = Path.Combine(dataDir, basefn + pickSuffix(connection.Uri, connection.ContentType));
+                StoreStream(connection.Stream, localFile);
+                connection.Close();
+
+                long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                Entry entry = catalog.AddSystem(UriUtils.NewUri(entryFile), connection.Uri.ToString(), localFile, now);
+                entry.SetProperty("contentType", connection.ContentType);
+                entry.SetProperty("time", now.ToString());
+                // FIXME: what about redirections?
+                if (connection.ETag != null) {
+                    entry.SetProperty("etag", connection.ETag);
+                }
+
+                FileInfo info = new FileInfo(localFile);
+                entry.SetProperty("filesize", info.Length.ToString());
+                entry.SetProperty("filemodified",
+                    ((DateTimeOffset) info.LastWriteTime).ToUnixTimeMilliseconds().ToString());
+                catalog.WriteCacheEntry(entry, entryFile);
+            }
+            finally {
+                dlock.Release();
+            }
+
+            return FindSystemCacheEntry(connection.Uri.ToString());
+        }
+
+        private string cacheBaseName(Uri name) {
+            using (SHA256 sha256Hash = SHA256.Create()) {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(name.ToString()));  
+                StringBuilder builder = new StringBuilder();  
+                for (int pos = 0; pos < bytes.Length; pos++) {  
+                    builder.Append(bytes[pos].ToString("x2"));  
+                }  
+                return builder.ToString(); 
+            }
+        }
+
+        private string pickSuffix(Uri uri, string contentType) {
+            string suffix = uri.ToString();
+            int pos = suffix.LastIndexOf(".");
+            if (pos > 0) {
+                suffix = suffix.Substring(pos);
+                if (suffix.Length <= 5) {
+                    return suffix;
+                }
+            }
+
+            if (contentType == null) {
+                return ".bin";
+            }
+            
+            if ("application/xml-dtd".Equals(contentType)) {
+                return ".dtd";
+            }
+
+            if (contentType.Contains("application/xml")) {
+                return ".xml";
+            }
+
+            if (contentType.Contains("text/html") || contentType.Contains("application/html+xml")) {
+                return ".html";
+            }
+
+            if (contentType.Contains("text/plain")) {
+                if (uri.ToString().EndsWith(".dtd")) {
+                    return ".dtd";
+                }
+                return ".txt";
+            }
+
+            return ".bin";
+        }
+
+        private void StoreStream(Stream stream, string filename) {
+            using (Stream output = File.OpenWrite(filename)) {
+                stream.CopyTo(output);
+            }
         }
         
         private CacheEntry FindNamespaceCacheEntry(string uri, string nature, string purpose) {

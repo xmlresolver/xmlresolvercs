@@ -95,7 +95,7 @@ namespace Org.XmlResolver.Cache {
             return entry;
         }
 
-        protected void WriteCacheEntry(Entry entry, string cacheFile) {
+        internal void WriteCacheEntry(Entry entry, string cacheFile) {
             // Constructing XML with print statements is kind of grotty, but...
             using (StreamWriter xml = new StreamWriter(cacheFile)) {
                 switch (entry.GetEntryType()) {

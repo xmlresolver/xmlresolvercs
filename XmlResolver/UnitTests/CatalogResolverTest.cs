@@ -22,7 +22,7 @@ namespace UnitTests {
         }
 
         [Test]
-        public void uriForSystemFail() {
+        public void UriForSystemFail() {
             config.SetFeature(ResolverFeature.URI_FOR_SYSTEM, false);
             try {
                 object stream = resolver.GetEntity(new Uri("https://xmlresolver.org/ns/sample-as-uri/sample.dtd"),
@@ -35,7 +35,7 @@ namespace UnitTests {
         }
         
         [Test]
-        public void uriForSystemSuccess() {
+        public void UriForSystemSuccess() {
             config.SetFeature(ResolverFeature.URI_FOR_SYSTEM, true);
             try {
                 object stream = resolver.GetEntity(new Uri("https://xmlresolver.org/ns/sample-as-uri/sample.dtd"),
@@ -48,7 +48,7 @@ namespace UnitTests {
         }
 
         [Test]
-        public void parseSample() {
+        public void ParseSample() {
             config.SetFeature(ResolverFeature.URI_FOR_SYSTEM, true);
             Uri document = UriUtils.GetLocationUri("/resources/sample10/sample.xml", asm);
             XmlReaderSettings settings = new XmlReaderSettings();
