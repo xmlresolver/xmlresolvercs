@@ -222,7 +222,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\XmlResolverData\XmlResolverData.csproj" />
       <ProjectReference Include="..\XmlResolver\XmlResolver.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="CMPreferTest.cs">
+        <Link>resources\CMPreferTest.cs</Link>
+      </Compile>
     </ItemGroup>
 
 </Project>

@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp", "SampleApp\SampleApp.csproj", "{44D45D23-B2A1-4EF2-B838-6B019FE1C7FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlResolverData", "XmlResolverData\XmlResolverData.csproj", "{F3EDFC12-6E8B-46BC-A56B-DA7EA373D4D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{44D45D23-B2A1-4EF2-B838-6B019FE1C7FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44D45D23-B2A1-4EF2-B838-6B019FE1C7FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44D45D23-B2A1-4EF2-B838-6B019FE1C7FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3EDFC12-6E8B-46BC-A56B-DA7EA373D4D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3EDFC12-6E8B-46BC-A56B-DA7EA373D4D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3EDFC12-6E8B-46BC-A56B-DA7EA373D4D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3EDFC12-6E8B-46BC-A56B-DA7EA373D4D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

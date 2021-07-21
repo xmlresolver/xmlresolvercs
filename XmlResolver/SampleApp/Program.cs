@@ -11,6 +11,8 @@ using System.Threading;
 using Org.XmlResolver;
 using Org.XmlResolver.Cache;
 using Org.XmlResolver.Utils;
+using Org.XmlResolverData;
+using Version = Org.XmlResolverData.Version;
 
 namespace SampleApp {
     class Program {
@@ -28,6 +30,7 @@ namespace SampleApp {
             Console.WriteLine("Done");
             */
 
+            /*
             try {
                 HttpWebRequest req = WebRequest.CreateHttp("https://nwalsh.com/");
                 req.Method = "HEAD";
@@ -37,6 +40,9 @@ namespace SampleApp {
             catch (WebException ex) {
                 Console.WriteLine(ex);
             }
+            */
+            
+            Console.WriteLine("Data Version {0}", Version.DataVersion);
 
             /*
 
@@ -63,7 +69,6 @@ namespace SampleApp {
             }
             */
 
-            /*
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach(AssemblyName an in Assembly.GetExecutingAssembly().GetReferencedAssemblies()){                      
                 Assembly asm = Assembly.Load(an.ToString());
@@ -75,6 +80,7 @@ namespace SampleApp {
                 }
             }
 
+            /*
             GetReferencedAssemblies.Demo();
             */
 

@@ -76,7 +76,7 @@ namespace Org.XmlResolver.Catalog.Query {
             foreach (var raw in catalog.Entries(Entry.Entry.EntryType.URI_SUFFIX)) {
                 EntryUriSuffix entry = (EntryUriSuffix) raw;
                 string compareSuffix = manager.NormalizedForComparison(entry.UriSuffix);
-                if (compareSuffix.EndsWith(compareSuffix)) {
+                if (compareUri.EndsWith(compareSuffix)) {
                     if (suffix == null || compareSuffix.Length > systemSuffix.Length) {
                         suffix = entry;
                         systemSuffix = compareSuffix;

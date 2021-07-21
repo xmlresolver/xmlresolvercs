@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Data/catalog.xml">
+                <Link>Org.XmlResolver.catalog.xml</Link>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Data/www.w3.org/XML/2008/06/xlink.xsd">
+                <Link>Org.XmlResolver.www_w3_org.XML.2008.06.xlink.xsd</Link>
+        </EmbeddedResource>
+    </ItemGroup>
+    
+</Project>
