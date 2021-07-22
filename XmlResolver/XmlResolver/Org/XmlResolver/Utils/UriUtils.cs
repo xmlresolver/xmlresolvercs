@@ -303,24 +303,6 @@ namespace Org.XmlResolver.Utils {
                 fn = fn.Replace("/", ".");
                 fn = asm.GetName().Name + "." + fn;
 
-                /*
-                if (true) {
-                    Stream stream = asm.GetManifestResourceStream(fn);
-                    if (stream == null) {
-                        throw new NullReferenceException("Failed to read stream from " + fn);
-                    }
-                    StreamReader sr = new StreamReader(stream);
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-                    while ((line = sr.ReadLine()) != null) {
-                        sb.Append(line);
-                    }
-
-                    String foo = sb.ToString();
-                    Console.WriteLine(foo);
-                }
-                */
-
                 return asm.GetManifestResourceStream(fn);
             } else if (uri.StartsWith("pack:///siteoforigin:,,,")) {
                 throw new ArgumentException("The siteoforigin authority is not supported: " + uri);

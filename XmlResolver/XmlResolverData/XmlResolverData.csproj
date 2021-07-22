@@ -1,16 +1,1094 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <EmbeddedResource Include="Data/catalog.xml">
-                <Link>Org.XmlResolver.catalog.xml</Link>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Data/www.w3.org/XML/2008/06/xlink.xsd">
-                <Link>Org.XmlResolver.www_w3_org.XML.2008.06.xlink.xsd</Link>
-        </EmbeddedResource>
-    </ItemGroup>
-    
+   <PropertyGroup>
+      <TargetFramework>net5.0</TargetFramework>
+   </PropertyGroup>
+   <ItemGroup>
+      <EmbeddedResource Include="Data/catalog.xml">
+         <Link>Org.XmlResolver.catalog.xml</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/cat-entities.xml">
+         <Link>Org.XmlResolver.cat-entities.xml</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/cat-mathml2.xml">
+         <Link>Org.XmlResolver.cat-mathml2.xml</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/cat-mathml3.xml">
+         <Link>Org.XmlResolver.cat-mathml3.xml</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/cat-rddl.xml">
+         <Link>Org.XmlResolver.cat-rddl.xml</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/cat-svg.xml">
+         <Link>Org.XmlResolver.cat-svg.xml</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/cat-xhtml.xml">
+         <Link>Org.XmlResolver.cat-xhtml.xml</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/rddl-qname-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.rddl-qname-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/rddl-resource-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.rddl-resource-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/rddl-xhtml.dtd">
+         <Link>Org.XmlResolver.www_rddl_org.rddl-xhtml.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-arch-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-arch-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-attribs-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-attribs-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-base-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-base-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-basic-form-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-basic-form-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-basic-table-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-basic-table-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-blkphras-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-blkphras-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-blkstruct-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-blkstruct-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-charent-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-charent-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-datatypes-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-datatypes-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-events-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-events-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-framework-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-framework-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-hypertext-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-hypertext-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-image-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-image-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-inlphras-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-inlphras-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-inlstruct-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-inlstruct-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-link-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-link-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-list-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-list-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-meta-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-meta-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-notations-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-notations-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-object-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-object-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-param-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-param-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-qname-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-qname-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-rddl-model-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-rddl-model-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-struct-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-struct-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-text-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-text-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml11.dtd">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml11.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xlink-module-1.mod">
+         <Link>Org.XmlResolver.www_rddl_org.xlink-module-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-lat1.ent">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-lat1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-special.ent">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-special.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.rddl.org/xhtml-symbol.ent">
+         <Link>Org.XmlResolver.www_rddl_org.xhtml-symbol.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/1999/xlink.xsd">
+         <Link>Org.XmlResolver.www_w3_org.1999.xlink.xsd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/XML/2008/06/xlink.xsd">
+         <Link>Org.XmlResolver.www_w3_org.XML.2008.06.xlink.xsd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2001/XMLSchema.dtd">
+         <Link>Org.XmlResolver.www_w3_org.2001.XMLSchema.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2001/XMLSchema.xsd">
+         <Link>Org.XmlResolver.www_w3_org.2001.XMLSchema.xsd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2001/datatypes.xsd">
+         <Link>Org.XmlResolver.www_w3_org.2001.datatypes.xsd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2001/xml.xsd">
+         <Link>Org.XmlResolver.www_w3_org.2001.xml.xsd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd">
+         <Link>Org.XmlResolver.www_w3_org.2002.xmlspec.dtd.2_10.xmlspec.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/html5-uppercase.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.html5-uppercase.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/htmlmathml-f.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.htmlmathml-f.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/htmlmathml.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.htmlmathml.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isoamsa.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isoamsa.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isoamsb.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isoamsb.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isoamsc.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isoamsc.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isoamsn.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isoamsn.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isoamso.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isoamso.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isoamsr.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isoamsr.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isobox.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isobox.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isocyr1.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isocyr1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isocyr2.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isocyr2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isodia.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isodia.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isogrk1.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isogrk1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isogrk2.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isogrk2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isogrk3.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isogrk3.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isogrk4.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isogrk4.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isolat1.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isolat1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isolat2.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isolat2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isomfrk.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isomfrk.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isomopf.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isomopf.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isomscr.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isomscr.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isonum.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isonum.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isopub.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isopub.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/isotech.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.isotech.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/mmlalias.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.mmlalias.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/mmlextra.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.mmlextra.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/predefined.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.predefined.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/w3centities-f.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.w3centities-f.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/w3centities.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.w3centities.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/xhtml1-lat1.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.xhtml1-lat1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/xhtml1-special.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.xhtml1-special.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/2007/xhtml1-symbol.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.2007.xhtml1-symbol.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isoamsa.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isoamsa.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isoamsb.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isoamsb.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isoamsc.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isoamsc.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isoamsn.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isoamsn.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isoamso.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isoamso.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isoamsr.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isoamsr.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isobox.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isobox.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isocyr1.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isocyr1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isocyr2.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isocyr2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isodia.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isodia.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isogrk1.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isogrk1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isogrk2.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isogrk2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isogrk3.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isogrk3.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isogrk4.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isogrk4.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isolat1.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isolat1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isolat2.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isolat2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isonum.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isonum.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isopub.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isopub.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2003/entities/iso8879/isotech.ent">
+         <Link>Org.XmlResolver.www_w3_org.2003.entities.iso8879.isotech.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2009/XMLSchema/XMLSchema.dtd">
+         <Link>Org.XmlResolver.www_w3_org.2009.XMLSchema.XMLSchema.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/2009/XMLSchema/datatypes.xsd">
+         <Link>Org.XmlResolver.www_w3_org.2009.XMLSchema.datatypes.xsd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-animation.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-animation.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-animevents-attrib.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-animevents-attrib.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-clip.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-basic-clip.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-filter.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-basic-filter.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-font.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-basic-font.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-graphics-attrib.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-basic-graphics-attrib.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-paint-attrib.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-basic-paint-attrib.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-structure.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-basic-structure.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-basic-text.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-basic-text.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-clip.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-clip.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-conditional.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-conditional.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-container-attrib.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-container-attrib.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-core-attrib.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-core-attrib.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-cursor.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-cursor.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-datatypes.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-datatypes.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-docevents-attrib.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-docevents-attrib.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-extensibility.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-extensibility.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-extresources-attrib.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-extresources-attrib.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-filter.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-filter.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-font.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-font.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-framework.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-framework.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-gradient.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-gradient.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-graphevents-attrib.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-graphevents-attrib.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-graphics-attrib.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-graphics-attrib.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-hyperlink.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-hyperlink.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-image.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-image.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-marker.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-marker.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-mask.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-mask.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-opacity-attrib.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-opacity-attrib.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-paint-attrib.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-paint-attrib.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-pattern.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-pattern.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-profile.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-profile.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-qname.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-qname.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-script.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-script.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-shape.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-shape.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-structure.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-structure.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-style.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-style.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-template-qname.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-template-qname.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-template.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-template.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-text.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-text.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-view.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-view.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-viewport-attrib.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-viewport-attrib.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg-xlink-attrib.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg-xlink-attrib.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11-attribs.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11-attribs.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic-attribs.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11-basic-attribs.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic-flat.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11-basic-flat.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic-model.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11-basic-model.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11-basic.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11-flat-20030114.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11-flat-20030114.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11-flat.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11-flat.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11-model.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11-model.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11-template.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11-template.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny-attribs.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11-tiny-attribs.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny-flat.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11-tiny-flat.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny-model.mod">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11-tiny-model.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11-tiny.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Graphics.SVG.1_1.DTD.svg11.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-access-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-access-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-access-qname-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-access-qname-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-applet-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-applet-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-arch-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-arch-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-attribs-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-attribs-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-base-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-base-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-basic-form-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-basic-form-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-basic-table-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-basic-table-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-basic10-model-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-basic10-model-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-basic11-model-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-basic11-model-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-basic11.dtd">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-basic11.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-bdo-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-bdo-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-blkphras-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-blkphras-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-blkpres-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-blkpres-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-blkstruct-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-blkstruct-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-charent-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-charent-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-csismap-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-csismap-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-datatypes-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-datatypes-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-edit-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-edit-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-events-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-events-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-form-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-form-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-frames-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-frames-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-framework-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-framework-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-hyperAttributes-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-hyperAttributes-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-hypertext-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-hypertext-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-iframe-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-iframe-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-image-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-image-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-inlphras-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-inlphras-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-inlpres-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-inlpres-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-inlstruct-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-inlstruct-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-inlstyle-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-inlstyle-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-inputmode-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-inputmode-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-lat1.ent">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-lat1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-legacy-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-legacy-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-legacy-redecl-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-legacy-redecl-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-link-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-link-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-list-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-list-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-meta-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-meta-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-meta-2.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-meta-2.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-metaAttributes-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-metaAttributes-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-nameident-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-nameident-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-notations-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-notations-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-object-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-object-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-param-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-param-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-pres-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-pres-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-print10-model-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-print10-model-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-qname-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-qname-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-rdfa-model-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-rdfa-model-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-rdfa-qname-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-rdfa-qname-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-role-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-role-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-role-qname-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-role-qname-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-ruby-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-ruby-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-script-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-script-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-special.ent">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-special.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-ssismap-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-ssismap-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-struct-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-struct-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-style-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-style-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-symbol.ent">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-symbol.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-table-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-table-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-target-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-target-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml-text-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml-text-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml1-frameset.dtd">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml1-frameset.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml1-strict.dtd">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml1-strict.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml1-transitional.dtd">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml1-transitional.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml11-model-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml11-model-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/MarkUp/DTD/xhtml11.dtd">
+         <Link>Org.XmlResolver.www_w3_org.MarkUp.DTD.xhtml11.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isoamsa.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isoamsa.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isoamsb.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isoamsb.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isoamsc.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isoamsc.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isoamsn.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isoamsn.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isoamso.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isoamso.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isoamsr.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isoamsr.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isobox.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isobox.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isocyr1.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isocyr1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isocyr2.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isocyr2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isodia.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isodia.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isogrk1.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isogrk1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isogrk2.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isogrk2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isogrk3.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isogrk3.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isogrk4.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isogrk4.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isolat1.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isolat1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isolat2.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isolat2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isomfrk.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isomfrk.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isomopf.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isomopf.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isomscr.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isomscr.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isonum.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isonum.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isopub.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isopub.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/isotech.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.isotech.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/mathml.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.mathml.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/mmlalias.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.mmlalias.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml1/mmlextra.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml1.mmlextra.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/html/lat1.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.html.lat1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/html/special.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.html.special.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/html/symbol.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.html.symbol.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isoamsa.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isoamsa.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isoamsb.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isoamsb.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isoamsc.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isoamsc.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isoamsn.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isoamsn.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isoamso.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isoamso.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isoamsr.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isoamsr.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isobox.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isobox.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isocyr1.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isocyr1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isocyr2.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isocyr2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isodia.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isodia.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isogrk1.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isogrk1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isogrk2.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isogrk2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isogrk3.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isogrk3.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isogrk4.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isogrk4.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isolat1.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isolat1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isolat2.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isolat2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isonum.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isonum.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isopub.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isopub.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso8879/isotech.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso8879.isotech.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso9573-13/isoamsa.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso9573-13.isoamsa.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso9573-13/isoamsb.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso9573-13.isoamsb.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso9573-13/isoamsc.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso9573-13.isoamsc.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso9573-13/isoamsn.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso9573-13.isoamsn.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso9573-13/isoamso.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso9573-13.isoamso.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso9573-13/isoamsr.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso9573-13.isoamsr.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso9573-13/isogrk3.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso9573-13.isogrk3.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso9573-13/isogrk4.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso9573-13.isogrk4.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso9573-13/isomfrk.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso9573-13.isomfrk.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso9573-13/isomopf.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso9573-13.isomopf.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso9573-13/isomscr.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso9573-13.isomscr.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/iso9573-13/isotech.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.iso9573-13.isotech.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isoamsa.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isoamsa.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isoamsb.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isoamsb.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isoamsc.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isoamsc.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isoamsn.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isoamsn.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isoamso.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isoamso.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isoamsr.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isoamsr.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isobox.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isobox.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isocyr1.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isocyr1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isocyr2.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isocyr2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isodia.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isodia.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isogrk3.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isogrk3.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isolat1.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isolat1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isolat2.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isolat2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isomfrk.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isomfrk.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isomopf.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isomopf.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isomscr.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isomscr.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isonum.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isonum.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isopub.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isopub.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/isotech.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.isotech.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/mathml/mmlalias.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.mathml.mmlalias.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/mathml/mmlextra.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.mathml.mmlextra.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/mathml2-a.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.mathml2-a.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/mathml2-qname-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.mathml2-qname-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/mathml2.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.mathml2.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/mmlalias.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.mmlalias.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/mmlextra.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.mmlextra.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/xhtml-math11-f-a.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.xhtml-math11-f-a.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.xhtml-math11-f.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml2/xhtml-math11.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml2.xhtml-math11.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isoamsa.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isoamsa.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isoamsb.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isoamsb.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isoamsc.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isoamsc.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isoamsn.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isoamsn.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isoamso.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isoamso.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isoamsr.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isoamsr.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isobox.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isobox.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isocyr1.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isocyr1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isocyr2.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isocyr2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isodia.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isodia.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isogrk3.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isogrk3.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isolat1.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isolat1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isolat2.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isolat2.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isomfrk.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isomfrk.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isomopf.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isomopf.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isomscr.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isomscr.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isonum.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isonum.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isopub.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isopub.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/isotech.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.isotech.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/mathml3-qname.mod">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.mathml3-qname.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/mathml3.dtd">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.mathml3.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/mmlalias.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.mmlalias.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/Math/DTD/mathml3/mmlextra.ent">
+         <Link>Org.XmlResolver.www_w3_org.Math.DTD.mathml3.mmlextra.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+         <Link>Org.XmlResolver.www_w3_org.TR.2001.REC-SVG-20010904.DTD.svg10.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/ruby/xhtml-ruby-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.TR.ruby.xhtml-ruby-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml-basic.xhtml-basic10.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml-modularization/DTD/xhtml-bdo-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml-modularization.DTD.xhtml-bdo-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml-modularization/DTD/xhtml-csismap-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml-modularization.DTD.xhtml-csismap-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml-modularization/DTD/xhtml-edit-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml-modularization.DTD.xhtml-edit-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml-modularization/DTD/xhtml-legacy-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml-modularization.DTD.xhtml-legacy-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml-modularization/DTD/xhtml-ssismap-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml-modularization.DTD.xhtml-ssismap-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml-modularization/DTD/xhtml-table-1.mod">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml-modularization.DTD.xhtml-table-1.mod</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml-modularization/DTD/xhtml-lat1.ent">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml-modularization.DTD.xhtml-lat1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml-modularization/DTD/xhtml-special.ent">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml-modularization.DTD.xhtml-special.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml-modularization/DTD/xhtml-symbol.ent">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml-modularization.DTD.xhtml-symbol.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml1.DTD.xhtml-lat1.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml1/DTD/xhtml-special.ent">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml1.DTD.xhtml-special.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml1/DTD/xhtml-symbol.ent">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml1.DTD.xhtml-symbol.ent</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml1.DTD.xhtml1-frameset.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml1.DTD.xhtml1-strict.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+         <Link>Org.XmlResolver.www_w3_org.TR.xhtml1.DTD.xhtml1-transitional.dtd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xmlschema-1/XMLSchema.xsd">
+         <Link>Org.XmlResolver.www_w3_org.TR.xmlschema-1.XMLSchema.xsd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xmlschema-2/datatypes.xsd">
+         <Link>Org.XmlResolver.www_w3_org.TR.xmlschema-2.datatypes.xsd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xmlschema11-1/XMLSchema.xsd">
+         <Link>Org.XmlResolver.www_w3_org.TR.xmlschema11-1.XMLSchema.xsd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xmlschema11-2/datatypes.xsd">
+         <Link>Org.XmlResolver.www_w3_org.TR.xmlschema11-2.datatypes.xsd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xslt-30/schema-for-json.xsd">
+         <Link>Org.XmlResolver.www_w3_org.TR.xslt-30.schema-for-json.xsd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xslt-30/schema-for-xslt30.rnc">
+         <Link>Org.XmlResolver.www_w3_org.TR.xslt-30.schema-for-xslt30.rnc</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xslt-30/schema-for-xslt30.rng">
+         <Link>Org.XmlResolver.www_w3_org.TR.xslt-30.schema-for-xslt30.rng</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xslt-30/schema-for-xslt30.xsd">
+         <Link>Org.XmlResolver.www_w3_org.TR.xslt-30.schema-for-xslt30.xsd</Link>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Data/www.w3.org/TR/xslt-30/xml-to-json.xsl">
+         <Link>Org.XmlResolver.www_w3_org.TR.xslt-30.xml-to-json.xsl</Link>
+      </EmbeddedResource>
+   </ItemGroup>
 </Project>

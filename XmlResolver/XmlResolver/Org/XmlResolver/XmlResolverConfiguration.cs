@@ -115,7 +115,6 @@ namespace Org.XmlResolver {
                             var config = cfgBuilder.Build();
                             loaded = pfile;
                             section = config.GetSection("xmlResolver");
-                            Console.WriteLine("Loaded {0}", pfile.AbsolutePath);
                         }
                         catch (XmlException) {
                             // Maybe it's a JSON file?
@@ -125,7 +124,6 @@ namespace Org.XmlResolver {
                                 var config = cfgBuilder.Build();
                                 section = config.GetSection("XmlResolver");
                                 loaded = pfile;
-                                Console.WriteLine("Loaded {0}", pfile.AbsolutePath);
                             }
                             catch (FormatException) {
                                 logger.Log(ResolverLogger.CONFIG, "Failed to read {0}", pfile.AbsolutePath);

@@ -1,6 +1,9 @@
 plugins {
   id "com.itiviti.dotnet" version "1.7.1"
+  id 'com.nwalsh.gradle.saxon.saxon-gradle' version '0.9.3'
 }
+
+import com.nwalsh.gradle.saxon.SaxonXsltTask
 
 dotnet {
   dotnetExecutable = '/usr/local/share/dotnet/dotnet'
@@ -22,6 +25,34 @@ dotnet {
       testOutputXml = file("${buildDir}/reports/nunit")
     }
   }
+}
+
+task copy_data(type: Copy) {
+  into "${projectDir}/XmlResolver/XmlResolverData/Data"
+  from ("${projectDir}/data/src/data") {
+    exclude "manifest.xml"
+  }
+}
+
+task make_data_catalog(type: SaxonXsltTask, dependsOn: ["copy_data"]) {
+  input "${projectDir}/data/src/data/manifest.xml"
+  output "${projectDir}/XmlResolver/XmlResolverData/Data/catalog.xml"
+  stylesheet "${projectDir}/tools/make-catalog.xsl"
+}
+
+task make_data_tests(type: SaxonXsltTask, dependsOn: ["copy_data"]) {
+  input "${projectDir}/data/src/data/manifest.xml"
+  output "${projectDir}/XmlResolver/XmlResolverData/Data/catalog.xml"
+  stylesheet "${projectDir}/tools/make-catalog.xsl"
+  parameters (
+    'generate-tests': "${buildDir}/test-cases.cs"
+  )
+}
+
+task make_data_csproj(type: SaxonXsltTask, dependsOn: ["copy_data"]) {
+  input "${projectDir}/data/src/data/manifest.xml"
+  output "${projectDir}/XmlResolver/XmlResolverData/XmlResolverData.csproj"
+  stylesheet "${projectDir}/tools/make-csproj.xsl"
 }
 
 //task ntest(type: 'NUnit', dependsOn: ['buildSolution']) {

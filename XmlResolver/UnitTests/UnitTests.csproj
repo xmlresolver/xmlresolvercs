@@ -22,6 +22,12 @@
 <EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/catalog.xml">
   <Link>resources/catalog.xml</Link>
 </EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/dtd10catalog.xml">
+  <Link>resources/dtd10catalog.xml</Link>
+</EmbeddedResource>
+<EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/dtd11catalog.xml">
+  <Link>resources/dtd11catalog.xml</Link>
+</EmbeddedResource>
 <EmbeddedResource Include="/Users/ndw/Projects/xmlresolver/cs/src/test/resources/picat.xml">
   <Link>resources/picat.xml</Link>
 </EmbeddedResource>

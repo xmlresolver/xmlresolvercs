@@ -57,10 +57,6 @@ namespace Org.XmlResolver.Catalog.Entry {
             lock (_syncLock) {
                 entries.Add(entry);
 
-                if (locator != null) {
-                    Console.WriteLine(locator.LineNumber + ": " + locator.LinePosition);
-                }
-
                 if (!typedEntries.ContainsKey(entry.GetEntryType())) {
                     typedEntries.Add(entry.GetEntryType(), new());
                 }

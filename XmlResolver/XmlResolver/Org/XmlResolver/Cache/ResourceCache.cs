@@ -97,8 +97,9 @@ namespace Org.XmlResolver.Cache {
                     while (reader.Read()) {
                         switch (reader.NodeType) {
                             case XmlNodeType.Element:
+                                bool empty = reader.IsEmptyElement;
                                 StartElement(reader);
-                                if (reader.IsEmptyElement) {
+                                if (empty) {
                                     EndElement(reader);
                                 }
 

@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Xml;
 using NLog;
 using Org.XmlResolver.Catalog.Entry;
+using Org.XmlResolver.Features;
 using Org.XmlResolver.Utils;
 
 namespace Org.XmlResolver.Loaders {
     public class XmlLoader : CatalogLoader {
+        private readonly object _syncLock = new object();
         protected static ResolverLogger logger = new ResolverLogger(LogManager.GetCurrentClassLogger());
 
         private static readonly HashSet<string> CATALOG_ELEMENTS
@@ -19,6 +22,7 @@ namespace Org.XmlResolver.Loaders {
             = new() {"doctype", "document", "dtddecl", "entity", "linktype", "notation", "sgmldecl"};
 
         protected readonly Dictionary<Uri,EntryCatalog> catalogMap;
+        private static Resolver _loaderResolver = null;
 
         private readonly Stack<Entry> parserStack;
         private readonly Stack<bool> preferPublicStack;
@@ -34,27 +38,56 @@ namespace Org.XmlResolver.Loaders {
             preferPublicStack = new();
             baseUriStack = new();
         }
+
+        public Resolver LoaderResolver {
+            get
+            {
+                if (_loaderResolver == null) {
+                    XmlResolverConfiguration config = new XmlResolverConfiguration(new List<Uri>(), new List<string>());
+                    config.SetFeature(ResolverFeature.PREFER_PUBLIC, true);
+                    config.SetFeature(ResolverFeature.CACHE_DIRECTORY, null);
+                    config.SetFeature(ResolverFeature.CACHE_UNDER_HOME, false);
+                    config.SetFeature(ResolverFeature.CLASSPATH_CATALOGS, false);
+                    config.AddAssemblyCatalog("Org.XmlResolver.catalog.xml", Assembly.GetExecutingAssembly());
+                    _loaderResolver = new Resolver(config);
+                }
+
+                return _loaderResolver;
+            }
+        }
         
         public EntryCatalog LoadCatalog(Uri caturi) {
-            if (catalogMap.ContainsKey(caturi)) {
-                return catalogMap[caturi];
-            }
+            lock (_syncLock) {
+                if (catalogMap.ContainsKey(caturi)) {
+                    return catalogMap[caturi];
+                }
 
-            Stream stream = null;
-            try {
-                stream = UriUtils.GetStream(caturi);
-            }
-            catch (Exception) {
-                logger.Log(ResolverLogger.ERROR, "Failed to load catalog {0}", caturi.ToString());
-                catalog = new EntryCatalog(caturi, null, false);
-                catalogMap.Add(caturi, catalog);
-                return catalog;
-            }
+                Stream stream = null;
+                try {
+                    stream = UriUtils.GetStream(caturi);
+                }
+                catch (Exception) {
+                    logger.Log(ResolverLogger.ERROR, "Failed to load catalog {0}", caturi.ToString());
+                    catalog = new EntryCatalog(caturi, null, false);
+                    catalogMap.Add(caturi, catalog);
+                    return catalog;
+                }
 
-            return LoadCatalog(caturi, stream);
+                return _LoadCatalog(caturi, stream);
+            }
         }
 
         public EntryCatalog LoadCatalog(Uri caturi, Stream data) {
+            lock (_syncLock) {
+                if (catalogMap.ContainsKey(caturi)) {
+                    return catalogMap[caturi];
+                }
+
+                return _LoadCatalog(caturi, data);
+            }
+        }
+        
+        private EntryCatalog _LoadCatalog(Uri caturi, Stream data) {
             catalog = null;
             locator = null;
             parserStack.Clear();
@@ -65,13 +98,15 @@ namespace Org.XmlResolver.Loaders {
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.Async = false;
             settings.DtdProcessing = DtdProcessing.Ignore; // FIXME: ???
+            settings.XmlResolver = _loaderResolver;
 
             using (XmlReader reader = XmlReader.Create(data, settings)) {
                 while (reader.Read()) {
                     switch (reader.NodeType) {
                         case XmlNodeType.Element:
+                            bool empty = reader.IsEmptyElement;
                             StartElement(reader);
-                            if (reader.IsEmptyElement) {
+                            if (empty) {
                                 EndElement(reader);
                             }
                             break;
@@ -89,6 +124,8 @@ namespace Org.XmlResolver.Loaders {
         }
 
         private void StartElement(XmlReader reader) {
+            string xxx = reader.LocalName;
+
             if (parserStack.Count == 0) {
                 if (reader.NamespaceURI.Equals(ResolverConstants.CATALOG_NS)
                     && reader.LocalName.Equals("catalog")) {
@@ -176,9 +213,10 @@ namespace Org.XmlResolver.Loaders {
                 locator.LinePosition = li.LinePosition;
             }
 
+            string xxx = reader.LocalName;
             bool preferPublic = preferPublicStack.Peek();
 
-            Entry entry = new EntryNull();
+            Entry entry = null;
 
             switch (reader.LocalName) {
                 case "group":
@@ -274,6 +312,10 @@ namespace Org.XmlResolver.Loaders {
                         entry.SetProperty(reader.LocalName, reader.Value);
                     }
                 }
+            }
+
+            if (entry == null) {
+                entry = new EntryNull();
             }
             
             parserStack.Push(entry);
