@@ -4,11 +4,10 @@ using System.Reflection;
 using NUnit.Framework;
 using Org.XmlResolver;
 using Org.XmlResolver.Features;
-using Version = Org.XmlResolverData.Version;
 
 namespace UnitTests {
     public class DataTest : ResolverTest {
-        private string dataVersion = Version.DataVersion;
+        private string dataVersion = XmlResolverData.Version.DataVersion;
         private XmlResolverConfiguration config = null;
         private CatalogManager manager = null;
 

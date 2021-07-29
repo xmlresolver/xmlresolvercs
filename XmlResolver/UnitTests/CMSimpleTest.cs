@@ -5,7 +5,7 @@ using Org.XmlResolver.Features;
 using Org.XmlResolver.Utils;
 
 namespace UnitTests {
-    public class CMSimpleTest : ResolverTest {
+    public class CMSimpleTest : BaseTestRoot {
         private readonly Uri baseUri = new Uri("file:///tmp/");
         private CatalogManager manager = null;
 
@@ -13,7 +13,7 @@ namespace UnitTests {
         public void Setup() {
             XmlResolverConfiguration config = new XmlResolverConfiguration();
             config.SetFeature(ResolverFeature.PREFER_PUBLIC, true);
-            config.AddCatalog(UriUtils.Resolve(TEST_ROOT_DIRECTORY, "src/test/resources/cm/simple.xml").ToString());
+            config.AddCatalog(UriUtils.Resolve(TEST_ROOT_DIRECTORY, "XmlResolver/UnitTests/resources/cm/simple.xml").ToString());
             manager = new CatalogManager(config);
         }
 

@@ -4,15 +4,15 @@ using Org.XmlResolver;
 using Org.XmlResolver.Utils;
 
 namespace UnitTests {
-    public class CMNextTest : ResolverTest {
+    public class CMNextTest : BaseTestRoot {
         private readonly Uri baseUri = new Uri("file:///tmp/");
         private CatalogManager manager = null;
 
         [SetUp]
         public void Setup() {
             XmlResolverConfiguration config = new XmlResolverConfiguration();
-            config.AddCatalog(UriUtils.Resolve(TEST_ROOT_DIRECTORY, "src/test/resources/cm/nextroot.xml").ToString());
-            config.AddCatalog(UriUtils.Resolve(TEST_ROOT_DIRECTORY, "src/test/resources/cm/following.xml").ToString());
+            config.AddCatalog(UriUtils.Resolve(TEST_ROOT_DIRECTORY, "XmlResolver/UnitTests/resources/cm/nextroot.xml").ToString());
+            config.AddCatalog(UriUtils.Resolve(TEST_ROOT_DIRECTORY, "XmlResolver/UnitTests/resources/cm/following.xml").ToString());
             manager = new CatalogManager(config);
         }
 

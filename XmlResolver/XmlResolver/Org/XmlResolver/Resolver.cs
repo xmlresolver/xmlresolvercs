@@ -9,26 +9,28 @@ using Org.XmlResolver.Utils;
 namespace Org.XmlResolver {
     public class Resolver : System.Xml.XmlResolver {
         protected static ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
-        protected readonly CatalogResolver resolver;
+        private readonly CatalogResolver _resolver;
 
         public Resolver() {
-            resolver = new CatalogResolver();
+            _resolver = new CatalogResolver();
         }
 
         public Resolver(XmlResolverConfiguration config) {
-            resolver = new CatalogResolver(config);
+            _resolver = new CatalogResolver(config);
         }
 
         public Resolver(CatalogResolver resolver) {
-            this.resolver = resolver;
+            this._resolver = resolver;
         }
 
+        public CatalogResolver CatalogResolver => _resolver;
+        
         public ResolverConfiguration GetConfiguration() {
-            return resolver.GetConfiguration();
+            return _resolver.GetConfiguration();
         }
 
         public override object? GetEntity(Uri absoluteUri, string? role, Type? ofObjectToReturn) {
-            ResolvedResource rsrc = resolver.ResolveEntity(null, null, absoluteUri.ToString(), null);
+            ResolvedResource rsrc = _resolver.ResolveEntity(null, null, absoluteUri.ToString(), null);
             if (rsrc == null) {
                 try {
                     Stream stream = UriUtils.GetStream(absoluteUri);
@@ -43,7 +45,7 @@ namespace Org.XmlResolver {
                         if (pubid.StartsWith(cwd)) {
                             pubid = pubid.Substring(cwd.Length+1);
                             pubid = Regex.Replace(pubid, @"/", @"//");
-                            rsrc = resolver.ResolveEntity(null, pubid, null, null);
+                            rsrc = _resolver.ResolveEntity(null, pubid, null, null);
                             if (rsrc != null) {
                                 return rsrc.GetInputStream();
                             }

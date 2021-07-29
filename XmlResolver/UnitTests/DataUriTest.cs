@@ -4,12 +4,12 @@ using Org.XmlResolver;
 using Org.XmlResolver.Utils;
 
 namespace UnitTests {
-    public class DataUriTest : ResolverTest {
+    public class DataUriTest : BaseTestRoot {
         private CatalogResolver resolver = null;
 
         [SetUp]
         public void Setup() {
-            XmlResolverConfiguration config = new XmlResolverConfiguration(UriUtils.Resolve(TEST_ROOT_DIRECTORY, "src/test/resources/datauri.xml").ToString());
+            XmlResolverConfiguration config = new XmlResolverConfiguration(UriUtils.Resolve(TEST_ROOT_DIRECTORY, "XmlResolver/UnitTests/resources/datauri.xml").ToString());
             resolver = new CatalogResolver(config);
         }
         

@@ -11,8 +11,7 @@ using System.Threading;
 using Org.XmlResolver;
 using Org.XmlResolver.Cache;
 using Org.XmlResolver.Utils;
-using Org.XmlResolverData;
-using Version = Org.XmlResolverData.Version;
+using Version = XmlResolverData.Version;
 
 namespace SampleApp {
     class Program {

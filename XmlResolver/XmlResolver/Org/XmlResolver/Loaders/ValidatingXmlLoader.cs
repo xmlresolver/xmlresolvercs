@@ -10,9 +10,7 @@ namespace Org.XmlResolver.Loaders {
         protected static ResolverLogger logger = new ResolverLogger(LogManager.GetCurrentClassLogger());
         protected readonly Dictionary<Uri,EntryCatalog> catalogMap;
 
-        private bool _preferPublic = true;
         private EntryCatalog catalog = null;
-        private Locator locator = null;
         
         private readonly Resolver resolver;
         private readonly XmlLoader underlyingLoader;

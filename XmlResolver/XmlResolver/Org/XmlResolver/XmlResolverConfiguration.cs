@@ -13,6 +13,7 @@ using Org.XmlResolver.Utils;
 namespace Org.XmlResolver {
     public class XmlResolverConfiguration : ResolverConfiguration {
         private readonly object _syncLock = new object();
+        private string dataVersion = XmlResolverData.Version.DataVersion;
 
         protected static ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
 
@@ -451,6 +452,7 @@ namespace Org.XmlResolver {
             } else if (feature == ResolverFeature.CATALOG_FILES) {
                 List<string> cats = new(catalogs);
                 if (classpathCatalogs) {
+                    cats.AddRange(FindAssemblyCatalogFiles());
                     // FIXME: find classpath catalog files
                 }
                 return cats;
@@ -489,6 +491,27 @@ namespace Org.XmlResolver {
 
         public List<ResolverFeature> GetFeatures() {
             return new(knownFeatures);
+        }
+
+        private List<string> FindAssemblyCatalogFiles() {
+            List<string> paths = new List<string>();
+
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach(Assembly asm in assemblies) {
+                string catrsrc = asm.GetName().Name + ".Org.XmlResolver.catalog.xml";
+                try {
+                    foreach (var file in asm.GetManifestResourceNames()) {
+                        if (catrsrc.Equals(file)) {
+                            paths.Add(UriUtils.GetLocationUri("Org.XmlResolver.catalog.xml", asm).ToString());
+                        }
+                    }
+                }
+                catch (Exception) {
+                    // nop
+                }
+            }
+            
+            return paths;
         }
     }
 }

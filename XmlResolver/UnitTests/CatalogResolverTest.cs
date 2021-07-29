@@ -25,9 +25,13 @@ namespace UnitTests {
         public void UriForSystemFail() {
             config.SetFeature(ResolverFeature.URI_FOR_SYSTEM, false);
             try {
-                object stream = resolver.GetEntity(new Uri("https://xmlresolver.org/ns/sample-as-uri/sample.dtd"),
-                    null, null);
-                Assert.Null(stream);
+                // We don't use GetStream here because the semantics of GetStream are that it has to
+                // attempt to get the resource, so it'll try the HTTP URI if it's not in the catalog.
+                // That's not an interesting result here.
+                CatalogManager manager =
+                    (CatalogManager) resolver.GetConfiguration().GetFeature(ResolverFeature.CATALOG_MANAGER);
+                Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample-as-uri/sample.dtd");
+                Assert.Null(rsrc);
             }
             catch (Exception) {
                 Assert.Fail();

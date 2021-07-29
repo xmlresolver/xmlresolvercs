@@ -32,7 +32,7 @@ namespace Org.XmlResolver.Catalog.Entry {
 
         public void SetProperty(String name, String value) {
             if (NCNAME_RE.IsMatch(name)) {
-                Extra.Add(name, value);
+                Extra[name] = value;
             } else {
                 logger.Log(ResolverLogger.ERROR, "Property name invalid: " + name);
             }

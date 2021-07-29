@@ -13,7 +13,7 @@ namespace UnitTests {
         public void Setup() {
             XmlResolverConfiguration config = new XmlResolverConfiguration();
             config.SetFeature(ResolverFeature.PREFER_PUBLIC, true);
-            config.AddCatalog(UriUtils.Resolve(TEST_ROOT_DIRECTORY, "src/test/resources/cm/pref-public.xml").ToString());
+            config.AddCatalog(UriUtils.Resolve(TEST_ROOT_DIRECTORY, "XmlResolver/UnitTests/resources/cm/pref-public.xml").ToString());
             manager = new CatalogManager(config);
         }
         

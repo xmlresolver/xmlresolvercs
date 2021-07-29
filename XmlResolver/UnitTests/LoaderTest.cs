@@ -21,7 +21,7 @@ namespace UnitTests {
             XmlResolverConfiguration config = new XmlResolverConfiguration(new List<Uri>(), new List<string>());
             config.AddAssemblyCatalog("resources/invalid-catalog.xml", Assembly.GetExecutingAssembly());
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
-            Uri rsrc = manager.LookupSystem("https://xmlresolver.com/ns/sample/sample.dtd");
+            Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
             Assert.NotNull(rsrc);
         }
 
@@ -66,7 +66,7 @@ namespace UnitTests {
             config.SetFeature(ResolverFeature.CLASSPATH_CATALOGS, false);
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             try {
-                Uri rsrc = manager.LookupSystem("https://xmlresolver.com/ns/sample/sample.dtd");
+                Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
                 Assert.NotNull(rsrc);
                 Assert.Fail();
             }

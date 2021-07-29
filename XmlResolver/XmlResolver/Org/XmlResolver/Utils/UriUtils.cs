@@ -303,7 +303,8 @@ namespace Org.XmlResolver.Utils {
                 fn = fn.Replace("/", ".");
                 fn = asm.GetName().Name + "." + fn;
 
-                return asm.GetManifestResourceStream(fn);
+                Stream stream = asm.GetManifestResourceStream(fn);
+                return stream;
             } else if (uri.StartsWith("pack:///siteoforigin:,,,")) {
                 throw new ArgumentException("The siteoforigin authority is not supported: " + uri);
             }

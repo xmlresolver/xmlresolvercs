@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Org.XmlResolver;
 using Org.XmlResolver.Features;
 using Org.XmlResolver.Utils;
-using Version = Org.XmlResolverData.Version;
+using Version = XmlResolverData.Version;
 
 namespace UnitTests {
     public class MergeHttpsTests {

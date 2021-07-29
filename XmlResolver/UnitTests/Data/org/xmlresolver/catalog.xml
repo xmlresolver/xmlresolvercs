@@ -1,0 +1,60 @@
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog"
+         prefer="public">
+
+  <h:div xmlns:h="http://www.w3.org/1999/xhtml">
+    <h:p>This is ok, but note that catalog entries in here are ignored</h:p>
+    <uri name="http://example.com/path/test.txt" uri="../../path/test.txt"/>
+  </h:div>
+
+  <uri name="http://example.com/path/test.txt" uri="/path/test.txt"/>
+
+  <uri name="http://example.com/example-doc.xml" uri="/path/example-doc.xml"/>
+
+  <system systemId="https://xmlresolver.org/ns/assembly-sample/sample.dtd"
+          uri="/data/sample.dtd"/>
+
+  <system systemId="https://xmlresolver.org/ns/sample/blocks.dtd"
+          uri="/data/blocks.dtd"/>
+
+<!--
+
+  Don't use the sample DTD in here because it overlaps with other catalogs.
+
+  <public publicId="-//Sample//DTD Simple 1.0//EN"
+          uri="/data/sample.dtd"/>
+
+  <system systemId="https://xmlresolver.org/ns/sample/sample.dtd"
+          uri="/data/sample.dtd"/>
+
+  <uri name="https://xmlresolver.org/ns/sample/uri.dtd"
+       uri="/data/sample.dtd"/>
+
+  <public publicId="-//Sample//DTD Simple Blocks 1.0//EN"
+          uri="/data/blocks.dtd"/>
+
+  <system systemId="https://xmlresolver.org/ns/sample/blocks.dtd"
+          uri="/data/sample.dtd"/>
+
+  <uri name="https://xmlresolver.org/ns/sample/sample.rng"
+       uri="/data/sample.rng"/>
+
+  <uri name="https://xmlresolver.org/ns/sample/blocks.rng"
+       uri="/data/blocks.rng"/>
+
+  <uri name="https://xmlresolver.org/ns/sample/sample.rnc"
+       uri="/data/sample.rnc"/>
+
+  <uri name="https://xmlresolver.org/ns/sample/blocks.rnc"
+       uri="/data/blocks.rnc"/>
+
+  <uri name="https://xmlresolver.org/ns/sample/sample.xsd"
+       uri="/data/sample.xsd"/>
+
+  <uri name="https://xmlresolver.org/ns/sample/blocks.xsd"
+       uri="/data/blocks.xsd"/>
+
+  <uri name="https://xmlresolver.org/ns/sample/xlink.xsd"
+       uri="/data/xlink.xsd"/>
+-->
+
+</catalog>
