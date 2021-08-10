@@ -15,8 +15,8 @@ dotnet {
   }
 
   build {
-    //version = project.version
-    //packageVersion = project.version
+    version = "3.0.1"
+    packageVersion = "3.0.1"
   }  
 
   test {
