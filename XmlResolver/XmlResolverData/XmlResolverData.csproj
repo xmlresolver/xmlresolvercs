@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
-      <TargetFramework>net5.0</TargetFramework>
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Norman Walsh</Authors>
+    <Description>This package provides a common set of XML resources and an XML Catalog that resolves them. It’s most commonly used with the xmlresolver package.</Description>
+    <PackageTags>XML,XmlResolver</PackageTags>
    </PropertyGroup>
    <ItemGroup>
       <EmbeddedResource Include="Data/catalog.xml">
