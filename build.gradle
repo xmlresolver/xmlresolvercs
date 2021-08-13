@@ -17,6 +17,10 @@ dotnet {
   build {
   }  
 
+  nugetPush {
+    apiKey = 'IS IT SENSIBLE TO PUBLISH THIS?'
+  }
+
   test {
     collectCoverage = true
     nunit {
