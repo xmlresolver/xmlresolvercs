@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Net;
 using System.Reflection;
 using System.Xml;
 using NLog;
@@ -29,6 +31,7 @@ namespace Org.XmlResolver.Loaders {
         private readonly Stack<Uri> baseUriStack;
 
         private bool _preferPublic = true;
+        private bool _archivedCatalogs = true;
         private EntryCatalog catalog = null;
         private Locator locator = null;
 
@@ -47,6 +50,7 @@ namespace Org.XmlResolver.Loaders {
                     config.SetFeature(ResolverFeature.PREFER_PUBLIC, true);
                     config.SetFeature(ResolverFeature.CACHE_DIRECTORY, null);
                     config.SetFeature(ResolverFeature.CACHE_UNDER_HOME, false);
+                    config.SetFeature(ResolverFeature.ALLOW_CATALOG_PI, false);
                     config.SetFeature(ResolverFeature.CLASSPATH_CATALOGS, false);
                     config.AddAssemblyCatalog("Org.XmlResolver.catalog.xml", Assembly.GetExecutingAssembly());
                     _loaderResolver = new Resolver(config);
@@ -86,46 +90,65 @@ namespace Org.XmlResolver.Loaders {
                 return _LoadCatalog(caturi, data);
             }
         }
-        
+
         private EntryCatalog _LoadCatalog(Uri caturi, Stream data) {
+            return _LoadCatalog(caturi, caturi, data);
+        }
+        
+        private EntryCatalog _LoadCatalog(Uri caturi, Uri baseUri, Stream data) {
             catalog = null;
             locator = null;
             parserStack.Clear();
             baseUriStack.Clear();
-            baseUriStack.Push(caturi);
+            baseUriStack.Push(baseUri);
             preferPublicStack.Push(_preferPublic);
-            
+
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.Async = false;
             settings.DtdProcessing = DtdProcessing.Ignore; // FIXME: ???
             settings.XmlResolver = _loaderResolver;
 
-            using (XmlReader reader = XmlReader.Create(data, settings)) {
-                while (reader.Read()) {
-                    switch (reader.NodeType) {
-                        case XmlNodeType.Element:
-                            bool empty = reader.IsEmptyElement;
-                            StartElement(reader);
-                            if (empty) {
+            try {
+                using (XmlReader reader = XmlReader.Create(data, settings)) {
+                    while (reader.Read()) {
+                        switch (reader.NodeType) {
+                            case XmlNodeType.Element:
+                                bool empty = reader.IsEmptyElement;
+                                StartElement(reader);
+                                if (empty) {
+                                    EndElement(reader);
+                                }
+
+                                break;
+                            case XmlNodeType.EndElement:
                                 EndElement(reader);
-                            }
-                            break;
-                        case XmlNodeType.EndElement:
-                            EndElement(reader);
-                            break;
-                        default:
-                            break;
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
-            }
 
-            catalogMap.Add(caturi, catalog);
-            return catalog;
+                catalogMap.Add(caturi, catalog);
+                return catalog;
+            }
+            catch (Exception ex)  {
+                logger.Log(ResolverLogger.ERROR, "Failed to parse catalog {0}: {1}", caturi.ToString(), ex.Message);
+
+                if (_archivedCatalogs) {
+                    catalog = ArchiveCatalog(caturi);
+                    // It will already have been added to the map
+                }
+                else {
+                    catalog = new EntryCatalog(caturi, null, false);
+                    catalogMap.Add(caturi,catalog);
+                }
+                
+                return catalog;
+            }
         }
 
         private void StartElement(XmlReader reader) {
-            string xxx = reader.LocalName;
-
             if (parserStack.Count == 0) {
                 if (reader.NamespaceURI.Equals(ResolverConstants.CATALOG_NS)
                     && reader.LocalName.Equals("catalog")) {
@@ -213,7 +236,6 @@ namespace Org.XmlResolver.Loaders {
                 locator.LinePosition = li.LinePosition;
             }
 
-            string xxx = reader.LocalName;
             bool preferPublic = preferPublicStack.Peek();
 
             Entry entry = null;
@@ -335,6 +357,80 @@ namespace Org.XmlResolver.Loaders {
 
         public bool GetPreferPublic() {
             return _preferPublic;
+        }
+
+        public void SetArchivedCatalogs(bool archived) {
+            _archivedCatalogs = archived;
+        }
+
+        public bool GetArchivedCatalogs() {
+            return _archivedCatalogs;
+        }
+
+        private EntryCatalog ArchiveCatalog(Uri caturi) {
+            if (caturi.Scheme != "file") {
+                // Only support file: URIs at the moment
+                return new EntryCatalog(caturi, null, true);
+            }
+
+            string path = caturi.AbsolutePath;
+            HashSet<string> catalogSet = new HashSet<string>();
+            bool firstEntry = true;
+            string leadingDir = null;
+            
+            ZipArchive zipRead = ZipFile.OpenRead(path);
+            foreach (ZipArchiveEntry entry in zipRead.Entries) {
+                int pos = entry.FullName.IndexOf("/");
+                if (firstEntry) {
+                    if (pos >= 0) {
+                        leadingDir = entry.FullName.Substring(0, pos);
+                    }
+
+                    firstEntry = false;
+                }
+                else {
+                    if (leadingDir != null) {
+                        if (pos < 0 || !leadingDir.Equals(entry.FullName.Substring(0, pos))) {
+                            leadingDir = null;
+                        }
+                    }
+                }
+
+                if (entry.FullName.EndsWith("catalog.xml")) {
+                    catalogSet.Add(entry.FullName);
+                }
+            }
+
+            string catpath = null;
+            if (leadingDir != null) {
+                if (catalogSet.Contains(leadingDir + "/catalog.xml")) {
+                    catpath = "/" + leadingDir + "/catalog.xml";
+                }
+                if (catalogSet.Contains(leadingDir + "/org/xmlresolver/catalog.xml")) {
+                    catpath = "/" + leadingDir + "/org/xmlresolver/catalog.xml";
+                }
+            }
+            else {
+                if (catalogSet.Contains("catalog.xml")) {
+                    catpath = "/catalog.xml";
+                }
+                if (catalogSet.Contains("org/xmlresolver/catalog.xml")) {
+                    catpath = "/org/xmlresolver/catalog.xml";
+                }
+            }
+
+            if (catpath != null) {
+                string packuri = caturi.ToString();
+                packuri = packuri.Replace(":", "%3A");
+                packuri = packuri.Replace("/", ",");
+                packuri = "pack://" + packuri + catpath;
+                Stream s = UriUtils.GetStream(packuri);
+                if (s != null) {
+                    return _LoadCatalog(caturi, UriUtils.NewUri(packuri), s);
+                }
+            }
+            
+            return new EntryCatalog(caturi, null, true);
         }
     }
 }

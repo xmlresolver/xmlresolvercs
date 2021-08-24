@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO.Compression;
 using System.IO.Packaging;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Text;
-using System.Threading;
 using Org.XmlResolver;
 using Org.XmlResolver.Cache;
 using Org.XmlResolver.Utils;
@@ -18,17 +15,20 @@ namespace SampleApp {
         static void Main(string[] args) {
             Console.WriteLine("Hello World!");
 
-            Uri x = UriUtils.NewUri("file://////Users/ndw/");
-            x = UriUtils.NewUri("/tmp/x/");
-            x = UriUtils.NewUri("file:/tmp/x");
-            x = UriUtils.NewUri("https://nwalsh.com/");
-
+            string zipFile = "/Users/ndw/Projects/xmlresolver/resolver/src/test/resources/dir-sample.zip";
             /*
-            XmlResolverConfiguration config = new();
-            ResourceCache rcache = new ResourceCache(config);
-            Console.WriteLine("Done");
+            ZipArchive zipRead = System.IO.Compression.ZipFile.OpenRead(zipFile);
+            foreach (ZipArchiveEntry entry in zipRead.Entries) {
+                Console.WriteLine(entry);
+            }
             */
-
+            
+            XmlResolverConfiguration config = new();
+            config.AddCatalog(zipFile);
+            Resolver resolver = new Resolver(config);
+            object o = resolver.GetEntity(new Uri("https://xmlresolver.org/ns/sample/sample.dtd"), null, null);
+            Console.WriteLine(o);
+            
             /*
             try {
                 HttpWebRequest req = WebRequest.CreateHttp("https://nwalsh.com/");
@@ -40,8 +40,8 @@ namespace SampleApp {
                 Console.WriteLine(ex);
             }
             */
-            
-            Console.WriteLine("Data Version {0}", Version.DataVersion);
+
+            //Console.WriteLine("Data Version {0}", Version.DataVersion);
 
             /*
 
@@ -68,6 +68,7 @@ namespace SampleApp {
             }
             */
 
+            /*
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach(AssemblyName an in Assembly.GetExecutingAssembly().GetReferencedAssemblies()){                      
                 Assembly asm = Assembly.Load(an.ToString());
@@ -78,6 +79,7 @@ namespace SampleApp {
                     Console.WriteLine("\t"+file);
                 }
             }
+            */
 
             /*
             GetReferencedAssemblies.Demo();

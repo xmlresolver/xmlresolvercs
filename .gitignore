@@ -12,3 +12,4 @@
 /XmlResolver/XmlResolverData/Data
 /build
 *.DotSettings.user
+.DS_Store

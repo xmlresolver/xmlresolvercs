@@ -10,6 +10,7 @@ dotnet {
   solution = 'XmlResolver/XmlResolver.sln'
   configuration = 'Release'
   verbosity = 'Normal'
+  projectName = 'XmlResolver'
 
   restore {
   }
@@ -18,7 +19,10 @@ dotnet {
   }  
 
   nugetPush {
-    apiKey = 'IS IT SENSIBLE TO PUBLISH THIS?'
+    // Read from ~/.gradle/gradle.properties because they must not be
+    // committed to the repository!
+    apiKey = nuget.apiKey
+    source = nuget.source
   }
 
   test {

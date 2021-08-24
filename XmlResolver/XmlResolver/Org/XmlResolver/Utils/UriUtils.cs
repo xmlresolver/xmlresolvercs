@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.IO.Packaging;
 using System.Net;
 using System.Reflection;
@@ -307,10 +308,39 @@ namespace Org.XmlResolver.Utils {
                 return stream;
             } else if (uri.StartsWith("pack:///siteoforigin:,,,")) {
                 throw new ArgumentException("The siteoforigin authority is not supported: " + uri);
+            } else if (uri.StartsWith("pack://file%3")) {
+                return _getPackFileStream(uri);
             }
             throw new ArgumentException("Unexpected pack: URI format: " + uri);
         }
 
+        private static Stream _getPackFileStream(string uri) {
+            string filestr = uri.Substring(7);
+            int pos = filestr.IndexOf("/");
+            if (pos < 0) {
+                throw new ArgumentException("Unsupported pack: URI format: " + uri);
+            }
+
+            string path = filestr.Substring(pos + 1);
+            filestr = filestr.Substring(0, pos);
+            filestr = filestr.Replace("%3a", ":");
+            filestr = filestr.Replace("%3A", ":");
+            filestr = filestr.Replace(",", "/");
+
+            Uri fileuri = UriUtils.NewUri(filestr);
+            filestr = fileuri.AbsolutePath;
+            
+            // Assume this is a zip file...
+            ZipArchive zipRead = ZipFile.OpenRead(filestr);
+            foreach (ZipArchiveEntry entry in zipRead.Entries) {
+                if (entry.FullName.Equals(path)) {
+                    return entry.Open();
+                }
+            }
+
+            return null;
+        }
+        
         private static Stream _getDataStream(string uri) {
             // This is a little bit crude; see RFC 2397
 

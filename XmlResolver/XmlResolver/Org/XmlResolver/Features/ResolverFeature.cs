@@ -97,5 +97,8 @@ namespace Org.XmlResolver.Features {
 
         public static readonly BoolResolverFeature CLASSPATH_CATALOGS = register(new BoolResolverFeature(
             "http://xmlresolver.org/feature/classpath-catalogs", true));
+
+        public static readonly BoolResolverFeature ARCHIVED_CATALOGS = register(new BoolResolverFeature(
+            "http://xmlresolver.org/feature/archived-catalogs", true));
     }
 }
