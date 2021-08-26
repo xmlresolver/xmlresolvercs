@@ -1,9 +1,15 @@
 plugins {
   id "com.itiviti.dotnet" version "1.7.2"
   id 'com.nwalsh.gradle.saxon.saxon-gradle' version '0.9.3'
+  id 'com.nwalsh.gradle.docker.container' version '0.0.3'
 }
 
 import com.nwalsh.gradle.saxon.SaxonXsltTask
+import com.nwalsh.gradle.docker.DockerContainer
+
+ext {
+  c_csrestest = "csrestest"
+}
 
 // Find dotnet
 def dotnetex = null
@@ -68,7 +74,57 @@ dotnet {
   }
 }
 
+docker_container.configure {
+  workingDir = "docker"
+}
+
+// ======================================================================
+
+tasks.register("dockerup") {
+  description "Make sure the Docker container is running."
+  doLast {
+    if (!DockerContainer.running(c_csrestest)) {
+      DockerContainer.compose {
+        command = "up"
+        options = ["-p", "xmlres"]
+        args = "-d"
+      }
+    }
+  }
+  finalizedBy "dockerstatus"
+}
+
+tasks.register("dockerdown") {
+  description "Make sure the Docker container is not running."
+  doLast {
+    if (DockerContainer.running(c_csrestest)) {
+      DockerContainer.compose {
+        command = "down"
+        options = ["-p", "xmlres"]
+      }
+    }
+  }
+  finalizedBy "dockerstatus"
+}
+
+tasks.register("dockerstatus") {
+  description "Print a short summary of running containers"
+  doLast {
+    if (DockerContainer.containers().isEmpty()) {
+      println("There are no docker containers running.")
+    } else {
+      DockerContainer.docker( {
+        command = "ps"
+        args = ["-a", "--format={{.ID}} {{.Names}} {{.Status}}"]
+      })
+    }
+  }
+}
+
+// ======================================================================
+
 task dist(type: Exec, dependsOn: ["dotnetBuild"]) {
   environment "CSHARP_XMLRESOLVER_ROOT", projectDir
   commandLine dotnetex, "test", "XmlResolver/UnitTests/UnitTests.csproj"
 }
+dist.dependsOn dockerup

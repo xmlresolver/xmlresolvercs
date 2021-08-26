@@ -46,7 +46,8 @@ namespace UnitTests {
                     null, null);
                 Assert.NotNull(stream);
             }
-            catch (Exception) {
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
         }
