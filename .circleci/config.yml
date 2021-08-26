@@ -43,7 +43,7 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
-      - run: ./gradlew --info dist
+      - run: ./gradlew dist
 
       - run:
           command: .circleci/publish.sh
