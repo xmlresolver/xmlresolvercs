@@ -6,13 +6,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\XmlResolverData\XmlResolverData.csproj" />
       <ProjectReference Include="..\XmlResolver\XmlResolver.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="NuGet.Frameworks" Version="5.10.0" />
       <PackageReference Include="System.IO.Packaging" Version="5.0.0" />
+      <PackageReference Include="XmlResolverData" Version="0.0.2" />
 
     </ItemGroup>
 

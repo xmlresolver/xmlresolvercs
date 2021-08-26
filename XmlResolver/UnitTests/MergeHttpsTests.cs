@@ -5,11 +5,9 @@ using NUnit.Framework;
 using Org.XmlResolver;
 using Org.XmlResolver.Features;
 using Org.XmlResolver.Utils;
-using Version = XmlResolverData.Version;
 
 namespace UnitTests {
     public class MergeHttpsTests {
-        private string dataVersion = Version.DataVersion;
         public static CatalogManager mergeManager = null;
         public static CatalogManager noMergeManager = null;
 

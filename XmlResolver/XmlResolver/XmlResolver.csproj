@@ -26,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\XmlResolverData\XmlResolverData.csproj" />
   </ItemGroup>
 
 </Project>

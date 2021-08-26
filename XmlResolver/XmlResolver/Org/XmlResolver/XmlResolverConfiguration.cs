@@ -13,7 +13,6 @@ using Org.XmlResolver.Utils;
 namespace Org.XmlResolver {
     public class XmlResolverConfiguration : ResolverConfiguration {
         private readonly object _syncLock = new object();
-        private string dataVersion = XmlResolverData.Version.DataVersion;
 
         protected static ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
 

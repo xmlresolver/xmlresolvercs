@@ -7,9 +7,6 @@
 /XmlResolver/UnitTests/obj
 /XmlResolver/XmlResolver/bin
 /XmlResolver/XmlResolver/obj
-/XmlResolver/XmlResolverData/bin
-/XmlResolver/XmlResolverData/obj
-/XmlResolver/XmlResolverData/Data
 /build
 *.DotSettings.user
 .DS_Store

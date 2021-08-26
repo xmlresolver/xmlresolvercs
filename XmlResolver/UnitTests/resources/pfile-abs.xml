@@ -1,0 +1,5 @@
+<configuration>
+  <xmlResolver relativeCatalogs="no"
+               catalogs="./catalog.xml;a/catalog.xml"
+               preferPropertyFile="no"/>
+</configuration>

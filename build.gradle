@@ -5,8 +5,45 @@ plugins {
 
 import com.nwalsh.gradle.saxon.SaxonXsltTask
 
+// Find dotnet
+def dotnetex = null
+// Laboriously construct a search path that includes some default locations
+// plus the users actual path.
+def spath = ["/usr/local/share/dotnet"]
+System.getenv("PATH").split(System.getProperty("path.separator")).each { dir ->
+  spath += [dir]
+}
+spath.each { dir ->
+  if (dotnetex == null) {
+    def fn = new File(dir + "/dotnet")
+    if (fn.exists() && fn.canExecute()) {
+      dotnetex = fn.toString()
+    } else {
+      fn = new File(dir + "/dotnet.exe")
+      if (fn.exists() && fn.canExecute()) {
+        dotnetex = fn.toString()
+      }
+    }
+  }
+}
+
+if (dotnetex == null) {
+  println("WARNING: Failed to find dotnet[.exe]!")
+}
+
+// You must specify the key and source externally in order to push the
+// nuget package. For example, they can be read from
+// ~/.gradle/gradle.properties. They must not be committed to the
+// repository!
+if (!hasProperty("nugetApiKey")) {
+  ext.nugetApiKey = "KEYREQUIREDTOPUSH"
+}
+if (!hasProperty("nugetSource")) {
+  ext.nugetSource = "SOURCEREQUIREDTOPUSH"
+}
+
 dotnet {
-  dotnetExecutable = '/usr/local/share/dotnet/dotnet'
+  dotnetExecutable = dotnetex
   solution = 'XmlResolver/XmlResolver.sln'
   configuration = 'Release'
   verbosity = 'Normal'
@@ -19,10 +56,8 @@ dotnet {
   }  
 
   nugetPush {
-    // Read from ~/.gradle/gradle.properties because they must not be
-    // committed to the repository!
-    apiKey = nuget.apiKey
-    source = nuget.source
+    apiKey = nugetApiKey
+    source = nugetSource
   }
 
   test {
@@ -31,35 +66,6 @@ dotnet {
       testOutputXml = file("${buildDir}/reports/nunit")
     }
   }
-}
-
-task copy_data(type: Copy) {
-  into "${projectDir}/XmlResolver/XmlResolverData/Data"
-  from ("${projectDir}/data/src/data") {
-    exclude "manifest.xml"
-  }
-}
-
-task make_data_catalog(type: SaxonXsltTask, dependsOn: ["copy_data"]) {
-  input "${projectDir}/data/src/data/manifest.xml"
-  output "${projectDir}/XmlResolver/XmlResolverData/Data/catalog.xml"
-  stylesheet "${projectDir}/tools/make-catalog.xsl"
-}
-dotnetBuild.dependsOn make_data_catalog
-
-task make_data_tests(type: SaxonXsltTask, dependsOn: ["copy_data"]) {
-  input "${projectDir}/data/src/data/manifest.xml"
-  output "${projectDir}/XmlResolver/XmlResolverData/Data/catalog.xml"
-  stylesheet "${projectDir}/tools/make-catalog.xsl"
-  parameters (
-    'generate-tests': "${buildDir}/test-cases.cs"
-  )
-}
-
-task make_data_csproj(type: SaxonXsltTask, dependsOn: ["copy_data"]) {
-  input "${projectDir}/data/src/data/manifest.xml"
-  output "${projectDir}/XmlResolver/XmlResolverData/XmlResolverData.csproj"
-  stylesheet "${projectDir}/tools/make-csproj.xsl"
 }
 
 //task ntest(type: 'NUnit', dependsOn: ['buildSolution']) {
