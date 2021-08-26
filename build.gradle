@@ -68,5 +68,7 @@ dotnet {
   }
 }
 
-//task ntest(type: 'NUnit', dependsOn: ['buildSolution']) {
-//}
+task dist(type: Exec, dependsOn: ["dotnetBuild"]) {
+  environment "CSHARP_XMLRESOLVER_ROOT", projectDir
+  commandLine dotnetex, "test", "XmlResolver/UnitTests/UnitTests.csproj"
+}
