@@ -17,6 +17,7 @@ namespace UnitTests {
             config.SetFeature(ResolverFeature.URI_FOR_SYSTEM, true);
             config.SetFeature(ResolverFeature.CACHE, null);
             config.SetFeature(ResolverFeature.CACHE_UNDER_HOME, false);
+            config.SetFeature(ResolverFeature.ASSEMBLY_CATALOG, "UnitTests.dll");
             resolver = new Resolver(config);
         }
         

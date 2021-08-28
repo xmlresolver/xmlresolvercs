@@ -21,25 +21,25 @@ namespace Org.XmlResolver {
             ResolverFeature.ALLOW_CATALOG_PI, ResolverFeature.CATALOG_ADDITIONS, ResolverFeature.CACHE_DIRECTORY,
             ResolverFeature.CACHE_UNDER_HOME, ResolverFeature.CACHE, ResolverFeature.MERGE_HTTPS, ResolverFeature.MASK_PACK_URIS,
             ResolverFeature.CATALOG_MANAGER, ResolverFeature.URI_FOR_SYSTEM, ResolverFeature.CATALOG_LOADER_CLASS,
-            ResolverFeature.PARSE_RDDL, ResolverFeature.CLASSPATH_CATALOGS
+            ResolverFeature.PARSE_RDDL, ResolverFeature.ASSEMBLY_CATALOG
         };
 
         // private static List<string> classpathCatalogList = null;
         private List<string> catalogs = new();
+        private List<string> assemblyCatalogs = new();
 
         private bool preferPublic = ResolverFeature.PREFER_PUBLIC.GetDefaultValue();
         private bool preferPropertyFile = ResolverFeature.PREFER_PROPERTY_FILE.GetDefaultValue();
         private bool allowCatalogPI = ResolverFeature.ALLOW_CATALOG_PI.GetDefaultValue();
-        private String cacheDirectory = ResolverFeature.CACHE_DIRECTORY.GetDefaultValue();
+        private string cacheDirectory = ResolverFeature.CACHE_DIRECTORY.GetDefaultValue();
         private bool cacheUnderHome = ResolverFeature.CACHE_UNDER_HOME.GetDefaultValue();
         private ResourceCache cache = ResolverFeature.CACHE.GetDefaultValue(); // null
         private CatalogManager manager = ResolverFeature.CATALOG_MANAGER.GetDefaultValue(); // also null
         private bool uriForSystem = ResolverFeature.URI_FOR_SYSTEM.GetDefaultValue();
         private bool mergeHttps = ResolverFeature.MERGE_HTTPS.GetDefaultValue();
         private bool maskPackUris = ResolverFeature.MASK_PACK_URIS.GetDefaultValue();
-        private String catalogLoader = ResolverFeature.CATALOG_LOADER_CLASS.GetDefaultValue();
+        private string catalogLoader = ResolverFeature.CATALOG_LOADER_CLASS.GetDefaultValue();
         private bool parseRddl = ResolverFeature.PARSE_RDDL.GetDefaultValue();
-        private bool classpathCatalogs = ResolverFeature.CLASSPATH_CATALOGS.GetDefaultValue();
         private bool showConfigChanges = false; // make the config process a bit less chatty
         
         public XmlResolverConfiguration(): this(null, null) {
@@ -81,7 +81,7 @@ namespace Org.XmlResolver {
             maskPackUris = current.maskPackUris;
             catalogLoader = current.catalogLoader;
             parseRddl = current.parseRddl;
-            classpathCatalogs = current.classpathCatalogs;
+            assemblyCatalogs = current.assemblyCatalogs;
             showConfigChanges = current.showConfigChanges;
         }
 
@@ -218,7 +218,6 @@ namespace Org.XmlResolver {
             }
 
             SetBoolean("XML_CATALOG_PARSE_RDDL", "Use RDDL: {0}", ref parseRddl);
-            SetBoolean("XML_CATALOG_CLASSPATH_CATALOGS", "Classpath catalogs: {0}", ref classpathCatalogs);
         }
 
         private void SetBoolean(string name, string desc, ref bool value) {
@@ -329,7 +328,6 @@ namespace Org.XmlResolver {
             }
 
             SetPropertyBoolean(section.GetSection("parseRddl"),"Use RDDL: {0}", ref parseRddl);
-            SetPropertyBoolean(section.GetSection("classpathCatalogs"), "Classpath catalogs: {0}", ref classpathCatalogs);
         }
 
         private void SetPropertyBoolean(IConfigurationSection section, string desc, ref bool value) {
@@ -405,6 +403,14 @@ namespace Org.XmlResolver {
             } else if (feature == ResolverFeature.CACHE) {
                 cache = (ResourceCache) value;
                 return;
+            } else if (feature == ResolverFeature.ASSEMBLY_CATALOG) {
+                if (value == null) {
+                    assemblyCatalogs.Clear();
+                }
+                else {
+                    assemblyCatalogs.Add((string)value);
+                }
+                return;
             }
 
             if (value == null) {
@@ -432,8 +438,6 @@ namespace Org.XmlResolver {
                 catalogLoader = (String) value;
             } else if (feature == ResolverFeature.PARSE_RDDL) {
                 parseRddl = (Boolean) value;
-            } else if (feature == ResolverFeature.CLASSPATH_CATALOGS) {
-                classpathCatalogs = (Boolean) value;
             } else {
                 logger.Log(ResolverLogger.ERROR, "Ignoring unknown feature: %s", feature.GetFeatureName());
             }        
@@ -450,9 +454,11 @@ namespace Org.XmlResolver {
                 return manager;
             } else if (feature == ResolverFeature.CATALOG_FILES) {
                 List<string> cats = new(catalogs);
-                if (classpathCatalogs) {
-                    cats.AddRange(FindAssemblyCatalogFiles());
-                    // FIXME: find classpath catalog files
+                foreach (string asm in assemblyCatalogs) {
+                    string cat = FindAssemblyCatalogFile(asm);
+                    if (cat != null) {
+                        cats.Add(cat);
+                    }
                 }
                 return cats;
             } else if (feature == ResolverFeature.PREFER_PUBLIC) {
@@ -473,8 +479,8 @@ namespace Org.XmlResolver {
                 return catalogLoader;
             } else if (feature == ResolverFeature.PARSE_RDDL) {
                 return parseRddl;
-            } else if (feature == ResolverFeature.CLASSPATH_CATALOGS) {
-                return classpathCatalogs;
+            } else if (feature == ResolverFeature.ASSEMBLY_CATALOG) {
+                return assemblyCatalogs;
             } else if (feature == ResolverFeature.CACHE) {
                 if (cache == null) {
                     cache = new ResourceCache(this);
@@ -492,25 +498,22 @@ namespace Org.XmlResolver {
             return new(knownFeatures);
         }
 
-        private List<string> FindAssemblyCatalogFiles() {
-            List<string> paths = new List<string>();
-
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach(Assembly asm in assemblies) {
+        private string FindAssemblyCatalogFile(string asmloc) {
+            try {
+                Assembly asm = Assembly.LoadFrom(asmloc);
                 string catrsrc = asm.GetName().Name + ".Org.XmlResolver.catalog.xml";
-                try {
-                    foreach (var file in asm.GetManifestResourceNames()) {
-                        if (catrsrc.Equals(file)) {
-                            paths.Add(UriUtils.GetLocationUri("Org.XmlResolver.catalog.xml", asm).ToString());
-                        }
+                foreach (var file in asm.GetManifestResourceNames()) {
+                    if (catrsrc.Equals(file)) {
+                        return UriUtils.GetLocationUri("Org.XmlResolver.catalog.xml", asm).ToString();
                     }
                 }
-                catch (Exception) {
-                    // nop
-                }
             }
-            
-            return paths;
+            catch (Exception ex) {
+                // Couldn't find it or couldn't load it
+                logger.Log(ResolverLogger.CONFIG, "Failed to load assembly: {0}", asmloc);
+            }
+
+            return null; 
         }
     }
 }

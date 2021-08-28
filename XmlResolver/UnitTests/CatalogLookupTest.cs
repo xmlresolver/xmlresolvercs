@@ -307,7 +307,6 @@ namespace UnitTests {
             List<String> catalog = new();
             catalog.Add(UriUtils.Resolve(catalog1, "lookup-test.xml").ToString());
             XmlResolverConfiguration config = new XmlResolverConfiguration(new(), catalog);
-            config.SetFeature(ResolverFeature.CLASSPATH_CATALOGS, false);
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri result = manager.LookupPublic("https://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd", "-//W3C//DTD SVG 1.1//EN");
             Assert.AreEqual("/usr/local/DTDs/svg11/system-svg11.dtd", result.AbsolutePath);
@@ -319,7 +318,6 @@ namespace UnitTests {
             List<String> catalog = new();
             catalog.Add(UriUtils.Resolve(catalog1, "lookup-test.xml").ToString());
             XmlResolverConfiguration config = new XmlResolverConfiguration(new(), catalog);
-            config.SetFeature(ResolverFeature.CLASSPATH_CATALOGS, false);
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri result = manager.LookupPublic("https://www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic.dtd", "-//W3C//DTD SVG 1.1 Basic//EN");
             Assert.AreEqual("/usr/local/nested/DTDs/svg11/system-svg11-basic.dtd", result.AbsolutePath);
@@ -331,7 +329,6 @@ namespace UnitTests {
             List<String> catalog = new();
             catalog.Add(UriUtils.Resolve(catalog1, "lookup-test.xml").ToString());
             XmlResolverConfiguration config = new XmlResolverConfiguration(new(), catalog);
-            config.SetFeature(ResolverFeature.CLASSPATH_CATALOGS, false);
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri result = manager.LookupSystem("https://example.com/test.dtd");
             Assert.AreEqual("/usr/local/on/DTDs/test.dtd", result.AbsolutePath);

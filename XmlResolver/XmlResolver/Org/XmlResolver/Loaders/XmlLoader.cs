@@ -51,7 +51,6 @@ namespace Org.XmlResolver.Loaders {
                     config.SetFeature(ResolverFeature.CACHE_DIRECTORY, null);
                     config.SetFeature(ResolverFeature.CACHE_UNDER_HOME, false);
                     config.SetFeature(ResolverFeature.ALLOW_CATALOG_PI, false);
-                    config.SetFeature(ResolverFeature.CLASSPATH_CATALOGS, false);
                     config.AddAssemblyCatalog("Org.XmlResolver.catalog.xml", Assembly.GetExecutingAssembly());
                     _loaderResolver = new Resolver(config);
                 }

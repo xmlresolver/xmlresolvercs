@@ -95,8 +95,8 @@ namespace Org.XmlResolver.Features {
         public static readonly BoolResolverFeature PARSE_RDDL = register(new BoolResolverFeature(
             "http://xmlresolver.org/feature/parse-rddl", true));
 
-        public static readonly BoolResolverFeature CLASSPATH_CATALOGS = register(new BoolResolverFeature(
-            "http://xmlresolver.org/feature/classpath-catalogs", true));
+        public static readonly StringResolverFeature ASSEMBLY_CATALOG = register(new StringResolverFeature(
+            "http://xmlresolver.org/feature/assembly-catalog", null));
 
         public static readonly BoolResolverFeature ARCHIVED_CATALOGS = register(new BoolResolverFeature(
             "http://xmlresolver.org/feature/archived-catalogs", true));

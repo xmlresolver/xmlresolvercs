@@ -29,7 +29,6 @@ namespace UnitTests {
         public void validatingValidCatalog() {
             XmlResolverConfiguration config = new XmlResolverConfiguration(new List<Uri>(), new List<string>());
             config.AddAssemblyCatalog("resources/catalog.xml", Assembly.GetExecutingAssembly());
-            config.SetFeature(ResolverFeature.CLASSPATH_CATALOGS, false);
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
             Assert.NotNull(rsrc);
@@ -40,7 +39,6 @@ namespace UnitTests {
             XmlResolverConfiguration config = new XmlResolverConfiguration(new List<Uri>(), new List<string>());
             config.AddAssemblyCatalog("resources/dtd10catalog.xml", Assembly.GetExecutingAssembly());
             config.SetFeature(ResolverFeature.CATALOG_LOADER_CLASS, "Org.XmlResolver.Loaders.ValidatingXmlLoader");
-            config.SetFeature(ResolverFeature.CLASSPATH_CATALOGS, false);
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
             Assert.NotNull(rsrc);
@@ -51,7 +49,6 @@ namespace UnitTests {
             XmlResolverConfiguration config = new XmlResolverConfiguration(new List<Uri>(), new List<string>());
             config.AddAssemblyCatalog("resources/dtd11catalog.xml", Assembly.GetExecutingAssembly());
             config.SetFeature(ResolverFeature.CATALOG_LOADER_CLASS, "Org.XmlResolver.Loaders.ValidatingXmlLoader");
-            config.SetFeature(ResolverFeature.CLASSPATH_CATALOGS, false);
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
             Assert.NotNull(rsrc);
@@ -63,7 +60,6 @@ namespace UnitTests {
             XmlResolverConfiguration config = new XmlResolverConfiguration(new List<Uri>(), new List<string>());
             config.AddAssemblyCatalog("resources/invalid-catalog.xml", Assembly.GetExecutingAssembly());
             config.SetFeature(ResolverFeature.CATALOG_LOADER_CLASS, "Org.XmlResolver.Loaders.ValidatingXmlLoader");
-            config.SetFeature(ResolverFeature.CLASSPATH_CATALOGS, false);
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             try {
                 Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
@@ -81,7 +77,6 @@ namespace UnitTests {
             XmlResolverConfiguration config = new XmlResolverConfiguration(new List<Uri>(), new List<string>());
             config.AddCatalog("./not-a-catalog-in-sight.xml");
             config.AddAssemblyCatalog("resources/catalog.xml", Assembly.GetExecutingAssembly());
-            config.SetFeature(ResolverFeature.CLASSPATH_CATALOGS, false);
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             try {
                 Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
