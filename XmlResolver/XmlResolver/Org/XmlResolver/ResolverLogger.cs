@@ -17,12 +17,12 @@ namespace Org.XmlResolver {
         const int INFO = 2;
         const int WARN = 3;
 
-        private readonly Logger logger;
+        private readonly Logger _logger;
         private readonly Dictionary<string, int> categories = new();
         private string catalogLogging = null;
 
         public ResolverLogger(Logger logger) {
-            this.logger = logger;
+            _logger = logger;
         }
 
         public string GetCategory(string cat) {
@@ -44,7 +44,7 @@ namespace Org.XmlResolver {
             } else {
                 categories.Add(cat, DEBUG);
                 if (!"debug".Equals(level)) {
-                    logger.Info(string.Format("Incorrect logging level specified: {0} treated as debug", level));
+                    _logger.Info(string.Format("Incorrect logging level specified: {0} treated as debug", level));
                 }
             }
         }
@@ -67,13 +67,13 @@ namespace Org.XmlResolver {
 
             switch (level) {
                 case WARN:
-                    logger.Warn(sb.ToString());
+                    _logger.Warn(sb.ToString());
                     break;
                 case INFO:
-                    logger.Info(sb.ToString());
+                    _logger.Info(sb.ToString());
                     break;
                 default:
-                    logger.Debug(sb.ToString());
+                    _logger.Debug(sb.ToString());
                     break;
             }
         }
