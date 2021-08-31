@@ -215,14 +215,19 @@ namespace Org.XmlResolver.Utils {
             String fn;
 
             if (uri.StartsWith("file:///")) {
-                fn = uri.Substring(8);
-            } else if (uri.StartsWith("file://")) {
                 fn = uri.Substring(7);
+            } else if (uri.StartsWith("file://")) {
+                fn = uri.Substring(6);
             }
             else {
                 fn = uri.Substring(5);
             }
-           
+
+            // If this looks like /C:/path/to/thing, make it C:/path/to/thing
+            if (fn.Length >= 3 && fn[0] == '/' && fn[2] == ':') {
+                fn = fn.Substring(1);
+            }
+            
             return File.OpenRead(fn);
         }
         
