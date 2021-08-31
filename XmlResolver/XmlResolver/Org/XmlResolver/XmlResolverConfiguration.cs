@@ -511,6 +511,7 @@ namespace Org.XmlResolver {
             catch (Exception ex) {
                 // Couldn't find it or couldn't load it
                 logger.Log(ResolverLogger.CONFIG, "Failed to load assembly: {0}", asmloc);
+                logger.Log(ResolverLogger.CONFIG, ex.Message);
             }
 
             return null; 
