@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using System.Net;
-using System.Text;
 using NLog;
 using Org.XmlResolver.Cache;
 using Org.XmlResolver.Features;
