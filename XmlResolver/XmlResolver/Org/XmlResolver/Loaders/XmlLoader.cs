@@ -69,8 +69,8 @@ namespace Org.XmlResolver.Loaders {
                 try {
                     stream = UriUtils.GetStream(caturi);
                 }
-                catch (Exception) {
-                    logger.Log(ResolverLogger.ERROR, "Failed to load catalog {0}", caturi.ToString());
+                catch (Exception ex) {
+                    logger.Log(ResolverLogger.ERROR, "Failed to load catalog {0}: {1}", caturi.ToString(), ex.Message);
                     catalog = new EntryCatalog(caturi, null, false);
                     catalogMap.Add(caturi, catalog);
                     return catalog;
