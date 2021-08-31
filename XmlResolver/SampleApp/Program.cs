@@ -1,33 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO.Compression;
+using System.IO;
 using System.IO.Packaging;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using NLog;
 using Org.XmlResolver;
-using Org.XmlResolver.Cache;
 using Org.XmlResolver.Utils;
-using Version = XmlResolverData.Version;
 
 namespace SampleApp {
     class Program {
-        static void Main(string[] args) {
-            Console.WriteLine("Hello World!");
+        protected static readonly ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
 
-            string zipFile = "/Users/ndw/Projects/xmlresolver/resolver/src/test/resources/dir-sample.zip";
+        static void Main(string[] args) {
+            Logger nlog = LogManager.GetCurrentClassLogger();
+            
+            Console.WriteLine("Hello World!");
+            logger.Log(ResolverLogger.ERROR, "Print this message");
+            nlog.Debug("Debug this");
+            nlog.Warn("It's about to blow");
+            nlog.Error("bang");
+
+            Uri duri = UriUtils.NewUri("C:\\Users\\ndw\\.bashrc");
+            Console.WriteLine("Document uri: " + duri);
+            Stream s = UriUtils.GetStream(duri);
+            if (s == null) {
+                Console.WriteLine("Failed to load document uri");
+            }
+            else {
+                Console.WriteLine("Loaded document uri");
+            }
+
+            
             /*
+            string zipFile = "/Users/ndw/Projects/xmlresolver/resolver/src/test/resources/dir-sample.zip";
             ZipArchive zipRead = System.IO.Compression.ZipFile.OpenRead(zipFile);
             foreach (ZipArchiveEntry entry in zipRead.Entries) {
                 Console.WriteLine(entry);
             }
-            */
             
             XmlResolverConfiguration config = new();
             config.AddCatalog(zipFile);
             Resolver resolver = new Resolver(config);
             object o = resolver.GetEntity(new Uri("https://xmlresolver.org/ns/sample/sample.dtd"), null, null);
             Console.WriteLine(o);
+            */
             
             /*
             try {
