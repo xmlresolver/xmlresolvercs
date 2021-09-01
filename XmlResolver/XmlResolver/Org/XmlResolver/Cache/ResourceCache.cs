@@ -20,7 +20,7 @@ namespace Org.XmlResolver.Cache {
         // The ^jar:file: and ^classpath: patterns are part of the Java implementation;
         // they're included here in case the cache is shared across different applications
         public static readonly string[] excludedPatterns = new string[]
-            {"^file:", "^path:", "^jar:file:", "^classpath:"};
+            {"^file:", "^pack:", "^jar:file:", "^classpath:"};
 
         new protected static ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
 
