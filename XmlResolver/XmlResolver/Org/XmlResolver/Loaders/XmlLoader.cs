@@ -102,7 +102,12 @@ namespace Org.XmlResolver.Loaders {
             baseUriStack.Push(baseUri);
             preferPublicStack.Push(_preferPublic);
 
-            logger.Log(ResolverLogger.TRACE, "Attempting to load catalog: {0}", caturi.ToString());
+            if (baseUri == null || caturi.Equals(baseUri)) {
+                logger.Log(ResolverLogger.TRACE, "Attempting to load catalog: {0}", caturi.ToString());
+            }
+            else {
+                logger.Log(ResolverLogger.TRACE, "Attempting to load catalog: {0} (with base URI: {1})", caturi.ToString(), baseUri.ToString());
+            }
 
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.Async = false;
@@ -404,8 +409,9 @@ namespace Org.XmlResolver.Loaders {
                     }
                 }
             }
-            catch (Exception) {
-                logger.Log(ResolverLogger.TRACE, "Failed to load catalog as a ZIP file: {0}", caturi.ToString());
+            catch (Exception ex) {
+                logger.Log(ResolverLogger.TRACE, "Failed to load catalog as a ZIP file: {0}: {1}", 
+                    caturi.ToString(), ex.Message);
                 return new EntryCatalog(caturi, null, true);
             }
 
