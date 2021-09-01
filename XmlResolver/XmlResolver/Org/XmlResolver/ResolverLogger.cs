@@ -19,12 +19,14 @@ namespace Org.XmlResolver {
 
         private readonly Logger _logger;
         private readonly Dictionary<string, int> categories = new();
-        private string catalogLogging = null;
+        private string _catalogLogging = null;
 
         public ResolverLogger(Logger logger) {
             _logger = logger;
         }
 
+        public static string CatalogLogging { get; set; }
+         
         public string GetCategory(string cat) {
             if (categories.ContainsKey(cat)) {
                 if (INFO.Equals(categories[cat])) {
@@ -79,23 +81,22 @@ namespace Org.XmlResolver {
         }
 
         private void updateLoggingCategories() {
-            string property = System.Environment.GetEnvironmentVariable("XML_CATALOG_LOGGING");
-            if (property == null && catalogLogging == null) {
+            if (CatalogLogging == null && _catalogLogging == null) {
                 return;
             }
 
-            if (property == null) {
+            if (CatalogLogging == null) {
                 categories.Clear();
                 return;
             }
 
-            if (property.Equals(catalogLogging)) {
+            if (CatalogLogging.Equals(_catalogLogging)) {
                 return;
             }
 
-            catalogLogging = property;
+            _catalogLogging = CatalogLogging;
             categories.Clear();
-            foreach (var prop in property.Split(",")) {
+            foreach (var prop in _catalogLogging.Split(",")) {
                 int pos = prop.IndexOf(":");
                 if (pos > 0) {
                     var cat = prop.Substring(0, pos).Trim();
