@@ -102,6 +102,8 @@ namespace Org.XmlResolver.Loaders {
             baseUriStack.Push(baseUri);
             preferPublicStack.Push(_preferPublic);
 
+            logger.Log(ResolverLogger.TRACE, "Attempting to load catalog: {0}", caturi.ToString());
+
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.Async = false;
             settings.DtdProcessing = DtdProcessing.Ignore; // FIXME: ???
@@ -376,28 +378,35 @@ namespace Org.XmlResolver.Loaders {
             HashSet<string> catalogSet = new HashSet<string>();
             bool firstEntry = true;
             string leadingDir = null;
-            
-            ZipArchive zipRead = ZipFile.OpenRead(path);
-            foreach (ZipArchiveEntry entry in zipRead.Entries) {
-                int pos = entry.FullName.IndexOf("/");
-                if (firstEntry) {
-                    if (pos >= 0) {
-                        leadingDir = entry.FullName.Substring(0, pos);
-                    }
 
-                    firstEntry = false;
-                }
-                else {
-                    if (leadingDir != null) {
-                        if (pos < 0 || !leadingDir.Equals(entry.FullName.Substring(0, pos))) {
-                            leadingDir = null;
+            try {
+                ZipArchive zipRead = ZipFile.OpenRead(path);
+                logger.Log(ResolverLogger.TRACE, "Searching ZIP file for catalog: {0}", caturi.ToString());
+                foreach (ZipArchiveEntry entry in zipRead.Entries) {
+                    int pos = entry.FullName.IndexOf("/");
+                    if (firstEntry) {
+                        if (pos >= 0) {
+                            leadingDir = entry.FullName.Substring(0, pos);
+                        }
+
+                        firstEntry = false;
+                    }
+                    else {
+                        if (leadingDir != null) {
+                            if (pos < 0 || !leadingDir.Equals(entry.FullName.Substring(0, pos))) {
+                                leadingDir = null;
+                            }
                         }
                     }
-                }
 
-                if (entry.FullName.EndsWith("catalog.xml")) {
-                    catalogSet.Add(entry.FullName);
+                    if (entry.FullName.EndsWith("catalog.xml")) {
+                        catalogSet.Add(entry.FullName);
+                    }
                 }
+            }
+            catch (Exception) {
+                logger.Log(ResolverLogger.TRACE, "Failed to load catalog as a ZIP file: {0}", caturi.ToString());
+                return new EntryCatalog(caturi, null, true);
             }
 
             string catpath = null;
@@ -427,6 +436,9 @@ namespace Org.XmlResolver.Loaders {
                 if (s != null) {
                     return _LoadCatalog(caturi, UriUtils.NewUri(packuri), s);
                 }
+            }
+            else {
+                logger.Log(ResolverLogger.CONFIG, "Did not find catalog in ZIP file");
             }
             
             return new EntryCatalog(caturi, null, true);
