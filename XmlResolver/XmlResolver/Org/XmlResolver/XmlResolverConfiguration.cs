@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -56,7 +57,9 @@ namespace Org.XmlResolver {
         }
         
         public XmlResolverConfiguration(List<Uri> propertyFiles, List<string> catalogFiles) {
-            logger.Log(ResolverLogger.CONFIG, "XMLResolver version FIXME:");
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            FileVersionInfo fileVersion = FileVersionInfo.GetVersionInfo(assembly.Location);
+            logger.Log(ResolverLogger.CONFIG, "XMLResolver version " + fileVersion.FileVersion);
             showConfigChanges = false;
             catalogs.Clear();
             LoadConfiguration(propertyFiles, catalogFiles);
@@ -90,7 +93,7 @@ namespace Org.XmlResolver {
 
             List<Uri> propertyFilesList = new();
             if (propertyFiles == null) {
-                string propfn = Environment.GetEnvironmentVariable("XMLRESOLVER_PROPERTIES");
+                string propfn = Environment.GetEnvironmentVariable("XMLRESOLVER_APPSETTINGS");
 
                 if (propfn == null || "".Equals(propfn)) {
                     // FIXME: load the system one
@@ -244,7 +247,7 @@ namespace Org.XmlResolver {
             // We can't do that in C# so I'm not sure what to do here...
             var property = section.GetSection("catalogLogging");
             if (property.Value != null) {
-                // ???
+                ResolverLogger.CatalogLogging = property.Value;
             }
 
             bool relative = true;
