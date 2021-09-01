@@ -26,7 +26,7 @@ namespace UnitTests {
             Assert.NotNull(cache.GetCacheInfo("^file:"));
             Assert.NotNull(cache.GetCacheInfo("^jar:file:"));
             Assert.NotNull(cache.GetCacheInfo("^classpath:"));
-            Assert.NotNull(cache.GetCacheInfo("^path:"));
+            Assert.NotNull(cache.GetCacheInfo("^pack:"));
             Assert.Null(cache.GetCacheInfo("^fribble:"));
             Assert.AreEqual(4, cache.GetCacheInfoList().Count);
          }
