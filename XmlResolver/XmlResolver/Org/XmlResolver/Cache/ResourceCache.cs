@@ -531,59 +531,65 @@ namespace Org.XmlResolver.Cache {
             foreach (string entryfn in entryfiles) {
                 FileStream data = new FileStream(Path.Combine(entryDir, entryfn), FileMode.Open);
                 bool root = true;
-                using (XmlReader reader = XmlReader.Create(data, settings)) {
-                    while (reader.Read()) {
-                        switch (reader.NodeType) {
-                            case XmlNodeType.Element:
-                                root = root && ResolverConstants.CATALOG_NS.Equals(reader.NamespaceURI);
-                                if (root) {
-                                    long timestamp = -1;
-                                    Dictionary<string, string> props = new();
-                                    string name = reader.GetAttribute("name");
-                                    string uri = reader.GetAttribute("uri");
-                                    Uri baseUri = UriUtils.Resolve(UriUtils.Cwd(), entryfn);
-                                    string xmlbase = reader.GetAttribute("xml:base");
-                                    if (xmlbase != null) {
-                                        baseUri = UriUtils.Resolve(baseUri, xmlbase);
-                                    }
-                                    
-                                    Entry entry = null;
-                                    string localName = reader.LocalName;
-                                    switch (localName) {
-                                        case "uri":
-                                            string nature = reader.GetAttribute("nature");
-                                            string purpose = reader.GetAttribute("purpose");
-                                            timestamp = CacheTimestamp(reader, out props);
-                                            entry = catalog.AddUri(baseUri, name, uri, nature, purpose, timestamp);
-                                            break;
-                                        case "system":
-                                            string systemId = reader.GetAttribute("systemId");
-                                            timestamp = CacheTimestamp(reader, out props);
-                                            entry = catalog.AddSystem(baseUri, systemId, uri, timestamp);
-                                            break;
-                                        case "public":
-                                            String publicId = reader.GetAttribute("publicId");
-                                            timestamp = CacheTimestamp(reader, out props);
-                                            entry = catalog.AddPublic(baseUri, publicId, uri, timestamp);
-                                            break;
-                                        default:
-                                            logger.Log(ResolverLogger.CACHE, "Unexpected cache entry: {0}",
-                                                localName);
-                                            break;
+                try {
+                    using (XmlReader reader = XmlReader.Create(data, settings)) {
+                        while (reader.Read()) {
+                            switch (reader.NodeType) {
+                                case XmlNodeType.Element:
+                                    root = root && ResolverConstants.CATALOG_NS.Equals(reader.NamespaceURI);
+                                    if (root) {
+                                        long timestamp = -1;
+                                        Dictionary<string, string> props = new();
+                                        string name = reader.GetAttribute("name");
+                                        string uri = reader.GetAttribute("uri");
+                                        Uri baseUri = UriUtils.Resolve(UriUtils.Cwd(), entryfn);
+                                        string xmlbase = reader.GetAttribute("xml:base");
+                                        if (xmlbase != null) {
+                                            baseUri = UriUtils.Resolve(baseUri, xmlbase);
+                                        }
+
+                                        Entry entry = null;
+                                        string localName = reader.LocalName;
+                                        switch (localName) {
+                                            case "uri":
+                                                string nature = reader.GetAttribute("nature");
+                                                string purpose = reader.GetAttribute("purpose");
+                                                timestamp = CacheTimestamp(reader, out props);
+                                                entry = catalog.AddUri(baseUri, name, uri, nature, purpose, timestamp);
+                                                break;
+                                            case "system":
+                                                string systemId = reader.GetAttribute("systemId");
+                                                timestamp = CacheTimestamp(reader, out props);
+                                                entry = catalog.AddSystem(baseUri, systemId, uri, timestamp);
+                                                break;
+                                            case "public":
+                                                String publicId = reader.GetAttribute("publicId");
+                                                timestamp = CacheTimestamp(reader, out props);
+                                                entry = catalog.AddPublic(baseUri, publicId, uri, timestamp);
+                                                break;
+                                            default:
+                                                logger.Log(ResolverLogger.CACHE, "Unexpected cache entry: {0}",
+                                                    localName);
+                                                break;
+                                        }
+
+                                        foreach (string pkey in props.Keys) {
+                                            entry.SetProperty(pkey, props[pkey]);
+                                        }
+
+                                        entry.SetProperty("filesize", "FIXME:");
+                                        entry.SetProperty("filemodified", "FIXME:");
                                     }
 
-                                    foreach (string pkey in props.Keys) {
-                                        entry.SetProperty(pkey, props[pkey]);
-                                    }
-
-                                    entry.SetProperty("filesize", "FIXME:");
-                                    entry.SetProperty("filemodified", "FIXME:");
-                                }
-                                break;
-                            default:
-                                break;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
+                }
+                catch (Exception) {
+                    logger.Log(ResolverLogger.CONFIG, "Failed to read cache: {0}", Path.Combine(entryDir, entryfn));
                 }
             }
             
