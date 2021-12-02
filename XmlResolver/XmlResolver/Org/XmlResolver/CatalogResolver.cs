@@ -6,7 +6,7 @@ using Org.XmlResolver.Features;
 using Org.XmlResolver.Utils;
 
 namespace Org.XmlResolver {
-    public class CatalogResolver : ResourceResolver {
+    public class CatalogResolver : IResourceResolver {
         protected static readonly ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
         private XmlResolverConfiguration config;
         private ResourceCache cache;
@@ -113,7 +113,45 @@ namespace Org.XmlResolver {
         }
 
         public ResolvedResource ResolveNamespace(string href, string baseUri, string nature, string purpose) {
-            throw new NotImplementedException();
+            logger.Log(ResolverLogger.REQUEST, "ResolveNamespace: {0} (base URI: {1}) nature={2}, purpose={3}", href, baseUri, nature, purpose);
+
+            if (href == null || "".Equals(href.Trim())) {
+                href = baseUri;
+                baseUri = null;
+                if (href == null || "".Equals(href.Trim())) {
+                    logger.Log(ResolverLogger.RESPONSE, "ResolveNamespace: null");
+                    return null;
+                }
+            }
+
+            CatalogManager catalog = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
+            Uri resolved = catalog.LookupNamespaceUri(href, nature, purpose);
+            if (resolved != null) {
+                logger.Log(ResolverLogger.RESPONSE, "ResolveNamespace: {0}", resolved.ToString());
+                return Resource(href, resolved, cache.CachedUri(resolved));
+            }
+
+            string absolute = href;
+            if (baseUri != null) {
+                absolute = UriUtils.Resolve(new Uri(baseUri), href).ToString();
+                if (!href.Equals(absolute)) {
+                    resolved = catalog.LookupNamespaceUri(absolute, nature, purpose);
+                    if (resolved != null) {
+                        logger.Log(ResolverLogger.RESPONSE, "ResolveNamespace: {0}", resolved.ToString());
+                        return Resource(absolute, resolved, cache.CachedUri(resolved));
+                    }
+                }
+            }
+
+            if (cache.CacheUri(absolute)) {
+                Uri absuri = new Uri(absolute);
+                logger.Log(ResolverLogger.RESPONSE, "ResolveNamespace: cached: {0}", absolute);
+                return Resource(absolute, absuri, cache.CachedUri(absuri));
+            }
+            else {
+                logger.Log(ResolverLogger.RESPONSE, "ResolvedNamespace: null");
+                return null;
+            }
         }
 
         public ResolvedResource ResolveEntity(string name, string publicId, string systemId, string baseUri) {

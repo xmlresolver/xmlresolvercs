@@ -9,7 +9,7 @@ using Org.XmlResolver.Loaders;
 using Org.XmlResolver.Utils;
 
 namespace Org.XmlResolver {
-    public class CatalogManager : XmlCatalogResolver {
+    public class CatalogManager : IXmlCatalogResolver {
         protected static ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
         protected readonly ResolverConfiguration _resolverConfiguration;
         protected CatalogLoader _catalogLoader;
