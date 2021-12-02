@@ -56,6 +56,8 @@ namespace UnitTests {
         public void ParseSample() {
             config.SetFeature(ResolverFeature.URI_FOR_SYSTEM, true);
             Uri document = UriUtils.GetLocationUri("/resources/sample10/sample.xml", asm);
+            Assert.That(document.ToString().StartsWith("pack:"));
+            Console.WriteLine("ParseSample: " + document.ToString());
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.Async = false;
             settings.DtdProcessing = DtdProcessing.Parse;

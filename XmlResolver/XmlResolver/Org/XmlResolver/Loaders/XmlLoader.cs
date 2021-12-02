@@ -163,7 +163,7 @@ namespace Org.XmlResolver.Loaders {
                     if (prefer != null) {
                         preferPublicStack.Push("public".Equals(prefer));
                         if (!"public".Equals(prefer) && !"system".Equals(prefer)) {
-                            logger.Log(ResolverLogger.ERROR, "Prefer on {0} is neither 'sytem' nor 'public': {1}",
+                            logger.Log(ResolverLogger.ERROR, "Prefer on {0} is neither 'system' nor 'public': {1}",
                                     reader.LocalName, prefer);
                         }
                     }

@@ -7,7 +7,7 @@ using Org.XmlResolver.Utils;
 #nullable enable
 
 namespace Org.XmlResolver {
-    public class Resolver : System.Xml.XmlResolver {
+    public class Resolver : System.Xml.XmlResolver, INamespaceResolver {
         protected static ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
         private readonly CatalogResolver _resolver;
 
@@ -56,6 +56,33 @@ namespace Org.XmlResolver {
                 return null;
             }
             return rsrc.GetInputStream();
+        }
+
+        public object? GetEntity(Uri absoluteUri, string nature, string purpose) {
+            ResolvedResource rsrc = _resolver.ResolveNamespace(absoluteUri.ToString(), null, nature, purpose);
+            if (rsrc == null) {
+                return null;
+            }
+
+            return rsrc.GetInputStream();
+        }
+
+        public object? GetEntity(string href, Uri baseUri, string nature, string purpose) {
+            string? uristr = null;
+            if (baseUri != null) {
+                uristr = baseUri.ToString();
+            }
+            ResolvedResource rsrc = _resolver.ResolveNamespace(href, uristr, nature, purpose);
+            if (rsrc == null && baseUri != null) {
+                Uri absUri = new Uri(baseUri, href);
+                return GetEntity(absUri, nature, purpose);
+            }
+
+            if (rsrc != null) {
+                return rsrc.GetInputStream();
+            }
+
+            return null;
         }
     }
 }

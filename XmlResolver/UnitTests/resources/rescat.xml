@@ -1,4 +1,5 @@
-<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog"
+	 xmlns:rddl="http://www.rddl.org/">
 
   <public publicId="-//Sample//DTD Sample 1.0//EN"
           uri="sample10/sample.dtd"/>
@@ -8,5 +9,23 @@
 
   <uri name="https://example.com/sample/1.0/uri.dtd"
        uri="sample10/sample.dtd"/>
+
+  <uri name="http://example.com/one"
+       rddl:nature="the-one-nature"
+       rddl:purpose="validation"
+       uri="one-validate.xml"/>
+
+  <uri name="http://example.com/one"
+       rddl:nature="the-one-nature"
+       rddl:purpose="somethingelse"
+       uri="one-else.xml"/>
+
+  <uri name="http://example.com/two"
+       rddl:nature="the-two-nature"
+       rddl:purpose="validation"
+       uri="two-validate.xml"/>
+
+  <uri name="http://example.com/two"
+       uri="two-anything-else.xml"/>
 
 </catalog>
