@@ -14,6 +14,16 @@
   <system systemId="https://xmlresolver.org/ns/sample/sample.dtd"
           uri="sample10/sample.dtd"/>
 
+  <system systemId="https://xmlresolver.org/ns/sample/sample.dtd"
+          uri="sample10/sample.dtd"/>
+
+  <!-- N.B. Because the System.Xml.UriResolver is so broken[*],
+       there must be a separate entry for the blocks module as
+       well.
+       [*] https://so.nwalsh.com/2020/07/23-getentity -->
+  <system systemId="https://xmlresolver.org/ns/sample/blocks.dtd"
+          uri="sample10/blocks.dtd"/>
+
   <group prefer="system">
     <public publicId="-//Sample//DTD Simple Prefer System 1.0//EN"
             uri="sample10/sample-public.dtd"/>
