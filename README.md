@@ -2,9 +2,6 @@
 
 A C# implementation of the XML Resolver
 
-I’ve started checking things in so that I have a repository backing up
-my work. This is definitely unfinished and not yet at all useful.
-
 If you’ve got experience with C# projects and you happen to notice me
 doing anything foolish, please do let me know.
 
@@ -27,3 +24,13 @@ git submodule update --init
 That will make sure that the submodule is checked out and the data
 files are available.
 
+## Release notes
+
+Releases are being pushed to [NuGet](https://www.nuget.org/packages/XmlResolver/).
+
+### Backwards incompatible changes
+
+* 0.2.0 Several interfaces have been renamed to follow C# conventions.
+  Methods related to the namespace resolver have been added to them
+  (given that I was breaking them anyway).
+* 0.1.0 Initial release.
