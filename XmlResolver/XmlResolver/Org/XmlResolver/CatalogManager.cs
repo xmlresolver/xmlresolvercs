@@ -12,7 +12,7 @@ namespace Org.XmlResolver {
     public class CatalogManager : IXmlCatalogResolver {
         protected static ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
         protected readonly ResolverConfiguration _resolverConfiguration;
-        protected CatalogLoader _catalogLoader;
+        protected ICatalogLoader _catalogLoader;
 
         public CatalogManager(ResolverConfiguration config) {
             _resolverConfiguration = config;
@@ -22,7 +22,12 @@ namespace Org.XmlResolver {
             }
 
             // FIXME: what if this doesn't work?
-            _catalogLoader = (CatalogLoader) Activator.CreateInstance(Type.GetType(loaderClassName));
+            _catalogLoader = (ICatalogLoader) Activator.CreateInstance(Type.GetType(loaderClassName));
+            if (_catalogLoader == null) {
+                throw new NullReferenceException("Failed to create catalog loader from " + loaderClassName);
+            }
+            _catalogLoader.SetPreferPublic((bool) config.GetFeature(ResolverFeature.PREFER_PUBLIC));
+            _catalogLoader.SetArchivedCatalogs((bool) config.GetFeature(ResolverFeature.ARCHIVED_CATALOGS));
         }
 
         public CatalogManager(CatalogManager current, ResolverConfiguration config) {

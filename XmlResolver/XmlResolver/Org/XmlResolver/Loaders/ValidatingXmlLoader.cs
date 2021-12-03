@@ -6,7 +6,7 @@ using Org.XmlResolver.Catalog.Entry;
 using Org.XmlResolver.Utils;
 
 namespace Org.XmlResolver.Loaders {
-    public class ValidatingXmlLoader : CatalogLoader {
+    public class ValidatingXmlLoader : ICatalogLoader {
         protected static ResolverLogger logger = new ResolverLogger(LogManager.GetCurrentClassLogger());
         protected readonly Dictionary<Uri,EntryCatalog> catalogMap;
 
@@ -61,6 +61,14 @@ namespace Org.XmlResolver.Loaders {
 
         public bool GetPreferPublic() {
             return underlyingLoader.GetPreferPublic();
+        }
+
+        public void SetArchivedCatalogs(bool archived) {
+            underlyingLoader.SetArchivedCatalogs(archived);
+        }
+
+        public bool GetArchivedCatalogs() {
+            return underlyingLoader.GetArchivedCatalogs();
         }
     }
 }

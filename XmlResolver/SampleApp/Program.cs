@@ -15,7 +15,7 @@ namespace SampleApp {
             XmlResolverConfiguration config = new XmlResolverConfiguration();
             // The SampleApp refers to the XmlResolverData NuGet, so I can assume all of
             // the common resources in that assembly will be available.
-            config.SetFeature(ResolverFeature.ASSEMBLY_CATALOG, "XmlResolverData.dll");
+            config.SetFeature(ResolverFeature.ASSEMBLY_CATALOGS, "XmlResolverData.dll");
 
             string document = null;
             
