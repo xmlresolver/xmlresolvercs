@@ -22,11 +22,12 @@ namespace Org.XmlResolver {
             ResolverFeature.ALLOW_CATALOG_PI, ResolverFeature.CATALOG_ADDITIONS, ResolverFeature.CACHE_DIRECTORY,
             ResolverFeature.CACHE_UNDER_HOME, ResolverFeature.CACHE, ResolverFeature.MERGE_HTTPS, ResolverFeature.MASK_PACK_URIS,
             ResolverFeature.CATALOG_MANAGER, ResolverFeature.URI_FOR_SYSTEM, ResolverFeature.CATALOG_LOADER_CLASS,
-            ResolverFeature.PARSE_RDDL, ResolverFeature.ASSEMBLY_CATALOG
+            ResolverFeature.PARSE_RDDL, ResolverFeature.ASSEMBLY_CATALOGS, ResolverFeature.ARCHIVED_CATALOGS
         };
 
         // private static List<string> classpathCatalogList = null;
         private List<string> catalogs = new();
+        private List<string> additionalCatalogs = new();
         private List<string> assemblyCatalogs = new();
 
         private bool preferPublic = ResolverFeature.PREFER_PUBLIC.GetDefaultValue();
@@ -41,6 +42,7 @@ namespace Org.XmlResolver {
         private bool maskPackUris = ResolverFeature.MASK_PACK_URIS.GetDefaultValue();
         private string catalogLoader = ResolverFeature.CATALOG_LOADER_CLASS.GetDefaultValue();
         private bool parseRddl = ResolverFeature.PARSE_RDDL.GetDefaultValue();
+        private bool archivedCatalogs = ResolverFeature.ARCHIVED_CATALOGS.GetDefaultValue();
         private bool showConfigChanges = false; // make the config process a bit less chatty
         
         public XmlResolverConfiguration(): this(null, null) {
@@ -62,12 +64,16 @@ namespace Org.XmlResolver {
             logger.Log(ResolverLogger.CONFIG, "XMLResolver version " + fileVersion.FileVersion);
             showConfigChanges = false;
             catalogs.Clear();
+            additionalCatalogs.Clear();
+            assemblyCatalogs.Clear();
             LoadConfiguration(propertyFiles, catalogFiles);
             showConfigChanges = true;
         }
 
         public XmlResolverConfiguration(XmlResolverConfiguration current) {
             catalogs = new List<string>(current.catalogs);
+            additionalCatalogs = new List<string>(current.additionalCatalogs);
+            assemblyCatalogs = new List<string>(current.assemblyCatalogs);
             preferPublic = current.preferPublic;
             preferPropertyFile = current.preferPropertyFile;
             allowCatalogPI = current.allowCatalogPI;
@@ -84,7 +90,7 @@ namespace Org.XmlResolver {
             maskPackUris = current.maskPackUris;
             catalogLoader = current.catalogLoader;
             parseRddl = current.parseRddl;
-            assemblyCatalogs = current.assemblyCatalogs;
+            archivedCatalogs = current.archivedCatalogs;
             showConfigChanges = current.showConfigChanges;
         }
 
@@ -183,7 +189,7 @@ namespace Org.XmlResolver {
                         if (showConfigChanges) {
                             logger.Log(ResolverLogger.CONFIG, "Catalog: {0}", token);
                         }
-                        catalogs.Add(token);
+                        additionalCatalogs.Add(token);
                     }
                 }
             }
@@ -221,6 +227,7 @@ namespace Org.XmlResolver {
             }
 
             SetBoolean("XML_CATALOG_PARSE_RDDL", "Use RDDL: {0}", ref parseRddl);
+            SetBoolean("XML_CATALOG_ARCHIVED_CATALOGS", "Use archived catalogs: {0}", ref archivedCatalogs);
         }
 
         private void SetBoolean(string name, string desc, ref bool value) {
@@ -293,7 +300,7 @@ namespace Org.XmlResolver {
                         if (showConfigChanges) {
                             logger.Log(ResolverLogger.CONFIG, "Catalog: {0}", caturi);
                         }
-                        catalogs.Add(caturi);
+                        additionalCatalogs.Add(caturi);
                     }
                 }
             }
@@ -331,6 +338,7 @@ namespace Org.XmlResolver {
             }
 
             SetPropertyBoolean(section.GetSection("parseRddl"),"Use RDDL: {0}", ref parseRddl);
+            SetPropertyBoolean(section.GetSection("archivedCatalogs"),"Use archived catalogs: {0}", ref archivedCatalogs);
         }
 
         private void SetPropertyBoolean(IConfigurationSection section, string desc, ref bool value) {
@@ -399,19 +407,42 @@ namespace Org.XmlResolver {
                     }
                 }
                 return;
-            } else if (feature == ResolverFeature.CACHE_DIRECTORY) {
+            }
+            
+            if (feature == ResolverFeature.CATALOG_ADDITIONS) {
+                lock (_syncLock) {
+                    additionalCatalogs.Clear();
+                    if (value != null) {
+                        additionalCatalogs.AddRange((List<string>) value);
+                    }
+                }
+                return;
+            }
+
+            if (feature == ResolverFeature.CACHE_DIRECTORY) {
                 cacheDirectory = (string) value;
                 cache = null;
                 return;
-            } else if (feature == ResolverFeature.CACHE) {
+            }
+            
+            if (feature == ResolverFeature.CACHE) {
                 cache = (ResourceCache) value;
                 return;
-            } else if (feature == ResolverFeature.ASSEMBLY_CATALOG) {
+            } 
+            
+            if (feature == ResolverFeature.ASSEMBLY_CATALOGS) {
                 if (value == null) {
                     assemblyCatalogs.Clear();
                 }
                 else {
-                    assemblyCatalogs.Add((string)value);
+                    if (value is string) {
+                        assemblyCatalogs.Add((string)value);
+                    } else if (value is List<string>) {
+                        assemblyCatalogs.Clear();
+                        assemblyCatalogs.AddRange((List<string>) value);
+                    } else {
+                        throw new ArgumentException("Invalid value for ASSEMBLY_CATALOGS feature");
+                    }
                 }
                 return;
             }
@@ -441,6 +472,8 @@ namespace Org.XmlResolver {
                 catalogLoader = (String) value;
             } else if (feature == ResolverFeature.PARSE_RDDL) {
                 parseRddl = (Boolean) value;
+            } else if (feature == ResolverFeature.ARCHIVED_CATALOGS) {
+                archivedCatalogs = (Boolean) value;
             } else {
                 logger.Log(ResolverLogger.ERROR, "Ignoring unknown feature: %s", feature.GetFeatureName());
             }        
@@ -456,12 +489,22 @@ namespace Org.XmlResolver {
                 }
                 return manager;
             } else if (feature == ResolverFeature.CATALOG_FILES) {
-                List<string> cats = new(catalogs);
-                foreach (string asm in assemblyCatalogs) {
-                    string cat = FindAssemblyCatalogFile(asm);
-                    if (cat != null) {
-                        cats.Add(cat);
+                List<string> cats = null;
+                lock (_syncLock) {
+                    cats = new(catalogs);
+                    cats.AddRange(additionalCatalogs);
+                    foreach (string asm in assemblyCatalogs) {
+                        string cat = FindAssemblyCatalogFile(asm);
+                        if (cat != null) {
+                            cats.Add(cat);
+                        }
                     }
+                }
+                return cats;
+            } else if (feature == ResolverFeature.CATALOG_ADDITIONS) {
+                List<string> cats = null;
+                lock (_syncLock) {
+                    cats = new(additionalCatalogs);
                 }
                 return cats;
             } else if (feature == ResolverFeature.PREFER_PUBLIC) {
@@ -482,7 +525,9 @@ namespace Org.XmlResolver {
                 return catalogLoader;
             } else if (feature == ResolverFeature.PARSE_RDDL) {
                 return parseRddl;
-            } else if (feature == ResolverFeature.ASSEMBLY_CATALOG) {
+            } else if (feature == ResolverFeature.ARCHIVED_CATALOGS) {
+                return archivedCatalogs;
+            } else if (feature == ResolverFeature.ASSEMBLY_CATALOGS) {
                 return assemblyCatalogs;
             } else if (feature == ResolverFeature.CACHE) {
                 if (cache == null) {

@@ -11,7 +11,7 @@ using Org.XmlResolver.Features;
 using Org.XmlResolver.Utils;
 
 namespace Org.XmlResolver.Loaders {
-    public class XmlLoader : CatalogLoader {
+    public class XmlLoader : ICatalogLoader {
         private readonly object _syncLock = new object();
         protected static ResolverLogger logger = new ResolverLogger(LogManager.GetCurrentClassLogger());
 
