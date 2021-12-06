@@ -6,15 +6,31 @@ using Org.XmlResolver.Features;
 using Org.XmlResolver.Utils;
 
 namespace Org.XmlResolver {
+    /// <summary>
+    /// The CatalogResolver extends the functionality of the CatalogManager. It looks up
+    /// resources in the catalog(s) and returns a description of what was found, if the resource
+    /// was successfully resolved.
+    /// </summary>
+    /// <para>The CatalogResolver also handles the caching layer, if caching is enabled.</para>
+    ///
+    /// <para>This class is a utility class used by the primary public API, the Resolver.</para>
+
     public class CatalogResolver : IResourceResolver {
         protected static readonly ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
         private XmlResolverConfiguration config;
         private ResourceCache cache;
 
+        /// <summary>
+        /// Create a new resolver using a default configuration.
+        /// </summary>
         public CatalogResolver() : this(new XmlResolverConfiguration()) {
             // nop   
         }
 
+        /// <summary>
+        /// Create a new resolver using the specified configuration.
+        /// </summary>
+        /// <param name="config">The resolver configuration.</param>
         public CatalogResolver(XmlResolverConfiguration config) {
             this.config = config;
             cache = (ResourceCache) config.GetFeature(ResolverFeature.CACHE);
@@ -70,6 +86,15 @@ namespace Org.XmlResolver {
             return new ResolvedResourceImpl(showResolvedUri, res, UriUtils.GetStream(res), null);
         }
         
+        /// <summary>
+        /// Resolve a URI against the catalog(s).
+        /// </summary>
+        /// <para>This method attempts to locate <code>href</code> with <see cref="CatalogManager.LookupUri"/>.
+        /// If that fails, and <code>baseUri</code> is provided, the <code>href</code> value will be made
+        /// absolute and another attmept will be made with the absolute URI.</para>
+        /// <param name="href">The URI.</param>
+        /// <param name="baseUri">The base URI, which may be null.</param>
+        /// <returns>A description of the resolved resource, or null if no resource was found.</returns>
         public ResolvedResource ResolveUri(string href, string baseUri) {
             logger.Log(ResolverLogger.REQUEST, "ResolveUri: {0} (base URI: {1})", href, baseUri);
 
@@ -112,6 +137,19 @@ namespace Org.XmlResolver {
             }
         }
 
+        /// <summary>
+        /// Resolve a URI against the catalog(s), optionally employing nature and purpose to limit the scope.
+        /// </summary>
+        /// <para>This method attempts to locate <code>href</code> with <see cref="CatalogManager.LookupNamespace"/>.
+        /// If that fails, and <code>baseUri</code> is provided, the <code>href</code> value will be made
+        /// absolute and another attmept will be made with the absolute URI.</para>
+        /// <para>If nature and purpose are both null, this method has the same effect as calling
+        /// <see cref="ResolveUri"/>.</para>
+        /// <param name="href">The URI.</param>
+        /// <param name="baseUri">The base URI, which may be null.</param>
+        /// <param name="nature">The nature, which may be null.</param>
+        /// <param name="purpose">The purpose, which may be null.</param>
+        /// <returns></returns>
         public ResolvedResource ResolveNamespace(string href, string baseUri, string nature, string purpose) {
             logger.Log(ResolverLogger.REQUEST, "ResolveNamespace: {0} (base URI: {1}) nature={2}, purpose={3}", href, baseUri, nature, purpose);
 
@@ -154,6 +192,23 @@ namespace Org.XmlResolver {
             }
         }
 
+        /// <summary>
+        /// Resolve an entity against the catalog(s).
+        /// </summary>
+        /// <para>If a <code>name</code> is provided, but both the <code>systemId</code> and
+        /// <code>publicId</code> are null, an attempt is made to locate a document type with the
+        /// specified name (calling <see cref="CatalogManager.LookupDoctype"/>.</para>
+        /// <para>If at least one of the identifiers is provided, they are used to lookup the
+        /// resource, with the <code>name</code> used with <see cref="CatalogManager.LookupEntity"/>
+        /// if nothing is located with the identifiers.</para>
+        /// <para>If the <code>baseUri</code> and system identifiers are not null, and resolution fails,
+        /// the system identifier is made absolute against the base URI and a second attempt is made.</para>
+        /// <para>If all of the parameters are null, null is returned.</para>
+        /// <param name="name">The entity name, which may be null.</param>
+        /// <param name="publicId">The public identifier, which may be null.</param>
+        /// <param name="systemId">The system identifier, which may be null.</param>
+        /// <param name="baseUri">The base URI, which may be null.</param>
+        /// <returns></returns>
         public ResolvedResource ResolveEntity(string name, string publicId, string systemId, string baseUri) {
             if (name == null && publicId == null && systemId == null && baseUri == null) {
                 logger.Log(ResolverLogger.REQUEST, "ResolveEntity: null");
@@ -236,7 +291,14 @@ namespace Org.XmlResolver {
             }
         }
         
-        public ResolverConfiguration GetConfiguration() {
+        /// <summary>
+        /// Returns the underlying configuration used by this resolver.
+        /// </summary>
+        /// <para>The resolver configuration can be interrogated or changed by calling
+        /// <see cref="XmlResolverConfiguration.GetFeature"/> or
+        /// <see cref="XmlResolverConfiguration.SetFeature"/> on the configuration.</para>
+        /// <returns></returns>
+        public IResolverConfiguration GetConfiguration() {
             return config;
         }
     }

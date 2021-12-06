@@ -12,7 +12,78 @@ using Org.XmlResolver.Features;
 using Org.XmlResolver.Utils;
 
 namespace Org.XmlResolver {
-    public class XmlResolverConfiguration : ResolverConfiguration {
+    /// <summary>
+    /// The XML resolver configuration.
+    /// </summary>
+    /// <para>This class is the implementation of the <see cref="IResolverConfiguration"/> for the
+    /// <see cref="CatalogResolver"/>.</para>
+    /// <para>The default value for property files is taken from the
+    /// <code>XMLRESOLVER_APPSETTINGS</code> environment variable. If this identifies a property file, it will
+    /// be used to configure the resolver.</para>
+    /// <para>Property files are read with the <see cref="IConfigurationSection"/> API. If the file is XML,
+    /// properties are loaded from a section named <code>xmlResolver</code>. If the file is JSON,
+    /// properties are loaded from an object named <code>XmlResolver</code>.</para>
+    /// <para>In addition to a property file, individual environent variables can be used to specify properties:</para>
+    /// <list type="table">
+    /// <listheader>
+    ///   <term>Env. Variable</term>
+    ///   <description>Configuration property</description>
+    /// </listheader>
+    /// <item>
+    ///    <term>XML_CATALOG_ADDITIONS</term>
+    ///    <description>Additions to the catalog <code>ResolverFeature.CATALOG_ADDITIONS</code>.</description>
+    /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_ALLOW_PI</term>
+    ///    <description>Allow the OASIS XML Catalog PI to influence resolution, <code>ResolverFeature.ALLOW_CATALOG_PI</code>.</description>
+    /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_ARCHIVED_CATALOGS</term>
+    ///    <description>Allow ZIP files to be specified as catalogs, <code>ResolverFeature.ARCHIVED_CATALOGS</code>.</description>
+    /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_CACHE</term>
+    ///    <description>Enable caching, <code>ResolverFeature.CACHE</code>.</description>
+    /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_CACHE_UNDER_HOME</term>
+    ///    <description>Use <code>.xmlresolver.org/cache</code> in the users home directory for caching, <code>ResolverFeature.CACHE_UNDER_HOME</code>.</description>
+    /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_FILES</term>
+    ///    <description>A list of XML Catalog files, <code>ResolverFeature.CATALOG_FILES</code>.</description>
+    /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_LOADER_CLASS</term>
+    ///    <description>The fully qualified name of the class to instantiate to load catalog files, <code>ResolverFeature.CATALOG_LOADER_CLASS</code>.</description>
+    /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_MASK_PACK_URIS</term>
+    ///    <description>Mask <code>pack:</code> URIs, <code>ResolverFeature.MASK_PACK_URIS</code>.</description>
+    /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_MERGE_HTTPS</term>
+    ///    <description>Merge http: and https: URIs for comparisons, <code>ResolverFeature.MERGE_HTTPS</code>.</description>
+    /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_PARSE_RDDL</term>
+    ///    <description>Attempt to parse RDDL files if located by resolution, <code>ResolverFeature.PARSE_RDDL</code>.</description>
+    /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_PREFER</term>
+    ///    <description>Prefer public or system entries, <code>ResolverFeature.PREFER_PUBLIC</code>.</description>
+    /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_PREFER_PROPERTY_FILE</term>
+    ///    <description>Prefer property file values over environment variables, <code>ResolverFeature.PREFER_PROPERTY_FILE</code>.</description>
+    /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_URI_FOR_SYSTEM</term>
+    ///    <description>Use uri entries for system identifier lookup, <code>ResolverFeature.URI_FOR_SYSTEM</code>.</description>
+    /// </item>
+    /// </list>
+    /// 
+    public class XmlResolverConfiguration : IResolverConfiguration {
         private readonly object _syncLock = new object();
 
         protected static ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
@@ -45,19 +116,40 @@ namespace Org.XmlResolver {
         private bool archivedCatalogs = ResolverFeature.ARCHIVED_CATALOGS.GetDefaultValue();
         private bool showConfigChanges = false; // make the config process a bit less chatty
         
+        /// <summary>
+        /// Create a new configuration from defaults.
+        /// </summary>
         public XmlResolverConfiguration(): this(null, null) {
             // nop
         }
 
+        /// <summary>
+        /// Create a new configuration using the specified catalog files.
+        /// </summary>
+        /// <para>For historical reasons, the list of catalogs must be semicolon separated in this string.</para>
+        /// <para>This constructor uses the default properties.</para>
+        /// <param name="catalogFiles">The list of catalog files.</param>
         public XmlResolverConfiguration(string catalogFiles)
             : this(null, new List<string>(Regex.Split(catalogFiles, @"\s*;\s*"))) {
             // nop
         }
 
+        /// <summary>
+        /// Create a new configuration using the specified catalog files.
+        /// </summary>
+        /// <para>This constructor uses the default properties.</para>
+        /// <param name="catalogFiles">The list of catalog files.</param>
         public XmlResolverConfiguration(List<string> catalogFiles) : this(null, catalogFiles) {
             // nop
         }
         
+        /// <summary>
+        /// Create a new configuration using the specified list of property files and list of catalog files.
+        /// </summary>
+        /// <para>The specified list of property files will be searched in order. The first property
+        /// file that can be opened successfully will be used and the rest will be ignored.</para>
+        /// <param name="propertyFiles"></param>
+        /// <param name="catalogFiles"></param>
         public XmlResolverConfiguration(List<Uri> propertyFiles, List<string> catalogFiles) {
             Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo fileVersion = FileVersionInfo.GetVersionInfo(assembly.Location);
@@ -70,6 +162,10 @@ namespace Org.XmlResolver {
             showConfigChanges = true;
         }
 
+        /// <summary>
+        /// Create a new configuration by copying an existing one.
+        /// </summary>
+        /// <param name="current">The configuration to copy.</param>
         public XmlResolverConfiguration(XmlResolverConfiguration current) {
             catalogs = new List<string>(current.catalogs);
             additionalCatalogs = new List<string>(current.additionalCatalogs);
@@ -216,7 +312,7 @@ namespace Org.XmlResolver {
             SetBoolean("XML_CATALOG_CACHE_UNDER_HOME", "Cache under home: {0}", ref cacheUnderHome);
             SetBoolean("XML_CATALOG_URI_FOR_SYSTEM", "URI-for-system: {0}", ref uriForSystem);
             SetBoolean("XML_CATALOG_MERGE_HTTPS", "Merge https: {0}", ref mergeHttps);
-            SetBoolean("XML_CATALOG_MASK_JAR_URIS", "Mask-jar-URIs: {0}", ref maskPackUris);
+            SetBoolean("XML_CATALOG_MASK_PACK_URIS", "Mask-pack-URIs: {0}", ref maskPackUris);
             
             property = Environment.GetEnvironmentVariable("XML_CATALOG_LOADER_CLASS");
             if (property != null) {
@@ -327,7 +423,7 @@ namespace Org.XmlResolver {
             SetPropertyBoolean(section.GetSection("cacheUnderHome"), "Cache under home: {0}", ref cacheUnderHome);
             SetPropertyBoolean(section.GetSection("uriForSystem"), "URI-for-system: {0}", ref uriForSystem);
             SetPropertyBoolean(section.GetSection("mergeHttps"), "Merge https: {0}", ref mergeHttps);
-            SetPropertyBoolean(section.GetSection("maskJarUris"), "Mask-jar-URIs: {0}", ref maskPackUris);
+            SetPropertyBoolean(section.GetSection("maskPackUris"), "Mask-pack-URIs: {0}", ref maskPackUris);
             
             property = section.GetSection("catalogLoaderClass");
             if (property.Value != null) {
