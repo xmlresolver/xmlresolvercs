@@ -4,6 +4,11 @@ using System.Text;
 using NLog;
 
 namespace Org.XmlResolver {
+    /// <summary>
+    /// A wrapper around an underlying logger.
+    /// </summary>
+    /// <para>This wrapper allows the resolver to be configured so that it will log
+    /// different classes of information at different levels.</para>
     public class ResolverLogger {
         public const string REQUEST = "request";
         public const string RESPONSE = "response";
@@ -21,6 +26,10 @@ namespace Org.XmlResolver {
         private readonly Dictionary<string, int> categories = new();
         private string _catalogLogging = null;
 
+        /// <summary>
+        /// Create a new <code>ResolverLogger</code> around the specified logger.
+        /// </summary>
+        /// <param name="logger">The underlying logger.</param>
         public ResolverLogger(Logger logger) {
             _logger = logger;
         }
