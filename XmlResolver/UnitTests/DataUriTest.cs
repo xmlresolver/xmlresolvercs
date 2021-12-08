@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text;
 using NUnit.Framework;
 using Org.XmlResolver;
 using Org.XmlResolver.Utils;
@@ -26,13 +27,15 @@ namespace UnitTests {
             Assert.AreEqual("A short note.", line);
         }
         
-        // FIXME: .NET doesn't support iso-8859-7?
-        /*
         [Test]
         public void testDataUricharset() {
             string href = "greek.txt";
             string baseuri = "http://example.com/";
 
+            // We don't do this in the resolver, but we do it here to demonstrate that
+            // it will work in applications that use the resolver.
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            
             string line = null;
             ResolvedResource result = resolver.ResolveUri(href, baseuri);
             using (StreamReader reader = new StreamReader(result.GetInputStream())) {
@@ -40,7 +43,6 @@ namespace UnitTests {
             }
             Assert.AreEqual("ΎχΎ", line);
         }
-        */
         
         [Test]
         public void testDataUriencoded() {
