@@ -37,12 +37,18 @@ namespace Org.XmlResolver {
         }
 
         private ResolvedResourceImpl Resource(string requestUri, Uri responseUri, CacheEntry cached) {
-            if (cached == null) {
-                return UncachedResource(new Uri(requestUri), responseUri);
-            }
-            else {
+            try {
+                if (cached == null) {
+                    return UncachedResource(new Uri(requestUri), responseUri);
+                }
+
                 var fs = File.Open(cached.CacheFile.ToString(), FileMode.Open, FileAccess.Read);
-                return new ResolvedResourceImpl(responseUri, new Uri(cached.CacheFile.ToString()), fs, cached.ContentType());
+                return new ResolvedResourceImpl(responseUri, new Uri(cached.CacheFile.ToString()), fs,
+                    cached.ContentType());
+            }
+            catch (Exception ex) {
+                logger.Log(ResolverLogger.TRACE, "Failed to resolve {0}: {1}", requestUri, ex.Message);
+                return null;
             }
         }
 

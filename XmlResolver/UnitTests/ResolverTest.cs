@@ -22,6 +22,32 @@ namespace UnitTests {
         }
         
         [Test]
+        public void LookupSystemFail() {
+            try {
+                CatalogResolver cresolver = resolver.CatalogResolver;
+
+                ResolvedResource rsrc = cresolver.ResolveEntity(null, null, "https://example.com/not/in/catalog", null);
+
+                Assert.Null(rsrc);
+            } catch (Exception) {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void LookupLocalSystemFail() {
+            try {
+                CatalogResolver cresolver = resolver.CatalogResolver;
+
+                ResolvedResource rsrc = cresolver.ResolveEntity(null, null, "file:///path/to/thing/that/isnt/likely/to/exist", null);
+
+                Assert.Null(rsrc);
+            } catch (Exception) {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
         public void LookupSystem() {
             try {
                 Uri result = UriUtils.Resolve(TEST_ROOT_DIRECTORY, "XmlResolver/UnitTests/resources/sample10/sample.dtd");
