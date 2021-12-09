@@ -16,252 +16,252 @@
         <!-- Data -->
 
         <EmbeddedResource Include="Data/org/xmlresolver/catalog.xml">
-          <Link>Org.XmlResolver.catalog.xml</Link>
+          <LogicalName>Org.XmlResolver.catalog.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/path/example-doc.xml">
-          <Link>path/example-doc.xml</Link>
+          <LogicalName>path.example-doc.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/path/catalog.xml">
-          <Link>path/catalog.xml</Link>
+          <LogicalName>path.catalog.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/path/test.txt">
-          <Link>path/test.txt</Link>
+          <LogicalName>path.test.txt</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/data/sample.xsd">
-          <Link>data/sample.xsd</Link>
+          <LogicalName>data.sample.xsd</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/data/blocks.rnc">
-          <Link>data/blocks.rnc</Link>
+          <LogicalName>data.blocks.rnc</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/data/sample.xsl">
-          <Link>data/sample.xsl</Link>
+          <LogicalName>data.sample.xsl</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/data/index.html">
-          <Link>data/index.html</Link>
+          <LogicalName>data.index.html</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/data/sample.rng">
-          <Link>data/sample.rng</Link>
+          <LogicalName>data.sample.rng</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/data/sample.dtd">
-          <Link>data/sample.dtd</Link>
+          <LogicalName>data.sample.dtd</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/data/xlink.xsd">
-          <Link>data/xlink.xsd</Link>
+          <LogicalName>data.xlink.xsd</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/data/blocks.rng">
-          <Link>data/blocks.rng</Link>
+          <LogicalName>data.blocks.rng</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/data/default.css">
-          <Link>data/default.css</Link>
+          <LogicalName>data.default.css</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/data/sample.xml">
-          <Link>data/sample.xml</Link>
+          <LogicalName>data.sample.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/data/blocks.xsd">
-          <Link>data/blocks.xsd</Link>
+          <LogicalName>data.blocks.xsd</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/data/sample.rnc">
-          <Link>data/sample.rnc</Link>
+          <LogicalName>data.sample.rnc</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Data/data/blocks.dtd">
-          <Link>data/blocks.dtd</Link>
+          <LogicalName>data.blocks.dtd</LogicalName>
         </EmbeddedResource>
 
         <!-- Resources -->
 
         <EmbeddedResource Include="resources/datauri.xml">
-          <Link>resources/datauri.xml</Link>
+          <LogicalName>resources.datauri.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/catalog.xml">
-          <Link>resources/catalog.xml</Link>
+          <LogicalName>resources.catalog.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/dtd10catalog.xml">
-          <Link>resources/dtd10catalog.xml</Link>
+          <LogicalName>resources.dtd10catalog.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/dtd11catalog.xml">
-          <Link>resources/dtd11catalog.xml</Link>
+          <LogicalName>resources.dtd11catalog.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/picat.xml">
-          <Link>resources/picat.xml</Link>
+          <LogicalName>resources.picat.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/docker.xml">
-          <Link>resources/docker.xml</Link>
+          <LogicalName>resources.docker.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample-as-uri.xml">
-          <Link>resources/sample-as-uri.xml</Link>
+          <LogicalName>resources.sample-as-uri.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/xmlns-xml.html">
-          <Link>resources/xmlns-xml.html</Link>
+          <LogicalName>resources.xmlns-xml.html</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/empty.xml">
-          <Link>resources/empty.xml</Link>
+          <LogicalName>resources.empty.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/parse/catalog.xml">
-          <Link>resources/parse/catalog.xml</Link>
+          <LogicalName>resources.parse.catalog.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/parse/doc.xml">
-          <Link>resources/parse/doc.xml</Link>
+          <LogicalName>resources.parse.doc.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/parse/doc.xsd">
-          <Link>resources/parse/doc.xsd</Link>
+          <LogicalName>resources.parse.doc.xsd</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/parse/doc.dtd">
-          <Link>resources/parse/doc.dtd</Link>
+          <LogicalName>resources.parse.doc.dtd</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/namespace">
-          <Link>resources/namespace</Link>
+          <LogicalName>resources.namespace</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/lookup-test.xml">
-          <Link>resources/lookup-test.xml</Link>
+          <LogicalName>resources.lookup-test.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/xml/sample-entities.xml">
-          <Link>resources/xml/sample-entities.xml</Link>
+          <LogicalName>resources.xml.sample-entities.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/xml/pi.xml">
-          <Link>resources/xml/pi.xml</Link>
+          <LogicalName>resources.xml.pi.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/xml/ch02.xml">
-          <Link>resources/xml/ch02.xml</Link>
+          <LogicalName>resources.xml.ch02.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/xml/ch01.xml">
-          <Link>resources/xml/ch01.xml</Link>
+          <LogicalName>resources.xml.ch01.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/xml/sample.xml">
-          <Link>resources/xml/sample.xml</Link>
+          <LogicalName>resources.xml.sample.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/xml/sample-dtd.xml">
-          <Link>resources/xml/sample-dtd.xml</Link>
+          <LogicalName>resources.xml.sample-dtd.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/seqtest2.xml">
-          <Link>resources/seqtest2.xml</Link>
+          <LogicalName>resources.seqtest2.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/seqtest1.xml">
-          <Link>resources/seqtest1.xml</Link>
+          <LogicalName>resources.seqtest1.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/sample.xsd">
-          <Link>resources/sample10/sample.xsd</Link>
+          <LogicalName>resources.sample10.sample.xsd</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/blocks.rnc">
-          <Link>resources/sample10/blocks.rnc</Link>
+          <LogicalName>resources.sample10.blocks.rnc</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/sample.xsl">
-          <Link>resources/sample10/sample.xsl</Link>
+          <LogicalName>resources.sample10.sample.xsl</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/catalog.xml">
-          <Link>resources/sample10/catalog.xml</Link>
+          <LogicalName>resources.sample10.catalog.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/index.html">
-          <Link>resources/sample10/index.html</Link>
+          <LogicalName>resources.sample10.index.html</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/sample.rng">
-          <Link>resources/sample10/sample.rng</Link>
+          <LogicalName>resources.sample10.sample.rng</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/sample.dtd">
-          <Link>resources/sample10/sample.dtd</Link>
+          <LogicalName>resources.sample10.sample.dtd</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/xlink.xsd">
-          <Link>resources/sample10/xlink.xsd</Link>
+          <LogicalName>resources.sample10.xlink.xsd</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/blocks.rng">
-          <Link>resources/sample10/blocks.rng</Link>
+          <LogicalName>resources.sample10.blocks.rng</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/default.css">
-          <Link>resources/sample10/default.css</Link>
+          <LogicalName>resources.sample10.default.css</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/sample.xml">
-          <Link>resources/sample10/sample.xml</Link>
+          <LogicalName>resources.sample10.sample.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/blocks.xsd">
-          <Link>resources/sample10/blocks.xsd</Link>
+          <LogicalName>resources.sample10.blocks.xsd</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/sample.rnc">
-          <Link>resources/sample10/sample.rnc</Link>
+          <LogicalName>resources.sample10.sample.rnc</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/sample10/blocks.dtd">
-          <Link>resources/sample10/blocks.dtd</Link>
+          <LogicalName>resources.sample10.blocks.dtd</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/cpcatalog.xml">
-          <Link>resources/cpcatalog.xml</Link>
+          <LogicalName>resources.cpcatalog.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/domresolver.xml">
-          <Link>resources/domresolver.xml</Link>
+          <LogicalName>resources.domresolver.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/documents/picat.xml">
-          <Link>resources/documents/picat.xml</Link>
+          <LogicalName>resources.documents.picat.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/documents/dtdtest.xml">
-          <Link>resources/documents/dtdtest.xml</Link>
+          <LogicalName>resources.documents.dtdtest.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/documents/pitest.xml">
-          <Link>resources/documents/pitest.xml</Link>
+          <LogicalName>resources.documents.pitest.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/documents/real-ent.xml">
-          <Link>resources/documents/real-ent.xml</Link>
+          <LogicalName>resources.documents.real-ent.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/documents/doc.dtd">
-          <Link>resources/documents/doc.dtd</Link>
+          <LogicalName>resources.documents.doc.dtd</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/documents/pitest-pass.xml">
-          <Link>resources/documents/pitest-pass.xml</Link>
+          <LogicalName>resources.documents.pitest-pass.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/lookup1.xml">
-          <Link>resources/lookup1.xml</Link>
+          <LogicalName>resources.lookup1.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/cm/nexttwo.xml">
-          <Link>resources/cm/nexttwo.xml</Link>
+          <LogicalName>resources.cm.nexttwo.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/cm/following.xml">
-          <Link>resources/cm/following.xml</Link>
+          <LogicalName>resources.cm.following.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/cm/prefer-public.xml">
-          <Link>resources/cm/prefer-public.xml</Link>
+          <LogicalName>resources.cm.prefer-public.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/cm/deltwo.xml">
-          <Link>resources/cm/deltwo.xml</Link>
+          <LogicalName>resources.cm.deltwo.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/cm/prefer-system.xml">
-          <Link>resources/cm/prefer-system.xml</Link>
+          <LogicalName>resources.cm.prefer-system.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/cm/pref-public.xml">
-          <Link>resources/cm/pref-public.xml</Link>
+          <LogicalName>resources.cm.pref-public.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/cm/delone.xml">
-          <Link>resources/cm/delone.xml</Link>
+          <LogicalName>resources.cm.delone.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/cm/simple.xml">
-          <Link>resources/cm/simple.xml</Link>
+          <LogicalName>resources.cm.simple.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/cm/nextone.xml">
-          <Link>resources/cm/nextone.xml</Link>
+          <LogicalName>resources.cm.nextone.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/cm/nextroot.xml">
-          <Link>resources/cm/nextroot.xml</Link>
+          <LogicalName>resources.cm.nextroot.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/lookup-delegated.xml">
-          <Link>resources/lookup-delegated.xml</Link>
+          <LogicalName>resources.lookup-delegated.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/xml.xsd">
-          <Link>resources/xml.xsd</Link>
+          <LogicalName>resources.xml.xsd</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/classpath.xml">
-          <Link>resources/classpath.xml</Link>
+          <LogicalName>resources.classpath.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/lookup2.xml">
-          <Link>resources/lookup2.xml</Link>
+          <LogicalName>resources.lookup2.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/invalid-catalog.xml">
-          <Link>resources/invalid-catalog.xml</Link>
+          <LogicalName>resources.invalid-catalog.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/rescat.xml">
-          <Link>resources/rescat.xml</Link>
+          <LogicalName>resources.rescat.xml</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="resources/lookup-shorter.xml">
-          <Link>resources/lookup-shorter.xml</Link>
+          <LogicalName>resources.lookup-shorter.xml</LogicalName>
         </EmbeddedResource>
 
         <PackageReference Include="System.IO.Packaging" Version="5.0.0" />
 
-        <PackageReference Include="XmlResolverData" Version="0.0.2" />
+        <PackageReference Include="XmlResolverData" Version="0.1.3" />
     </ItemGroup>
 
     <ItemGroup>
@@ -270,7 +270,7 @@
 
     <ItemGroup>
       <Compile Update="CMPreferTest.cs">
-        <Link>resources\CMPreferTest.cs</Link>
+        <LogicalName>resources.CMPreferTest.cs</LogicalName>
       </Compile>
     </ItemGroup>
 

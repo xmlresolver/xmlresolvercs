@@ -645,10 +645,10 @@ namespace Org.XmlResolver {
         private string FindAssemblyCatalogFile(string asmloc) {
             try {
                 Assembly asm = Assembly.LoadFrom(asmloc);
-                string catrsrc = asm.GetName().Name + ".Org.XmlResolver.catalog.xml";
+                string catrsrc = "Org.XmlResolver.catalog.xml";
                 foreach (var file in asm.GetManifestResourceNames()) {
                     if (catrsrc.Equals(file)) {
-                        return UriUtils.GetLocationUri("Org.XmlResolver.catalog.xml", asm).ToString();
+                        return UriUtils.GetLocationUri(catrsrc, asm).ToString();
                     }
                 }
             }

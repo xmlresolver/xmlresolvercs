@@ -307,7 +307,6 @@ namespace Org.XmlResolver.Utils {
                 }
 
                 fn = fn.Replace("/", ".");
-                fn = asm.GetName().Name + "." + fn;
 
                 Stream stream = asm.GetManifestResourceStream(fn);
                 return stream;
