@@ -11,8 +11,8 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Set a feature value.
         /// </summary>
-        /// <para>This method may throw a <code>NullReferenceException</code> if the value passed
-        /// is <code>null</code>.
+        /// <para>This method may throw a <c>NullReferenceException</c> if the value passed
+        /// is <c>null</c>.
         /// <param name="feature">The feature.</param>
         /// <param name="value">The value.</param>
         public void SetFeature(ResolverFeature feature, object value);

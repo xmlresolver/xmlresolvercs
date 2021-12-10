@@ -100,7 +100,7 @@ namespace Org.XmlResolver {
         /// Loads an XML catalog from an open Stream.
         /// </summary>
         /// <para>This method assumes that you've already opened the catalog file and reads data from the
-        /// stream. The specified <code>catalog</code> URI will be used to resolve relative URIs.</para>
+        /// stream. The specified <c>catalog</c> URI will be used to resolve relative URIs.</para>
         /// <param name="catalog">The absolute URI of the catalog to load.</param>
         /// <param name="data">An open data from which to read the catalog.</param>
         /// <returns>The EntryCatalog that represents the entries from the catalog file.</returns>
@@ -111,7 +111,7 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Lookup a URI.
         /// </summary>
-        /// <para>This method matches <code>uri</code> entries in the catalog.</para>
+        /// <para>This method matches <c>uri</c> entries in the catalog.</para>
         /// <param name="uri">The URI to find</param>
         /// <returns>The resolved URI or null if no matching entry could be found.</returns>
         public virtual Uri LookupUri(string uri) {
@@ -121,14 +121,14 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Lookup a URI with a given nature and purpose.
         /// </summary>
-        /// <para>This method matches <code>uri</code> entries, preferentially entries marked with matching
-        /// <code>rddl:nature</code> and <code>rddl:purpose</code> attributes. It will not match <code>uri</code>
+        /// <para>This method matches <c>uri</c> entries, preferentially entries marked with matching
+        /// <c>rddl:nature</c> and <c>rddl:purpose</c> attributes. It will not match <c>uri</c>
         /// entries that have different natures or purposes specified.</para>
         /// <para>An entry is considered to have a matching purpose if the purpose parameter is null, or
-        /// if the entry has no <code>rddl:purpose</code> attribute, or if the parameter and the attribute
+        /// if the entry has no <c>rddl:purpose</c> attribute, or if the parameter and the attribute
         /// value are the same. Similarly for the nature.</para>
         /// <para>Calling this method with both the nature and purpose set to null is equivalent to
-        /// calling <code>lookupUri</code> with just the URI.
+        /// calling <c>lookupUri</c> with just the URI.
         /// <param name="uri">The URI.</param>
         /// <param name="nature">The desired nature URI, may be null.</param>
         /// <param name="purpose">The desired purpose URI, may be null</param>
@@ -140,11 +140,11 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Lookup an entity by its public and system identifiers.
         /// </summary>
-        /// <para>This method matches <code>system</code> and <code>public</code> entries in the catalog.
-        /// If the <code>ResolverFeature.URI_FOR_SYSTEM</code> is true, then <code>uri</code> entries in
+        /// <para>This method matches <c>system</c> and <c>public</c> entries in the catalog.
+        /// If the <c>ResolverFeature.URI_FOR_SYSTEM</c> is true, then <c>uri</c> entries in
         /// the catalog will also match the system identifier.</para>
         /// <para>Note that public identifiers can be encoded in the system identifier with a URN,
-        /// so it is possible for <code>public</code> entries to match in the catalog, even though
+        /// so it is possible for <c>public</c> entries to match in the catalog, even though
         /// the system identifier is required in XML.</para>
         /// <param name="systemId">The system identifier for the entity.</param>
         /// <param name="publicId">The public identifier for the entity.</param>
@@ -157,12 +157,12 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Lookup an entity by its system identifier.
         /// </summary>
-        /// <para>This method matches <code>system</code> entries in the catalog.
-        /// If the <code>ResolverFeature.URI_FOR_SYSTEM</code> is true, then <code>uri</code> entries in
+        /// <para>This method matches <c>system</c> entries in the catalog.
+        /// If the <c>ResolverFeature.URI_FOR_SYSTEM</c> is true, then <c>uri</c> entries in
         /// the catalog will also match the system identifier.</para>
         /// <para>Note that public identifiers can be encoded in the system identifier with a URN.
         /// If such a system identifier is provided, the matching will be performed against the
-        /// corresponding public identifier and against <code>public</code> entries.</para>
+        /// corresponding public identifier and against <c>public</c> entries.</para>
         /// <param name="systemId">The system identifier for the entity.</param>
         /// <returns>The resolved URI or null if no matching entry could be found.</returns>
         public virtual Uri LookupSystem(string systemId) {
@@ -177,9 +177,9 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Lookup a doctype.
         /// </summary>
-        /// <para>This method matches <code>system</code> and <code>public</code> entries in the catalog.
+        /// <para>This method matches <c>system</c> and <c>public</c> entries in the catalog.
         /// If no match is found, it attempts to match the entity name, if one is provided, against
-        /// <code>doctype</code> entries in the catalog.</para>
+        /// <c>doctype</c> entries in the catalog.</para>
         /// <param name="entityName">The entity name, may be null.</param>
         /// <param name="systemId">The system identifier, may be null.</param>
         /// <param name="publicId">The public identifier, may be null.</param>
@@ -192,9 +192,9 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Lookup an external entity.
         /// </summary>
-        /// <para>This method matches <code>system</code> and <code>public</code> entries in the catalog.
+        /// <para>This method matches <c>system</c> and <c>public</c> entries in the catalog.
         /// If no match is found, it attempts to match the entity name, if one is provided, against
-        /// <code>entity</code> entries in the catalog.</para>
+        /// <c>entity</c> entries in the catalog.</para>
         /// <param name="entityName">The entity name, may be null.</param>
         /// <param name="systemId">The system identifier, may be null.</param>
         /// <param name="publicId">The public identifier, may be null.</param>
@@ -207,9 +207,9 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Lookup a notation.
         /// </summary>
-        /// <para>This method matches <code>system</code> and <code>public</code> entries in the catalog.
+        /// <para>This method matches <c>system</c> and <c>public</c> entries in the catalog.
         /// If no match is found, it attempts to match the notation name, if one is provided, against
-        /// <code>notation</code> entries in the catalog.</para>
+        /// <c>notation</c> entries in the catalog.</para>
         /// <param name="notationName">The notation name, may be null.</param>
         /// <param name="systemId">The system identifier, may be null.</param>
         /// <param name="publicId">The public identifier, may be null.</param>
@@ -222,7 +222,7 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Looks up the default document.
         /// </summary>
-        /// <para>This method matches <code>document</code> entries in the catalog.
+        /// <para>This method matches <c>document</c> entries in the catalog.
         /// <returns>The default document URI or null if no default document was specified.</returns>
         public virtual Uri LookupDocument() {
             return new QueryDocument().Search(this).ResultUri();
@@ -232,8 +232,8 @@ namespace Org.XmlResolver {
         /// Normalize a URI string for comparison.
         /// </summary>
         /// <para>This method attempts to generate a normalized or canonical version of a URI for comparison.
-        /// If the URI begins with <code>classpath:/</code>, the initial slash is removed. If the
-        /// <code>ResolverFeature.MERGE_HTTPS</code> feature is enabled and the URI starts with 
+        /// If the URI begins with <c>classpath:/</c>, the initial slash is removed. If the
+        /// <c>ResolverFeature.MERGE_HTTPS</c> feature is enabled and the URI starts with 
         /// <param name="uri"></param>
         /// <returns></returns>
         public string NormalizedForComparison(string uri) {

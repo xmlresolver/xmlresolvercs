@@ -18,11 +18,11 @@ namespace Org.XmlResolver {
     /// <para>This class is the implementation of the <see cref="IResolverConfiguration"/> for the
     /// <see cref="CatalogResolver"/>.</para>
     /// <para>The default value for property files is taken from the
-    /// <code>XMLRESOLVER_APPSETTINGS</code> environment variable. If this identifies a property file, it will
+    /// <c>XMLRESOLVER_APPSETTINGS</c> environment variable. If this identifies a property file, it will
     /// be used to configure the resolver.</para>
     /// <para>Property files are read with the <see cref="IConfigurationSection"/> API. If the file is XML,
-    /// properties are loaded from a section named <code>xmlResolver</code>. If the file is JSON,
-    /// properties are loaded from an object named <code>XmlResolver</code>.</para>
+    /// properties are loaded from a section named <c>xmlResolver</c>. If the file is JSON,
+    /// properties are loaded from an object named <c>XmlResolver</c>.</para>
     /// <para>In addition to a property file, individual environent variables can be used to specify properties:</para>
     /// <list type="table">
     /// <listheader>
@@ -31,55 +31,55 @@ namespace Org.XmlResolver {
     /// </listheader>
     /// <item>
     ///    <term>XML_CATALOG_ADDITIONS</term>
-    ///    <description>Additions to the catalog <code>ResolverFeature.CATALOG_ADDITIONS</code>.</description>
+    ///    <description>Additions to the catalog <c>ResolverFeature.CATALOG_ADDITIONS</c>.</description>
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_ALLOW_PI</term>
-    ///    <description>Allow the OASIS XML Catalog PI to influence resolution, <code>ResolverFeature.ALLOW_CATALOG_PI</code>.</description>
+    ///    <description>Allow the OASIS XML Catalog PI to influence resolution, <c>ResolverFeature.ALLOW_CATALOG_PI</c>.</description>
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_ARCHIVED_CATALOGS</term>
-    ///    <description>Allow ZIP files to be specified as catalogs, <code>ResolverFeature.ARCHIVED_CATALOGS</code>.</description>
+    ///    <description>Allow ZIP files to be specified as catalogs, <c>ResolverFeature.ARCHIVED_CATALOGS</c>.</description>
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_CACHE</term>
-    ///    <description>Enable caching, <code>ResolverFeature.CACHE</code>.</description>
+    ///    <description>Enable caching, <c>ResolverFeature.CACHE</c>.</description>
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_CACHE_UNDER_HOME</term>
-    ///    <description>Use <code>.xmlresolver.org/cache</code> in the users home directory for caching, <code>ResolverFeature.CACHE_UNDER_HOME</code>.</description>
+    ///    <description>Use <c>.xmlresolver.org/cache</c> in the users home directory for caching, <c>ResolverFeature.CACHE_UNDER_HOME</c>.</description>
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_FILES</term>
-    ///    <description>A list of XML Catalog files, <code>ResolverFeature.CATALOG_FILES</code>.</description>
+    ///    <description>A list of XML Catalog files, <c>ResolverFeature.CATALOG_FILES</c>.</description>
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_LOADER_CLASS</term>
-    ///    <description>The fully qualified name of the class to instantiate to load catalog files, <code>ResolverFeature.CATALOG_LOADER_CLASS</code>.</description>
+    ///    <description>The fully qualified name of the class to instantiate to load catalog files, <c>ResolverFeature.CATALOG_LOADER_CLASS</c>.</description>
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_MASK_PACK_URIS</term>
-    ///    <description>Mask <code>pack:</code> URIs, <code>ResolverFeature.MASK_PACK_URIS</code>.</description>
+    ///    <description>Mask <c>pack:</c> URIs, <c>ResolverFeature.MASK_PACK_URIS</c>.</description>
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_MERGE_HTTPS</term>
-    ///    <description>Merge http: and https: URIs for comparisons, <code>ResolverFeature.MERGE_HTTPS</code>.</description>
+    ///    <description>Merge http: and https: URIs for comparisons, <c>ResolverFeature.MERGE_HTTPS</c>.</description>
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_PARSE_RDDL</term>
-    ///    <description>Attempt to parse RDDL files if located by resolution, <code>ResolverFeature.PARSE_RDDL</code>.</description>
+    ///    <description>Attempt to parse RDDL files if located by resolution, <c>ResolverFeature.PARSE_RDDL</c>.</description>
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_PREFER</term>
-    ///    <description>Prefer public or system entries, <code>ResolverFeature.PREFER_PUBLIC</code>.</description>
+    ///    <description>Prefer public or system entries, <c>ResolverFeature.PREFER_PUBLIC</c>.</description>
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_PREFER_PROPERTY_FILE</term>
-    ///    <description>Prefer property file values over environment variables, <code>ResolverFeature.PREFER_PROPERTY_FILE</code>.</description>
+    ///    <description>Prefer property file values over environment variables, <c>ResolverFeature.PREFER_PROPERTY_FILE</c>.</description>
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_URI_FOR_SYSTEM</term>
-    ///    <description>Use uri entries for system identifier lookup, <code>ResolverFeature.URI_FOR_SYSTEM</code>.</description>
+    ///    <description>Use uri entries for system identifier lookup, <c>ResolverFeature.URI_FOR_SYSTEM</c>.</description>
     /// </item>
     /// </list>
     /// 

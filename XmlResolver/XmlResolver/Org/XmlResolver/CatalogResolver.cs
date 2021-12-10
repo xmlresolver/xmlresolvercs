@@ -95,8 +95,8 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Resolve a URI against the catalog(s).
         /// </summary>
-        /// <para>This method attempts to locate <code>href</code> with <see cref="CatalogManager.LookupUri"/>.
-        /// If that fails, and <code>baseUri</code> is provided, the <code>href</code> value will be made
+        /// <para>This method attempts to locate <c>href</c> with <see cref="CatalogManager.LookupUri"/>.
+        /// If that fails, and <c>baseUri</c> is provided, the <c>href</c> value will be made
         /// absolute and another attmept will be made with the absolute URI.</para>
         /// <param name="href">The URI.</param>
         /// <param name="baseUri">The base URI, which may be null.</param>
@@ -146,8 +146,8 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Resolve a URI against the catalog(s), optionally employing nature and purpose to limit the scope.
         /// </summary>
-        /// <para>This method attempts to locate <code>href</code> with <see cref="CatalogManager.LookupNamespace"/>.
-        /// If that fails, and <code>baseUri</code> is provided, the <code>href</code> value will be made
+        /// <para>This method attempts to locate <c>href</c> with <see cref="CatalogManager.LookupNamespace"/>.
+        /// If that fails, and <c>baseUri</c> is provided, the <c>href</c> value will be made
         /// absolute and another attmept will be made with the absolute URI.</para>
         /// <para>If nature and purpose are both null, this method has the same effect as calling
         /// <see cref="ResolveUri"/>.</para>
@@ -201,13 +201,13 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Resolve an entity against the catalog(s).
         /// </summary>
-        /// <para>If a <code>name</code> is provided, but both the <code>systemId</code> and
-        /// <code>publicId</code> are null, an attempt is made to locate a document type with the
+        /// <para>If a <c>name</c> is provided, but both the <c>systemId</c> and
+        /// <c>publicId</c> are null, an attempt is made to locate a document type with the
         /// specified name (calling <see cref="CatalogManager.LookupDoctype"/>.</para>
         /// <para>If at least one of the identifiers is provided, they are used to lookup the
-        /// resource, with the <code>name</code> used with <see cref="CatalogManager.LookupEntity"/>
+        /// resource, with the <c>name</c> used with <see cref="CatalogManager.LookupEntity"/>
         /// if nothing is located with the identifiers.</para>
-        /// <para>If the <code>baseUri</code> and system identifiers are not null, and resolution fails,
+        /// <para>If the <c>baseUri</c> and system identifiers are not null, and resolution fails,
         /// the system identifier is made absolute against the base URI and a second attempt is made.</para>
         /// <para>If all of the parameters are null, null is returned.</para>
         /// <param name="name">The entity name, which may be null.</param>
