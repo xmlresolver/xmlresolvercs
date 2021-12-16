@@ -17,5 +17,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override EntryType GetEntryType() {
             return EntryType.SYSTEM;
         }
+        
+        public override string ToString() {
+            return $"system {SystemId} {Entry.Rarr} {ResourceUri}";
+        }
     }
 }

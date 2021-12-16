@@ -9,5 +9,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override Catalog.Entry.Entry.EntryType GetEntryType() {
             return Catalog.Entry.Entry.EntryType.DOCUMENT;
         }
+
+        public override string ToString() {
+            return $"document {Entry.Rarr} {ResourceUri}";
+        }
     }
 }

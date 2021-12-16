@@ -13,6 +13,8 @@ namespace Org.XmlResolver.Catalog.Entry {
             SYSTEM, SYSTEM_SUFFIX,
             URI, URI_SUFFIX
         }
+        
+        public static readonly string Rarr = "→";
 
         // Cheap and cheerful NCNAME test
         private static Regex NCNAME_RE = new Regex(@"^[A-Za-z0-9_]+$");

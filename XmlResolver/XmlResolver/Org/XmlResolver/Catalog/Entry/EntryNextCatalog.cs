@@ -12,5 +12,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override EntryType GetEntryType() {
             return EntryType.NEXT_CATALOG;
         }
+
+        public override string ToString() {
+            return $"nextCatalog {Entry.Rarr} {Catalog}";
+        }
     }
 }

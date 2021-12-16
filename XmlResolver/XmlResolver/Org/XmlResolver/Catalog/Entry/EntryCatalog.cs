@@ -294,5 +294,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         }
         return entry;
     }
+    
+    public override string ToString() {
+        return $"catalog prefer={(preferPublic ? "public" : "system")}";
+    }
     }
 }

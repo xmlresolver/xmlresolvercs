@@ -14,5 +14,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override EntryType GetEntryType() {
             return EntryType.URI_SUFFIX;
         }
+        
+        public override string ToString() {
+            return $"uriSuffix {UriSuffix} {Entry.Rarr} {ResourceUri}";
+        }
     }
 }

@@ -21,5 +21,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override EntryType GetEntryType() {
             return EntryType.REWRITE_SYSTEM;
         }
+        
+        public override string ToString() {
+            return $"rewriteSystem {SystemIdStart} {Entry.Rarr} {RewritePrefix}";
+        }
     }
 }

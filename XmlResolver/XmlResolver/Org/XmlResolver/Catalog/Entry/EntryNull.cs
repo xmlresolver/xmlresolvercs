@@ -9,5 +9,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override EntryType GetEntryType() {
             return EntryType.NULL;
         }
+        
+        public override string ToString() {
+            return $"null entry (not a catalog element)";
+        }
     }
 }

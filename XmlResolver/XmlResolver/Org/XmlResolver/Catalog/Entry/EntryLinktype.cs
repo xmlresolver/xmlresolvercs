@@ -11,5 +11,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override Catalog.Entry.Entry.EntryType GetEntryType() {
             return Catalog.Entry.Entry.EntryType.LINKTYPE;
         }
+        
+        public override string ToString() {
+            return $"linktype {Name} {Entry.Rarr} {ResourceUri}";
+        }
     }
 }
