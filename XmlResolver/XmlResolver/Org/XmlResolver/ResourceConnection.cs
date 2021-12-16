@@ -27,7 +27,7 @@ namespace Org.XmlResolver {
         /// Create a connection for the URI.
         /// </summary>
         /// <para>This is the equivalent of calling the two argument constructor
-        /// specifying "false" for <code>headOnly</code>.</para>
+        /// specifying "false" for <c>headOnly</c>.</para>
         /// <param name="resolved">The resolved (absolute) URI to access</param>
         public ResourceConnection(string resolved) : this(resolved, false) {
             // nop
@@ -127,9 +127,9 @@ namespace Org.XmlResolver {
         /// <summary>
         /// The last modified date of the resource. May be null.
         /// </summary>
-        /// <para>This value will be null if the server did not return a <code>Date</code>
+        /// <para>This value will be null if the server did not return a <c>Date</c>
         /// header or if the format of the date header did not match the expected form
-        /// <code>ddd, dd MMM yyyy HH:mm:ss 'GMT'</code>.</para>
+        /// <c>ddd, dd MMM yyyy HH:mm:ss 'GMT'</c>.</para>
         public long Date => _date;
 
         /// <summary>

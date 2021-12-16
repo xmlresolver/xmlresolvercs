@@ -8,7 +8,34 @@ using System.Reflection;
 using System.Text;
 
 namespace Org.XmlResolver.Utils {
+    /// <summary>
+    /// Convenience class of methods for dealing with URIs and obtaining data from resources identified
+    /// with URIs.
+    /// </summary>
+    ///
+    /// <para>The methods in <c>URIUtils</c> are designed to simplify access, but they are
+    /// considered relatively low level. It is the caller's responsibility to catch exceptions
+    /// that may arise (because resources aren't found, for example, or aren't accessible.</para>
+    /// 
     public class UriUtils {
+        /// <summary>
+        /// Resolve a string against a base URI, taking special care of pack: URIs.
+        /// </summary>
+        /// <para>URIs in the <c>pack:</c> scheme can be used to access resources in assemblies,
+        /// see https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?view=netframeworkdesktop-4.8
+        /// </para>.
+        /// <para>If the <c>uri</c> appears to be a <c>pack:</c> URI, an attempt is
+        /// made to find the relevant assembly. If it is found, <see cref="GetLocationUri"/> is
+        /// used to return a location. Only <c>pack://application:</c> URIs are supported,
+        /// <c>pack://siteoforigin:</c> URIs are not.</para>
+        /// <para>For URIs of other schemes, this method calls <c>new Uri(baseURI, uri)</c>.
+        /// </para>
+        /// <para>Will throw exceptions if the URI scheme is not supported or if resolution results
+        /// in an exception.</para>
+        /// 
+        /// <param name="baseURI">The base URI.</param>
+        /// <param name="uri">The possibly relative URI to make absolute.</param>
+        /// <returns>The resolved URI.</returns>
         public static Uri Resolve(Uri baseURI, string uri) {
             if (uri.StartsWith("pack://")) {
                 return GetPackUri(uri);
@@ -17,15 +44,45 @@ namespace Org.XmlResolver.Utils {
             return new Uri(baseURI, uri);
         }
 
+        /// <summary>
+        /// Resolve a URI against a base URI.
+        /// </summary>
+        /// <para>This is purely a convenience method so that <c>UriUtils.Resolve()</c> can be
+        /// called with either a string or Uri. It simply calls <c>new Uri(baseURI, uri)</c>
+        /// on its inputs.</para>
+        /// <param name="baseURI">The base URI.</param>
+        /// <param name="uri">The possibly relative URI to make absolute.</param>
+        /// <returns>The resolved URI.</returns>
         public static Uri Resolve(Uri baseURI, Uri uri) {
             return new Uri(baseURI, uri);
         }
 
+        /// <summary>
+        /// Returns the current working directory as a URI.
+        /// </summary>
+        /// <para>This method returns <see cref="Directory.GetCurrentDirectory"/> as a
+        /// <c>file:</c> URI.</para>
+        /// <returns>The current directory as a URI.</returns>
         public static Uri Cwd() {
             return new Uri(new Uri("file://"), 
                 System.IO.Directory.GetCurrentDirectory() + "/");
         }
         
+        /// <summary>
+        /// Normalize a URI. 
+        /// </summary>
+        /// <para>The XML Catalogs specification describes a normalization process for system and public
+        /// identifiers. This normalization attempts to make comparisons more robust and is required
+        /// for encoding public identifiers as URNs.</para>
+        ///
+        /// <para>Normalization consists of replacing all occurrences of characters less than
+        /// or equal to space (0x20), greater than or equal to DEL (0x7F), or one of
+        /// <c>&quot;</c>, <c>&lt;</c>, <c>&gt;</c>, <c>\</c>, <c>^</c>, <c>`</c>, <c>{</c>, <c>|</c>,
+        /// or <c>}</c> with its hex-encoded value.</para> 
+        ///
+        /// <para>If the <c>uriref</c> is <c>null</c>, <c>null</c> is returned.
+        /// <param name="uriref">The URI reference</param>
+        /// <returns>The normalized URI reference.</returns>
         public static String NormalizeUri(string uriref) {
             if (uriref == null) {
                 return null;
@@ -62,6 +119,20 @@ namespace Org.XmlResolver.Utils {
             return "%" + hex;
         }
         
+        /// <summary>
+        /// Return a URI for a resource located in an assembly.
+        /// </summary>
+        /// <para>Generates a URI from the combination of a resource path and an assembly.
+        /// If the assembly is null, the currently executing assembly is used.</para>
+        /// <para>Note: The Microsoft documentation is inconsistent about the format of the path.
+        /// It says the path must conform to <c>AssemblyShortName{;Version]{;PublicKey};component/Path</c>
+        /// but then goes on to show examples that have a leading "/" before the AssemblyShortName.
+        /// I can't work out how to construct paths of the latter form, see
+        /// https://stackoverflow.com/questions/68255149 so this method returns the former for now.
+        /// 
+        /// <param name="resourcePath">The resource path.</param>
+        /// <param name="assembly">The assembly, or null for the current assembly</param>
+        /// <returns>Returns a pack: URI for the resource within the assembly.</returns>
         public static Uri GetLocationUri(string resourcePath, Assembly assembly = null) {
             StringBuilder uribuilder = new StringBuilder();
             uribuilder.Append("application:///");
@@ -71,7 +142,7 @@ namespace Org.XmlResolver.Utils {
             }
 
             // FIXME: the Microsoft documentation is inconsistent about the format of the path.
-            // It says, the path must conform to AssemblyShortName{;Version]{;PublicKey];component/Path
+            // It says, the path must conform to AssemblyShortName{;Version]{;PublicKey};component/Path
             // but then goes on to show examples that have a leading "/" before the AssemblyShortName.
             // I can't work out how to construct paths of the latter form, see
             // https://stackoverflow.com/questions/68255149 so I'm just going to run with the former
@@ -179,18 +250,58 @@ namespace Org.XmlResolver.Utils {
             return new Uri(uri);
         }
 
+        /// <summary>
+        /// Returns a stream for the given URI.
+        /// </summary>
+        /// <para>Equivalent to <c>GetStream(uri.ToString(), Assembly.GetExecutingAssembly())</c>.
+        /// </para>
+        /// <para>Will throw exceptions if errors occur attempting to resolve the reference
+        /// or open the stream.</para>
+        /// <param name="uri">The URI.</param>
+        /// <returns>The stream, or null if the stream could not be opened.</returns>
         public static Stream GetStream(Uri uri) {
             return GetStream(uri.ToString(), Assembly.GetExecutingAssembly());
         }
 
+        /// <summary>
+        /// Returns a stream for the given URI in the context of the given assembly.
+        /// </summary>
+        /// <para>Equivalent to <c>GetStream(uri.ToString(), asm)</c>.
+        /// </para>
+        /// <para>Will throw exceptions if errors occur attempting to resolve the reference
+        /// or open the stream.</para>
+        /// <param name="uri">The URI.</param>
+        /// <param name="asm">The relevant assembly.</param>
+        /// <returns>The stream, or null if the stream could not be opened.</returns>
         public static Stream GetStream(Uri uri, Assembly asm) {
             return GetStream(uri.ToString(), asm);
         }
 
+        /// <summary>
+        /// Returns a stream for the given URI.
+        /// </summary>
+        /// <para>Equivalent to <c>GetStream(uri, Assembly.GetExecutingAssembly())</c>.
+        /// </para>
+        /// <para>Will throw exceptions if errors occur attempting to resolve the reference
+        /// or open the stream.</para>
+        /// <param name="uri">The URI.</param>
+        /// <returns>The stream, or null if the stream could not be opened.</returns>
         public static Stream GetStream(string uri) {
             return GetStream(uri, Assembly.GetExecutingAssembly());
         }
 
+        /// <summary>
+        /// Returns a stream for the given URI.
+        /// </summary>
+        /// <para>The URI must be absolute. Only <c>file:</c>, <c>http:</c> and <c>https:</c>,
+        /// <c>pack:</c>, and <c>data:</c> URIs are supported.</para>
+        /// <para>The assembly is only relevant for <c>pack:</c> scheme URIs.</para>
+        /// <para>In addition to <c>ArgumentException</c>, any exceptions raised attempting to open the
+        /// resource will also be thrown.</para>
+        /// <param name="uri">The URI.</param>
+        /// <param name="asm">The relevant assembly.</param>
+        /// <returns>The stream, or null if the stram could not be opened.</returns>
+        /// <exception cref="ArgumentException">If the URI is not absolute or has an unsupported scheme.</exception>
         public static Stream GetStream(string uri, Assembly asm) {
             if (uri.StartsWith("file:/")) {
                 return _getFileStream(uri);
@@ -382,6 +493,14 @@ namespace Org.XmlResolver.Utils {
             throw new UriFormatException(uri + ": comma separator missing");
         }
         
+        /// <summary>
+        /// Convenience method for constructing URIs from strings.
+        /// </summary>
+        /// <para>This method normalizes the number of "/" characters that follow
+        /// <c>file:</c> in a file URI, and promotes any <c>href</c> that begins with a
+        /// slash to being a <c>file:</c> URI.</para>
+        /// <param name="href">A URI or path.</param>
+        /// <returns>A normalized file: URI or the string as a URI.</returns>
         public static Uri NewUri(string href) {
             if (href.StartsWith("file:")) {
                 int pos = 5;

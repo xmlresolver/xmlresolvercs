@@ -20,8 +20,8 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Resolve a URI.
         /// </summary>
-        /// <para>If the <code>baseUri</code> is not null and resolution fails with the initial
-        /// value of <code>href</code>, the <code>href</code> will be made absolute against the
+        /// <para>If the <c>baseUri</c> is not null and resolution fails with the initial
+        /// value of <c>href</c>, the <c>href</c> will be made absolute against the
         /// base URI and another attempt will be made.</para>
         /// <param name="href">The (namespace) URI.</param>
         /// <param name="baseUri">The base URI, which may be null.</param>

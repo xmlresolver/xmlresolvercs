@@ -60,7 +60,7 @@ namespace Org.XmlResolver {
         /// version of the API.</para>
         /// <para>There's an awful failing in the way that the system parser uses this API.
         /// Presented with an entity that has both system and public identifiers, it calls
-        /// <code>GetEntity</code> initially passing the public identifier as the absolute URI.
+        /// <c>GetEntity</c> initially passing the public identifier as the absolute URI.
         /// This is complete madness, but if attempting to use the URI throws an exception and
         /// the URI looks like it might be a public identifier, we try to resolve with it.</para>
         /// <para>In principle, an XML document can't have only a public identifier, but this API forces

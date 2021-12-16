@@ -6,8 +6,8 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Resolve a URI.
         /// </summary>
-        /// <para>If the <code>baseUri</code> is not null and resolution fails with the initial
-        /// value of <code>href</code>, the <code>href</code> will be made absolute against the
+        /// <para>If the <c>baseUri</c> is not null and resolution fails with the initial
+        /// value of <c>href</c>, the <c>href</c> will be made absolute against the
         /// base URI and another attempt will be made.</para>
         /// <param name="href">The URI.</param>
         /// <param name="baseUri">The base URI, which may be null.</param>
@@ -17,8 +17,8 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Resolve a (namespace) URI.
         /// </summary>
-        /// <para>If the <code>baseUri</code> is not null and resolution fails with the initial
-        /// value of <code>href</code>, the <code>href</code> will be made absolute against the
+        /// <para>If the <c>baseUri</c> is not null and resolution fails with the initial
+        /// value of <c>href</c>, the <c>href</c> will be made absolute against the
         /// base URI and another attempt will be made.</para>
         /// <param name="href">The URI.</param>
         /// <param name="baseUri">The base URI, which may be null.</param>
@@ -30,12 +30,12 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Resolve an entity.
         /// </summary>
-        /// <para>If a <code>name</code> is provided, but both the <code>systemId</code> and
-        /// <code>publicId</code> are null, an attempt is made to locate a document type with the
+        /// <para>If a <c>name</c> is provided, but both the <c>systemId</c> and
+        /// <c>publicId</c> are null, an attempt is made to locate a document type with the
         /// specified name.</para>
         /// <para>If at least one of the identifiers is provided, they are used to lookup the
-        /// resource, with the <code>name</code> used if nothing is located with the identifiers.</para>
-        /// <para>If the <code>baseUri</code> and system identifiers are not null, and resolution fails,
+        /// resource, with the <c>name</c> used if nothing is located with the identifiers.</para>
+        /// <para>If the <c>baseUri</c> and system identifiers are not null, and resolution fails,
         /// the system identifier is made absolute against the base URI and a second attempt is made.</para>
         /// <para>If all of the parameters are null, null is returned.</para>
         /// <param name="name">The entity name, which may be null.</param>

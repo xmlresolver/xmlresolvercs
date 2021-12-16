@@ -27,7 +27,7 @@ namespace Org.XmlResolver {
         private string _catalogLogging = null;
 
         /// <summary>
-        /// Create a new <code>ResolverLogger</code> around the specified logger.
+        /// Create a new <c>ResolverLogger</c> around the specified logger.
         /// </summary>
         /// <param name="logger">The underlying logger.</param>
         public ResolverLogger(Logger logger) {
