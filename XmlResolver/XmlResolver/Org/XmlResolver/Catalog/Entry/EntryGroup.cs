@@ -11,5 +11,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override EntryType GetEntryType() {
             return EntryType.GROUP;
         }
+        
+        public override string ToString() {
+            return $"group prefer={(preferPublic ? "public" : "system")}";
+        }
     }
 }

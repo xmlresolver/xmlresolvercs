@@ -16,6 +16,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override Catalog.Entry.Entry.EntryType GetEntryType() {
             return XmlResolver.Catalog.Entry.Entry.EntryType.DELEGATE_PUBLIC;
         }
-
+                    
+        public override string ToString() {
+            return $"delegatePublic {PublicIdStart} {Entry.Rarr} {Catalog}";
+        }
     }
 }

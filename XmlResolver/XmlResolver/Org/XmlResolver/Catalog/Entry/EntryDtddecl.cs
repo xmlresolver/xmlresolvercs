@@ -11,5 +11,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override Catalog.Entry.Entry.EntryType GetEntryType() {
             return Catalog.Entry.Entry.EntryType.DTD_DECL;
         }
+
+        public override string ToString() {
+            return $"dtddecl {PublicId} {Entry.Rarr} {ResourceUri}";
+        }
     }
 }

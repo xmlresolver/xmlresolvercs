@@ -21,5 +21,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override EntryType GetEntryType() {
             return EntryType.REWRITE_URI;
         }
+        
+        public override string ToString() {
+            return $"rewriteURI {UriStart} {Entry.Rarr} {RewritePrefix}";
+        }
     }
 }

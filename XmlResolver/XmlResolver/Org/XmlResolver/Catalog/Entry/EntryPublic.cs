@@ -13,5 +13,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override EntryType GetEntryType() {
             return EntryType.PUBLIC;
         }
+        
+        public override string ToString() {
+            return $"public {PublicId} {Entry.Rarr} {ResourceUri}";
+        }
     }
 }

@@ -20,5 +20,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override EntryType GetEntryType() {
             return EntryType.DELEGATE_URI;
         }
+        
+        public override string ToString() {
+            return $"delegateURI {UriStart} {Entry.Rarr} {Catalog}";
+        }
     }
 }

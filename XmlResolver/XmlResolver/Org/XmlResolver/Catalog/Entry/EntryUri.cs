@@ -24,5 +24,28 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override EntryType GetEntryType() {
             return EntryType.URI;
         }
+        
+        public override string ToString() {
+            string str = $"uri {Name} {Entry.Rarr} {ResourceUri}";
+            if (Nature != null || Purpose != null) {
+                str += " (";
+            }
+            if (Nature != null) {
+                str += $"nature={Nature}";
+            }
+
+            if (Purpose != null) {
+                if (Nature != null) {
+                    str += "; ";
+                }
+
+                str += $"purpose={Purpose}";
+            }
+            if (Nature != null || Purpose != null) {
+                str += ")";
+            }
+
+            return str;
+        }
     }
 }

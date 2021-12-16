@@ -20,5 +20,9 @@ namespace Org.XmlResolver.Catalog.Entry {
         public override Catalog.Entry.Entry.EntryType GetEntryType() {
             return XmlResolver.Catalog.Entry.Entry.EntryType.DELEGATE_SYSTEM;
         }
+        
+        public override string ToString() {
+            return $"delegateSystem {SystemIdStart} {Entry.Rarr} {Catalog}";
+        }
     }
 }

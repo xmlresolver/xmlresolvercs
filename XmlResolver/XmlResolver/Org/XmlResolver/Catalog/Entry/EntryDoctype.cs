@@ -15,5 +15,8 @@ namespace Org.XmlResolver.Catalog.Entry {
             return Catalog.Entry.Entry.EntryType.DOCTYPE;
         }
         
+        public override string ToString() {
+            return $"doctype {Name} {Entry.Rarr} {ResourceUri}";
+        }
     }
 }
