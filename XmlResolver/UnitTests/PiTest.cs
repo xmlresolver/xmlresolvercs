@@ -31,7 +31,8 @@ namespace UnitTests {
                     // nop;
                 }
             }
-            catch (Exception) {
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
         }
@@ -48,7 +49,8 @@ namespace UnitTests {
                     // nop;
                 }
             }
-            catch (Exception) {
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
 
