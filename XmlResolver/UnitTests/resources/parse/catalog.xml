@@ -4,6 +4,9 @@
   <system systemId="http://example.org/schema/doc.dtd"
           uri="doc.dtd"/>
 
+  <public publicId="-//DTD//Example 1.0//EN"
+          uri="doc.dtd"/>
+
   <system systemId="http://example.org/schema/doc.xsd"
           uri="doc.xsd"/>
 

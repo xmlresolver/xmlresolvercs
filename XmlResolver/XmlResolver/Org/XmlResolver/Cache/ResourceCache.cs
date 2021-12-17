@@ -474,6 +474,10 @@ namespace Org.XmlResolver.Cache {
         }
 
         public CacheEntry CachedSystem(Uri systemId, string publicId) {
+            if (systemId == null) {
+                return null;
+            }
+
             CacheEntry entry = FindSystemCacheEntry(systemId.ToString());
             if (entry == null || entry.Expired) {
                 if (CacheUri(systemId.ToString())) {
