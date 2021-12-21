@@ -73,54 +73,6 @@ namespace Org.XmlResolver {
         /// <param name="ofObjectToReturn">The type of object to return, which is ignored.</param>
         /// <returns>A stream if the resource was located or null otherwise.</returns>
         public override object? GetEntity(Uri absoluteUri, string? role, Type? ofObjectToReturn) {
-            // If the absolute URI path contains "//", it might be a public identifier.
-            if (absoluteUri.AbsolutePath.Contains("//")) {
-                // There's a horrible bug in System.Xml where it attempts to resolve public identifiers
-                // as if they were relative URIs. It turns them into things like this:
-                //    http://example.com/path/-//DTD//Example 1.0//EN
-                // That's not in the catalog, of course, so we end up doing a web request for it, even
-                // though it's bound to fail.
-                //
-                // You might think, if we were clever, we could do a publicId lookup in the catalog
-                // for it. And you'd be right. Unfortunately, the resulting resource will either
-                // have no system identifier (not allowed by XML) or will have the aforementioned
-                // mangled URI as its system identifier. Using the mangled URI will cause relative
-                // URI lookups to fail; if the relative URI is a pack:// URI that accessed a resource
-                // in an assemble, the relative URI will likely throw an other exceptions.
-                //
-                // The best we can do is return "null" without attempting to access the resource
-                // with the broken URI.
-                //
-                // But now we need a heuristic for "is this one of those mangled URIs".
-                //
-                // Here's my heuristic:
-                // If the URI contains "//", it could be a public identifier
-                // If it contains *another* "//" and if there is no "." after the 
-                // last "//", we assume it's a public identifier.
-
-                bool isMangledUri = false;
-                
-                string path = absoluteUri.ToString(); // We don't want the AbsolutePath version because of escapes
-                
-                // The *first* // is going to be the scheme separator
-                int pos = path.IndexOf("//");
-                path = path.Substring(pos + 2);
-
-                pos = path.IndexOf("//");
-                if (pos >= 0) {                                // It has a "//"
-                    path = path.Substring(pos + 2);
-                    pos = path.LastIndexOf("//");              // It has *another* "//"
-                    if (pos >= 0) {
-                        path = path.Substring(pos + 2);
-                        isMangledUri = !path.Contains(".");    // Is there a "." in what follows the last one?
-                    }
-                }
-
-                if (isMangledUri) {
-                    return null;
-                }
-            }
-            
             ResolvedResource rsrc = _resolver.ResolveEntity(null, null, absoluteUri.ToString(), null);
             if (rsrc == null) {
                 try {
@@ -128,23 +80,9 @@ namespace Org.XmlResolver {
                     return stream;
                 }
                 catch (Exception) {
-                    // If the absoluteUri looks like a public identifier, ¯\_(ツ)_/¯
-                    if ("file".Equals(absoluteUri.Scheme)) {
-                        string cwd = Directory.GetCurrentDirectory();
-                        string pubid = absoluteUri.ToString(); // Can't use AbsolutePath because it escapes things
-                        pubid = Regex.Replace(pubid, @"file:/+", "/");
-                        if (pubid.StartsWith(cwd)) {
-                            pubid = pubid.Substring(cwd.Length+1);
-                            pubid = Regex.Replace(pubid, @"/", @"//");
-                            rsrc = _resolver.ResolveEntity(null, pubid, null, null);
-                            if (rsrc != null) {
-                                return rsrc.GetInputStream();
-                            }
-                        }
-                    }
+                    // Give up.
+                    return null;
                 }
-                
-                return null;
             }
             return rsrc.GetInputStream();
         }
@@ -189,6 +127,63 @@ namespace Org.XmlResolver {
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Resolve the relative URI against the base.
+        /// </summary>
+        /// <para>Note: this is part of the System.Xml.UriResolver interface. This is about resolving
+        /// the relative and absolute portions of a URI, it is not about resolving the URI to a resource.</para>
+        /// <param name="baseUri">The base URI.</param>
+        /// <param name="relativeUri">The relative URI.</param>
+        /// <returns>The resolved absolute URI or null.</returns>
+        /// <exception cref="NotSupportedException">If resolution produces a relative URI</exception>
+        public override Uri ResolveUri(Uri? baseUri, string? relativeUri) {
+            // There's a horrible bug in System.Xml where it attempts to resolve public identifiers
+            // as if they were relative URIs. It turns them into things like this:
+            //    http://example.com/path/-//DTD//Example 1.0//EN
+            // That's not in the catalog, of course, so we end up doing a web request for it, even
+            // though it's bound to fail.
+            //
+            // You might think, if we were clever, we could do a publicId lookup in the catalog
+            // for it. And you'd be right. Unfortunately, the resulting resource will either
+            // have no system identifier (not allowed by XML) or will have the aforementioned
+            // mangled URI as its system identifier. Using the mangled URI will cause problems
+            // if relative URIs are resolved against it, especially if it happens to be a pack://
+            // URI that was the result of loading a resource from an assembly.
+            //
+            // The best we can do is return "null" without attempting to access the resource
+            // with the broken URI.
+
+            bool publicId = false;
+            // Does the relativeUri look like a public identifier? Technically, does it look like a formal
+            // public identifier (FPI)? This code relies on the structure of FPIs to identify them. Any
+            // random string of characters *might* be a public identifier, but there's nothing we can do
+            // about that. And the convention of formatting them as FPIs is pretty nearly universal.
+            if (relativeUri != null) {
+                int cpos = relativeUri.IndexOf(":", StringComparison.InvariantCulture);
+                int pos = relativeUri.IndexOf("//", StringComparison.InvariantCulture);
+                // If it doesn't contain '//' or if it begins 'scheme://', then it's not a public identifier.
+                // (Here we use "position of :" < "position of //" as a proxy for checking the scheme.
+                // Close enough and faster than regex.)
+                if (pos >= 0 && (cpos < 0 || cpos > pos)) {
+                    String id = relativeUri.Substring(pos + 2);
+                    pos = id.IndexOf("//", StringComparison.InvariantCulture);
+                    if (pos >= 0) {
+                        // If it contains a second //, and...
+                        pos = id.LastIndexOf("//", StringComparison.InvariantCulture);
+                        id = id.Substring(pos + 2);
+                        // If there's no "." (no hint of a filename extension) after the last //
+                        publicId = !id.Contains("."); // call it a public identifier
+                    }
+                }
+            }
+            
+            if (publicId) {
+                return null;
+            }
+
+            return base.ResolveUri(baseUri, relativeUri);
         }
     }
 }
