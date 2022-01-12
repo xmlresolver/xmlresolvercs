@@ -781,7 +781,7 @@ namespace Org.XmlResolver.Cache {
             int pos = suffix.LastIndexOf(".");
             if (pos > 0) {
                 suffix = suffix.Substring(pos);
-                if (suffix.Length <= 5) {
+                if (suffix.Length <= 5 && !suffix.EndsWith("/")) {
                     return suffix;
                 }
             }
