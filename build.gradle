@@ -1,3 +1,10 @@
+buildscript {
+  repositories {
+    mavenCentral()
+    mavenLocal()
+  }
+}
+
 plugins {
   id "com.itiviti.dotnet" version "1.9.2"
   id 'com.nwalsh.gradle.saxon.saxon-gradle' version '0.9.3'
