@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using NUnit.Framework;
 using Org.XmlResolver;
@@ -12,6 +13,7 @@ namespace UnitTests {
 
         private XmlResolverConfiguration config = null;
         private ResourceCache cache = null;
+        private CatalogResolver cresolver = null;
 
         [SetUp]
         public void Setup() {
@@ -19,6 +21,7 @@ namespace UnitTests {
             config = new XmlResolverConfiguration();
             config.SetFeature(ResolverFeature.CACHE_DIRECTORY, Path.Combine(Directory.GetCurrentDirectory(), cacheDir));
             cache = new ResourceCache(config);
+            cresolver = new CatalogResolver(config);
         }
 
         [Test]
@@ -111,6 +114,16 @@ namespace UnitTests {
             cache.RemoveCacheInfo("^fribble:");
             cache.RemoveCacheInfo("^frabble:");
             cache.RemoveCacheInfo("\\.dtd$");
+        }
+
+        [Test]
+        public void TestCacheData() {
+            try {
+                ResolvedResource rsrc = cresolver.ResolveUri("http://localhost:8222/docs/sample/xlink.xsd", null);
+                Assert.NotNull(rsrc.GetInputStream());
+            } catch (Exception) {
+                Assert.Fail();
+            }
         }
     }
 }
