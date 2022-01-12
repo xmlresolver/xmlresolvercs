@@ -7,6 +7,13 @@ plugins {
 import com.nwalsh.gradle.saxon.SaxonXsltTask
 import com.nwalsh.gradle.docker.DockerContainer
 
+repositories {
+  mavenLocal()
+  mavenCentral()
+  maven { url = "https://maven.apache.org" }
+  maven { url "https://dev.saxonica.com/maven" }
+}
+
 ext {
   c_csrestest = "csrestest"
 }
