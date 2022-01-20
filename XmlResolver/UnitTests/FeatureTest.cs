@@ -11,6 +11,7 @@ namespace UnitTests {
         [SetUp]
         public void Setup() {
             config = new XmlResolverConfiguration();
+            config.SetFeature(ResolverFeature.USE_DATA_ASSEMBLY, false);
         }
         
         private void BooleanFeature(BoolResolverFeature feature) {
