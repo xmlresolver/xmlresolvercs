@@ -81,10 +81,16 @@ namespace Org.XmlResolver {
     ///    <term>XML_CATALOG_URI_FOR_SYSTEM</term>
     ///    <description>Use uri entries for system identifier lookup, <c>ResolverFeature.URI_FOR_SYSTEM</c>.</description>
     /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_USE_DATA_ASSEMBLY</term>
+    ///    <description>Use the XmlResolverData assembly for resolution (if it's available).</description>
+    /// </item>
     /// </list>
     /// 
     public class XmlResolverConfiguration : IResolverConfiguration {
         private readonly object _syncLock = new object();
+
+        private readonly string XmlResolverDataAssembly = "XmlResolverData.dll";
 
         protected static ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
 
@@ -93,13 +99,15 @@ namespace Org.XmlResolver {
             ResolverFeature.ALLOW_CATALOG_PI, ResolverFeature.CATALOG_ADDITIONS, ResolverFeature.CACHE_DIRECTORY,
             ResolverFeature.CACHE_UNDER_HOME, ResolverFeature.CACHE, ResolverFeature.MERGE_HTTPS, ResolverFeature.MASK_PACK_URIS,
             ResolverFeature.CATALOG_MANAGER, ResolverFeature.URI_FOR_SYSTEM, ResolverFeature.CATALOG_LOADER_CLASS,
-            ResolverFeature.PARSE_RDDL, ResolverFeature.ASSEMBLY_CATALOGS, ResolverFeature.ARCHIVED_CATALOGS
+            ResolverFeature.PARSE_RDDL, ResolverFeature.ASSEMBLY_CATALOGS, ResolverFeature.ARCHIVED_CATALOGS,
+            ResolverFeature.USE_DATA_ASSEMBLY
         };
 
         // private static List<string> classpathCatalogList = null;
         private List<string> catalogs = new();
         private List<string> additionalCatalogs = new();
         private List<string> assemblyCatalogs = new();
+        private List<string> builtinAssemblyCatalogs = new();
 
         private bool preferPublic = ResolverFeature.PREFER_PUBLIC.GetDefaultValue();
         private bool preferPropertyFile = ResolverFeature.PREFER_PROPERTY_FILE.GetDefaultValue();
@@ -114,6 +122,7 @@ namespace Org.XmlResolver {
         private string catalogLoader = ResolverFeature.CATALOG_LOADER_CLASS.GetDefaultValue();
         private bool parseRddl = ResolverFeature.PARSE_RDDL.GetDefaultValue();
         private bool archivedCatalogs = ResolverFeature.ARCHIVED_CATALOGS.GetDefaultValue();
+        private bool useDataAssembly = ResolverFeature.USE_DATA_ASSEMBLY.GetDefaultValue();
         private bool showConfigChanges = false; // make the config process a bit less chatty
         
         /// <summary>
@@ -158,6 +167,7 @@ namespace Org.XmlResolver {
             catalogs.Clear();
             additionalCatalogs.Clear();
             assemblyCatalogs.Clear();
+            builtinAssemblyCatalogs.Clear();
             LoadConfiguration(propertyFiles, catalogFiles);
             showConfigChanges = true;
         }
@@ -170,6 +180,7 @@ namespace Org.XmlResolver {
             catalogs = new List<string>(current.catalogs);
             additionalCatalogs = new List<string>(current.additionalCatalogs);
             assemblyCatalogs = new List<string>(current.assemblyCatalogs);
+            builtinAssemblyCatalogs = new List<string>(current.builtinAssemblyCatalogs);
             preferPublic = current.preferPublic;
             preferPropertyFile = current.preferPropertyFile;
             allowCatalogPI = current.allowCatalogPI;
@@ -187,6 +198,7 @@ namespace Org.XmlResolver {
             catalogLoader = current.catalogLoader;
             parseRddl = current.parseRddl;
             archivedCatalogs = current.archivedCatalogs;
+            useDataAssembly = current.useDataAssembly;
             showConfigChanges = current.showConfigChanges;
         }
 
@@ -257,6 +269,10 @@ namespace Org.XmlResolver {
                     }
                 }
             }
+
+            if (useDataAssembly) {
+                builtinAssemblyCatalogs.Add(XmlResolverDataAssembly);
+            }
         }
 
         private void LoadSystemPropertiesConfiguration() {
@@ -324,6 +340,7 @@ namespace Org.XmlResolver {
 
             SetBoolean("XML_CATALOG_PARSE_RDDL", "Use RDDL: {0}", ref parseRddl);
             SetBoolean("XML_CATALOG_ARCHIVED_CATALOGS", "Use archived catalogs: {0}", ref archivedCatalogs);
+            SetBoolean("XML_CATALOG_USE_DATA_ASSEMBLY", "Use data assembly: {0}", ref useDataAssembly);
         }
 
         private void SetBoolean(string name, string desc, ref bool value) {
@@ -435,6 +452,7 @@ namespace Org.XmlResolver {
 
             SetPropertyBoolean(section.GetSection("parseRddl"),"Use RDDL: {0}", ref parseRddl);
             SetPropertyBoolean(section.GetSection("archivedCatalogs"),"Use archived catalogs: {0}", ref archivedCatalogs);
+            SetPropertyBoolean(section.GetSection("useDataAssembly"), "Use data assembly: {0}", ref useDataAssembly);
         }
 
         private void SetPropertyBoolean(IConfigurationSection section, string desc, ref bool value) {
@@ -570,6 +588,22 @@ namespace Org.XmlResolver {
                 parseRddl = (Boolean) value;
             } else if (feature == ResolverFeature.ARCHIVED_CATALOGS) {
                 archivedCatalogs = (Boolean) value;
+            } else if (feature == ResolverFeature.USE_DATA_ASSEMBLY) {
+                useDataAssembly = (Boolean) value;
+                // Remove the XmlResolverData assembly if it's in the list
+                List<string> updatedCatalogs = new();
+                foreach (string catalog in builtinAssemblyCatalogs)
+                {
+                    if (catalog != XmlResolverDataAssembly) {
+                        updatedCatalogs.Add(catalog);
+                    }
+                }
+                builtinAssemblyCatalogs.Clear();
+                builtinAssemblyCatalogs.AddRange(updatedCatalogs);
+                // Put the XmlResolverData assembly in the list if it's enabled
+                if (useDataAssembly) {
+                    builtinAssemblyCatalogs.Add(XmlResolverDataAssembly);
+                }
             } else {
                 logger.Log(ResolverLogger.ERROR, "Ignoring unknown feature: %s", feature.GetFeatureName());
             }        
@@ -590,6 +624,12 @@ namespace Org.XmlResolver {
                     cats = new(catalogs);
                     cats.AddRange(additionalCatalogs);
                     foreach (string asm in assemblyCatalogs) {
+                        string cat = FindAssemblyCatalogFile(asm);
+                        if (cat != null) {
+                            cats.Add(cat);
+                        }
+                    }
+                    foreach (string asm in builtinAssemblyCatalogs) {
                         string cat = FindAssemblyCatalogFile(asm);
                         if (cat != null) {
                             cats.Add(cat);
@@ -625,6 +665,8 @@ namespace Org.XmlResolver {
                 return archivedCatalogs;
             } else if (feature == ResolverFeature.ASSEMBLY_CATALOGS) {
                 return assemblyCatalogs;
+            } else if (feature == ResolverFeature.USE_DATA_ASSEMBLY) {
+                return useDataAssembly;
             } else if (feature == ResolverFeature.CACHE) {
                 if (cache == null) {
                     cache = new ResourceCache(this);

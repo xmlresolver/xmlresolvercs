@@ -100,5 +100,8 @@ namespace Org.XmlResolver.Features {
 
         public static readonly BoolResolverFeature ARCHIVED_CATALOGS = register(new BoolResolverFeature(
             "http://xmlresolver.org/feature/archived-catalogs", true));
+
+        public static readonly BoolResolverFeature USE_DATA_ASSEMBLY = register(new BoolResolverFeature(
+            "http://xmlresolver.org/feature/use-data-assembly", true));
     }
 }

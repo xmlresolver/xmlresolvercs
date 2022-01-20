@@ -14,26 +14,52 @@ namespace UnitTests {
         private XmlResolverConfiguration config = null;
         private Resolver resolver = null;
         private HashSet<String> assemblies = new HashSet<String> ();
+        private List<string> catalogs = new List<string>();
 
         [SetUp]
         public void BaseSetup() {
-            List<string> catalogs = new List<string>();
             catalogs.Add(TEST_ROOT_PATH + catalog1);
             config = new XmlResolverConfiguration(new List<Uri>(), catalogs);
-            config.SetFeature(ResolverFeature.ASSEMBLY_CATALOGS, "XmlResolverData.dll");
+            // This is enabled by default now
+            // config.SetFeature(ResolverFeature.ASSEMBLY_CATALOGS, "XmlResolverData.dll");
             resolver = new Resolver(config);
         }
 
         [Test]
-        public void LookupSvg() {
+        public void LookupRddl() {
             var res = resolver.CatalogResolver.ResolveEntity(null, null,
-                "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd", null);
+                "http://www.rddl.org/rddl-resource-1.mod", null);
             Assert.NotNull(res);
             Assert.NotNull(res.GetInputStream());
             Assert.NotNull(res.GetLocalUri());
             Assert.That(res.GetLocalUri().Scheme == "pack");
         }
         
+        [Test]
+        public void LookupRddlWithoutData() {
+            config.SetFeature(ResolverFeature.USE_DATA_ASSEMBLY, false);
+            var res = resolver.CatalogResolver.ResolveEntity(null, null,
+                "http://www.rddl.org/rddl-resource-1.mod", null);
+            Assert.NotNull(res);
+            Assert.NotNull(res.GetInputStream());
+            Assert.NotNull(res.GetLocalUri());
+            Assert.That(res.GetLocalUri().Scheme != "pack");
+        }
+
+        [Test]
+        public void LookupRddlWithoutDataByDefault() {
+            List<Uri> propertyFiles = new List<Uri>()
+                { new Uri("file://" + TEST_ROOT_PATH + "/XmlResolver/UnitTests/resources/xmlresolver-minimal.json") };
+            var localConfig = new XmlResolverConfiguration(propertyFiles, catalogs);
+            var localResolver = new Resolver(localConfig);
+
+            var res = localResolver.CatalogResolver.ResolveEntity(null, null,
+                "http://www.rddl.org/rddl-resource-1.mod", null);
+            
+            // With the cache and the data assembly disabled, we won't return anything
+            Assert.Null(res);
+        }
+
         [Test]
         public void ParseSvg() {
             Uri docuri = new Uri(TEST_ROOT_PATH + "/XmlResolver/UnitTests/resources/test.svg");

@@ -1,0 +1,12 @@
+{
+  "XmlResolver": {
+    "relativeCatalogs": "true",
+    "catalogs": "",
+    "prefer": "public",
+    "allowOasisXmlCatalogPi": "no",
+    "cache": null,
+    "cacheUnderHome": "false",
+    "preferPropertyFile": "no",
+    "useDataAssembly": "no"
+  }
+}
