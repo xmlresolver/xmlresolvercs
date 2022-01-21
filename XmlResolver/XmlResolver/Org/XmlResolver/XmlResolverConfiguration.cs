@@ -108,6 +108,7 @@ namespace Org.XmlResolver {
         private List<string> additionalCatalogs = new();
         private List<string> assemblyCatalogs = new();
         private List<string> builtinAssemblyCatalogs = new();
+        private Dictionary<string,string> assemblyCache = new();
 
         private bool preferPublic = ResolverFeature.PREFER_PUBLIC.GetDefaultValue();
         private bool preferPropertyFile = ResolverFeature.PREFER_PROPERTY_FILE.GetDefaultValue();
@@ -168,6 +169,7 @@ namespace Org.XmlResolver {
             additionalCatalogs.Clear();
             assemblyCatalogs.Clear();
             builtinAssemblyCatalogs.Clear();
+            assemblyCache.Clear();
             LoadConfiguration(propertyFiles, catalogFiles);
             showConfigChanges = true;
         }
@@ -547,6 +549,7 @@ namespace Org.XmlResolver {
             if (feature == ResolverFeature.ASSEMBLY_CATALOGS) {
                 if (value == null) {
                     assemblyCatalogs.Clear();
+                    assemblyCache.Clear();
                 }
                 else {
                     if (value is string) {
@@ -621,17 +624,29 @@ namespace Org.XmlResolver {
             } else if (feature == ResolverFeature.CATALOG_FILES) {
                 List<string> cats = null;
                 lock (_syncLock) {
-                    cats = new(catalogs);
-                    cats.AddRange(additionalCatalogs);
+                    // Let's avoid returning duplicates...
+                    cats = new();
+                    foreach (string cat in catalogs)
+                    {
+                        if (!cats.Contains(cat)) {
+                            cats.Add(cat);
+                        }
+                    }
+                    foreach (string cat in additionalCatalogs)
+                    {
+                        if (!cats.Contains(cat)) {
+                            cats.Add(cat);
+                        }
+                    }
                     foreach (string asm in assemblyCatalogs) {
                         string cat = FindAssemblyCatalogFile(asm);
-                        if (cat != null) {
+                        if (cat != null && !cats.Contains(cat)) {
                             cats.Add(cat);
                         }
                     }
                     foreach (string asm in builtinAssemblyCatalogs) {
                         string cat = FindAssemblyCatalogFile(asm);
-                        if (cat != null) {
+                        if (cat != null && !cats.Contains(cat)) {
                             cats.Add(cat);
                         }
                     }
@@ -685,14 +700,39 @@ namespace Org.XmlResolver {
         }
 
         private string FindAssemblyCatalogFile(string asmloc) {
+            if (assemblyCache.ContainsKey(asmloc)) {
+                return assemblyCache[asmloc];
+            }
+
             try {
                 Assembly asm = Assembly.LoadFrom(asmloc);
                 string catrsrc = "Org.XmlResolver.catalog.xml";
                 foreach (var file in asm.GetManifestResourceNames()) {
                     if (catrsrc.Equals(file)) {
-                        return UriUtils.GetLocationUri(catrsrc, asm).ToString();
+                        String DllLoc = UriUtils.GetLocationUri(catrsrc, asm).ToString();
+                        assemblyCache.Add(asmloc, DllLoc);
+                        return DllLoc;
                     }
                 }
+            }
+            catch (FileNotFoundException ex) {
+                if (!asmloc.Contains("/") && !asmloc.Contains("\\")) {
+                    var loc = Assembly.GetExecutingAssembly().Location;
+                    var path = Path.GetDirectoryName(loc);
+                    var newloc = Path.Combine(path, asmloc);
+                    // Check for / or \ so we don't wind up in an infinite loop...
+                    if (newloc.Contains("/") || newloc.Contains("\\")) {
+                        String DllLoc = FindAssemblyCatalogFile(newloc);
+                        if (DllLoc != null) {
+                            // Cache the original value too
+                            assemblyCache.Add(asmloc, DllLoc);
+                        }
+                        return DllLoc;
+                    }
+                }
+                // Couldn't find it or couldn't load it
+                logger.Log(ResolverLogger.CONFIG, "Failed to load assembly: {0}", asmloc);
+                logger.Log(ResolverLogger.CONFIG, ex.Message);
             }
             catch (Exception ex) {
                 // Couldn't find it or couldn't load it
