@@ -23,6 +23,12 @@ namespace UnitTests {
             cache = new ResourceCache(config);
             cresolver = new CatalogResolver(config);
         }
+        
+        [TearDown]
+        public void Teardown()
+        {
+            ClearCache(cacheDir);
+        }
 
         [Test]
         public void DefaultInfo() {
@@ -121,7 +127,9 @@ namespace UnitTests {
             try {
                 ResolvedResource rsrc = cresolver.ResolveUri("http://localhost:8222/docs/sample/xlink.xsd", null);
                 Assert.NotNull(rsrc.GetInputStream());
-            } catch (Exception) {
+                rsrc.GetInputStream().Close();
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
         }
