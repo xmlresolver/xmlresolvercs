@@ -84,7 +84,10 @@ namespace Org.XmlResolver.Cache {
             settings.Async = false;
             settings.DtdProcessing = DtdProcessing.Ignore;
 
-            try {
+            DirectoryLock controlLock = new DirectoryLock(cacheDir);
+
+            try
+            {
                 xmlDepth = 0;
                 xmlControlFile = false;
                 xmlDeleteWait = DeleteWait;
@@ -92,14 +95,18 @@ namespace Org.XmlResolver.Cache {
                 xmlCacheSpace = CacheSpace;
                 xmlMaxAge = MaxAge;
 
-                FileStream data = new FileStream(control, FileMode.Open);
-                using (XmlReader reader = XmlReader.Create(data, settings)) {
-                    while (reader.Read()) {
-                        switch (reader.NodeType) {
+                FileStream data = File.Open(control, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using (XmlReader reader = XmlReader.Create(data, settings))
+                {
+                    while (reader.Read())
+                    {
+                        switch (reader.NodeType)
+                        {
                             case XmlNodeType.Element:
                                 bool empty = reader.IsEmptyElement;
                                 StartElement(reader);
-                                if (empty) {
+                                if (empty)
+                                {
                                     EndElement(reader);
                                 }
 
@@ -112,28 +119,36 @@ namespace Org.XmlResolver.Cache {
                         }
                     }
                 }
+                data.Close();
 
-                foreach (string pattern in excludedPatterns) {
+                foreach (string pattern in excludedPatterns)
+                {
                     CacheInfo info = GetCacheInfo(pattern);
-                    if (info == null) {
+                    if (info == null)
+                    {
                         update = true;
                         cacheInfo.Add(new CacheInfo(pattern, false));
                     }
                 }
             }
-            catch (FileNotFoundException) {
+            catch (FileNotFoundException)
+            {
                 update = true;
-                foreach (string pattern in excludedPatterns) {
+                foreach (string pattern in excludedPatterns)
+                {
                     cacheInfo.Add(new CacheInfo(pattern, false));
                 }
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 // nevermind
             }
 
             if (update) {
-                UpdateCacheControlFile();
+                UpdateCacheControlFile(false);
             }
+            
+            controlLock.Release();
         }
         
         private void StartElement(XmlReader reader) {
@@ -177,9 +192,15 @@ namespace Org.XmlResolver.Cache {
             xmlDepth--;
         }
 
-        private void UpdateCacheControlFile() {
+        private void UpdateCacheControlFile(bool acquireLock) {
             if (cacheDir == null) {
                 return;
+            }
+            
+            DirectoryLock controlLock = null;
+            if (acquireLock)
+            {
+                controlLock = new DirectoryLock(cacheDir);
             }
 
             String control = Path.Combine(cacheDir, "control.xml");
@@ -203,6 +224,10 @@ namespace Org.XmlResolver.Cache {
                 xml.WriteLine("</cache-control>\n");
             }
 
+            if (controlLock != null)
+            {
+                controlLock.Release();
+            }
         }
 
         public string GetDirectory() {
@@ -242,7 +267,7 @@ namespace Org.XmlResolver.Cache {
             CacheInfo info = new CacheInfo(pattern, cache, deleteWait, cacheSize, cacheSpace, maxAge);
             RemoveCacheInfo(pattern, false);
             cacheInfo.Add(info);
-            UpdateCacheControlFile();
+            UpdateCacheControlFile(true);
             return info;
         }
 
@@ -258,7 +283,7 @@ namespace Org.XmlResolver.Cache {
             }
 
             if (writeUpdate) {
-                UpdateCacheControlFile();
+                UpdateCacheControlFile(true);
             }
         }
 
@@ -524,7 +549,7 @@ namespace Org.XmlResolver.Cache {
                 return;
             }
 
-            DirectoryLock clock = new (cacheDir);
+            DirectoryLock cacheLock = new (cacheDir);
             cleanupCache();
 
             XmlReaderSettings settings = new XmlReaderSettings();
@@ -533,7 +558,7 @@ namespace Org.XmlResolver.Cache {
 
             string[] entryfiles = Directory.GetFiles(entryDir, "*.xml", SearchOption.TopDirectoryOnly);
             foreach (string entryfn in entryfiles) {
-                FileStream data = new FileStream(Path.Combine(entryDir, entryfn), FileMode.Open);
+                FileStream data = File.Open(Path.Combine(entryDir, entryfn), FileMode.Open, FileAccess.Read, FileShare.Read);
                 bool root = true;
                 try {
                     using (XmlReader reader = XmlReader.Create(data, settings)) {
@@ -597,7 +622,7 @@ namespace Org.XmlResolver.Cache {
                 }
             }
             
-            clock.Release();
+            cacheLock.Release();
         }
 
         private long CacheTimestamp(XmlReader reader, out Dictionary<string,string> props) {
@@ -687,7 +712,7 @@ namespace Org.XmlResolver.Cache {
                 return null;
             }
 
-            DirectoryLock dlock = new DirectoryLock(cacheDir);
+            DirectoryLock dlock = new (cacheDir);
             try {
                 if (nature == null && purpose == null) {
                     logger.Log(ResolverLogger.CACHE, "Caching resource for uri: {0}", connection.Uri.ToString());
@@ -733,7 +758,7 @@ namespace Org.XmlResolver.Cache {
                 return null;
             }
 
-            DirectoryLock dlock = new DirectoryLock(cacheDir);
+            DirectoryLock dlock = new (cacheDir);
             try {
                 logger.Log(ResolverLogger.CACHE, "Caching systemId: %s", connection.Uri.ToString());
                 

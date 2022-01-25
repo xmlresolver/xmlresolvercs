@@ -3,8 +3,9 @@ using System.IO;
 using System.Threading;
 
 namespace Org.XmlResolver.Cache {
-    public class DirectoryLock {
-        public static int retryCount = 10;
+    public class DirectoryLock
+    {
+        public static int retryCount = 30; // ~15 seconds
         private FileStream lockStream = null;
 
         public DirectoryLock(string dir) {
@@ -12,11 +13,10 @@ namespace Org.XmlResolver.Cache {
             int count = retryCount;
             while (true) {
                 try {
-                    lockStream = File.Open(lockfn, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None);
+                    lockStream = File.Open(lockfn, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
                     return;
                 }
                 catch (IOException) {
-                    Console.WriteLine("Failed to get lock, waiting...");
                     count--;
                     if (count <= 0) {
                         throw;
