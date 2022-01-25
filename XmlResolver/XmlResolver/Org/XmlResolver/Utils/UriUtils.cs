@@ -334,6 +334,12 @@ namespace Org.XmlResolver.Utils {
                 fn = uri.Substring(5);
             }
 
+            // What about /C:/path/to/thing?
+            if (fn.Length >= 3 && fn[2] == ':')
+            {
+                fn = fn.Substring(1);
+            }
+
             // If this looks like /C:/path/to/thing, make it C:/path/to/thing
             if (fn.Length >= 3 && fn[0] == '/' && fn[2] == ':') {
                 fn = fn.Substring(1);
