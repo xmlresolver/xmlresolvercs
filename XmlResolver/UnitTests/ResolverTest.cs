@@ -41,7 +41,9 @@ namespace UnitTests {
                 ResolvedResource rsrc = cresolver.ResolveEntity(null, null, "file:///path/to/thing/that/isnt/likely/to/exist", null);
 
                 Assert.Null(rsrc);
-            } catch (Exception) {
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
         }
@@ -56,7 +58,8 @@ namespace UnitTests {
 
                 Assert.NotNull(rsrc.GetInputStream());
                 Assert.AreEqual(result, rsrc.GetLocalUri());
-            } catch (Exception) {
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
         }

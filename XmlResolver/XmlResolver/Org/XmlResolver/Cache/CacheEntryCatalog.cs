@@ -95,52 +95,71 @@ namespace Org.XmlResolver.Cache {
             return entry;
         }
 
-        internal void WriteCacheEntry(Entry entry, string cacheFile) {
-            // Constructing XML with print statements is kind of grotty, but...
-            using (StreamWriter xml = new StreamWriter(cacheFile)) {
-                switch (entry.GetEntryType()) {
-                    case EntryType.URI:
-                        EntryUri uri = (EntryUri) entry;
-                        xml.WriteLine("<uri xmlns='" + ResolverConstants.CATALOG_NS + "'");
-                        xml.WriteLine("<uri xmlns='" + ResolverConstants.CATALOG_NS + "'");
-                        xml.WriteLine("     xmlns:xr='" + ResolverConstants.XMLRESOURCE_EXT_NS + "'");
-                        xml.WriteLine("     name='" + XmlEscape(uri.Name) + "'");
-                        xml.WriteLine("     uri='" + XmlEscape(uri.ResourceUri.ToString()) + "'");
-                        if (uri.Nature != null) {
-                            xml.WriteLine("     nature='" + XmlEscape(uri.Nature) + "'");
-                        }
-                        if (uri.Purpose != null) {
-                            xml.WriteLine("     purpose='" + XmlEscape(uri.Purpose) + "'");
-                        }
+        internal void WriteCacheEntry(Entry entry, string cacheFile)
+        {
+            FileStream cacheStream = null;
+            try
+            {
+                cacheStream = File.Open(cacheFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
 
-                        break;
-                    case EntryType.SYSTEM:
-                        EntrySystem system = (EntrySystem) entry;
-                        xml.WriteLine("<system xmlns='" + ResolverConstants.CATALOG_NS + "'");
-                        xml.WriteLine("        xmlns:xr='" + ResolverConstants.XMLRESOURCE_EXT_NS + "'");
-                        xml.WriteLine("        systemId='" + XmlEscape(system.SystemId) + "'");
-                        xml.WriteLine("        uri='" + XmlEscape(system.ResourceUri.ToString()) + "'");
-                        break;
-                    case EntryType.PUBLIC:
-                        EntryPublic pub = (EntryPublic) entry;
-                        xml.WriteLine("<public xmlns='" + ResolverConstants.CATALOG_NS + "'");
-                        xml.WriteLine("        xmlns:xr='" + ResolverConstants.XMLRESOURCE_EXT_NS + "'");
-                        xml.WriteLine("        publicId='" + XmlEscape(pub.PublicId) + "'");
-                        xml.WriteLine("        uri='" + XmlEscape(pub.ResourceUri.ToString()) + "'");
-                        break;
-                    default:
-                        Error("Attempt to write unexpected entry type");
-                        break;
-                }
-                
-                foreach (string name in entry.GetProperties().Keys)
+                // Constructing XML with print statements is kind of grotty, but...
+                using (StreamWriter xml = new StreamWriter(cacheStream))
                 {
-                    if (entry.GetProperty(name) != null) {
-                        xml.WriteLine("     xr:" + name + "='" + XmlEscape(entry.GetProperty(name)) + "'");
-                    }
-                }
+                    switch (entry.GetEntryType())
+                    {
+                        case EntryType.URI:
+                            EntryUri uri = (EntryUri) entry;
+                            xml.WriteLine("<uri xmlns='" + ResolverConstants.CATALOG_NS + "'");
+                            xml.WriteLine("     xmlns:xr='" + ResolverConstants.XMLRESOURCE_EXT_NS + "'");
+                            xml.WriteLine("     name='" + XmlEscape(uri.Name) + "'");
+                            xml.WriteLine("     uri='" + XmlEscape(uri.ResourceUri.ToString()) + "'");
+                            if (uri.Nature != null)
+                            {
+                                xml.WriteLine("     nature='" + XmlEscape(uri.Nature) + "'");
+                            }
 
-                xml.WriteLine("/>");
+                            if (uri.Purpose != null)
+                            {
+                                xml.WriteLine("     purpose='" + XmlEscape(uri.Purpose) + "'");
+                            }
+
+                            break;
+                        case EntryType.SYSTEM:
+                            EntrySystem system = (EntrySystem) entry;
+                            xml.WriteLine("<system xmlns='" + ResolverConstants.CATALOG_NS + "'");
+                            xml.WriteLine("        xmlns:xr='" + ResolverConstants.XMLRESOURCE_EXT_NS + "'");
+                            xml.WriteLine("        systemId='" + XmlEscape(system.SystemId) + "'");
+                            xml.WriteLine("        uri='" + XmlEscape(system.ResourceUri.ToString()) + "'");
+                            break;
+                        case EntryType.PUBLIC:
+                            EntryPublic pub = (EntryPublic) entry;
+                            xml.WriteLine("<public xmlns='" + ResolverConstants.CATALOG_NS + "'");
+                            xml.WriteLine("        xmlns:xr='" + ResolverConstants.XMLRESOURCE_EXT_NS + "'");
+                            xml.WriteLine("        publicId='" + XmlEscape(pub.PublicId) + "'");
+                            xml.WriteLine("        uri='" + XmlEscape(pub.ResourceUri.ToString()) + "'");
+                            break;
+                        default:
+                            Error("Attempt to write unexpected entry type");
+                            break;
+                    }
+
+                    foreach (string name in entry.GetProperties().Keys)
+                    {
+                        if (entry.GetProperty(name) != null)
+                        {
+                            xml.WriteLine("     xr:" + name + "='" + XmlEscape(entry.GetProperty(name)) + "'");
+                        }
+                    }
+
+                    xml.WriteLine("/>");
+                }
+            }
+            finally
+            {
+                if (cacheStream != null)
+                {
+                    cacheStream.Close();
+                }
             }
         }
 

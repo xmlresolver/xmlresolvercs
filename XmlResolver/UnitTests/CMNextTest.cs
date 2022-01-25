@@ -5,11 +5,17 @@ using Org.XmlResolver.Utils;
 
 namespace UnitTests {
     public class CMNextTest : BaseTestRoot {
-        private readonly Uri baseUri = new Uri("file:///tmp/");
+        private Uri baseUri = new Uri("file:///tmp/");
         private CatalogManager manager = null;
 
         [SetUp]
         public void Setup() {
+            if (TEST_ROOT_PATH[1] == ':')
+            {
+                // Fix the path for Windows
+                baseUri = new Uri("file:///" + TEST_ROOT_PATH[0] + ":/tmp/");
+            }
+            
             XmlResolverConfiguration config = new XmlResolverConfiguration();
             config.AddCatalog(UriUtils.Resolve(TEST_ROOT_DIRECTORY, "XmlResolver/UnitTests/resources/cm/nextroot.xml").ToString());
             config.AddCatalog(UriUtils.Resolve(TEST_ROOT_DIRECTORY, "XmlResolver/UnitTests/resources/cm/following.xml").ToString());
