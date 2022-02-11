@@ -162,8 +162,7 @@ namespace Org.XmlResolver {
         /// <param name="catalogFiles"></param>
         public XmlResolverConfiguration(List<Uri> propertyFiles, List<string> catalogFiles) {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            FileVersionInfo fileVersion = FileVersionInfo.GetVersionInfo(assembly.Location);
-            logger.Log(ResolverLogger.CONFIG, "XMLResolver version " + fileVersion.FileVersion);
+            logger.Log(ResolverLogger.CONFIG, assembly.FullName);
             showConfigChanges = false;
             catalogs.Clear();
             additionalCatalogs.Clear();
