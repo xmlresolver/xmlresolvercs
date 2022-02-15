@@ -77,5 +77,13 @@ namespace UnitTests {
             }
         }
 
+        [Test]
+        public void lookupCheckUri() {
+            var res = resolver.CatalogResolver.ResolveUri("https://xmlresolver.org/data/resolver/succeeded/test/check.xml", null);
+            Assert.NotNull(res);
+            Assert.NotNull(res.GetInputStream());
+            Assert.NotNull(res.GetLocalUri());
+            Assert.That(res.GetLocalUri().Scheme == "pack");
+        }
     }
 }

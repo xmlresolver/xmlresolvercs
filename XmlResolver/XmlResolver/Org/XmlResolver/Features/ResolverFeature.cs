@@ -103,5 +103,9 @@ namespace Org.XmlResolver.Features {
 
         public static readonly BoolResolverFeature USE_DATA_ASSEMBLY = register(new BoolResolverFeature(
             "http://xmlresolver.org/feature/use-data-assembly", true));
+            
+        public static readonly BoolResolverFeature CACHE_ENABLED = register(new BoolResolverFeature(
+            "http://xmlresolver.org/feature/cache-enbled", true));
+
     }
 }

@@ -43,6 +43,12 @@ namespace Org.XmlResolver.Cache {
         private long xmlMaxAge = MaxAge;
         
         public ResourceCache(XmlResolverConfiguration config): base(config) {
+            if (! (bool) config.GetFeature(ResolverFeature.CACHE_ENABLED)) {
+                cacheDir = null;
+                defaultCacheInfo = new CacheInfo(DefaultPattern, false, DeleteWait, CacheSize, CacheSpace, MaxAge);
+                return;
+            }
+            
             cacheInfo = new();
             defaultCacheInfo = new CacheInfo(DefaultPattern, true, DeleteWait, CacheSize, CacheSpace, MaxAge);
 

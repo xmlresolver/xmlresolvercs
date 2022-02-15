@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -47,7 +46,11 @@ namespace Org.XmlResolver {
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_CACHE_UNDER_HOME</term>
-    ///    <description>Use <c>.xmlresolver.org/cache</c> in the users home directory for caching, <c>ResolverFeature.CACHE_UNDER_HOME</c>.</description>
+    ///    <description>Use <c>xmlresolver.org/cache</c> in the users home directory for caching, <c>ResolverFeature.CACHE_UNDER_HOME</c>.</description>
+    /// </item>
+    /// <item>
+    ///    <term>XML_CATALOG_CACHE_ENABLED</term>
+    ///    <description>Enable or disable all use of the cache.</description>
     /// </item>
     /// <item>
     ///    <term>XML_CATALOG_FILES</term>
@@ -97,7 +100,8 @@ namespace Org.XmlResolver {
         private static List<ResolverFeature> knownFeatures = new() {
             ResolverFeature.CATALOG_FILES, ResolverFeature.PREFER_PUBLIC, ResolverFeature.PREFER_PROPERTY_FILE,
             ResolverFeature.ALLOW_CATALOG_PI, ResolverFeature.CATALOG_ADDITIONS, ResolverFeature.CACHE_DIRECTORY,
-            ResolverFeature.CACHE_UNDER_HOME, ResolverFeature.CACHE, ResolverFeature.MERGE_HTTPS, ResolverFeature.MASK_PACK_URIS,
+            ResolverFeature.CACHE_UNDER_HOME, ResolverFeature.CACHE, ResolverFeature.CACHE_ENABLED,
+            ResolverFeature.MERGE_HTTPS, ResolverFeature.MASK_PACK_URIS,
             ResolverFeature.CATALOG_MANAGER, ResolverFeature.URI_FOR_SYSTEM, ResolverFeature.CATALOG_LOADER_CLASS,
             ResolverFeature.PARSE_RDDL, ResolverFeature.ASSEMBLY_CATALOGS, ResolverFeature.ARCHIVED_CATALOGS,
             ResolverFeature.USE_DATA_ASSEMBLY
@@ -116,6 +120,7 @@ namespace Org.XmlResolver {
         private string cacheDirectory = ResolverFeature.CACHE_DIRECTORY.GetDefaultValue();
         private bool cacheUnderHome = ResolverFeature.CACHE_UNDER_HOME.GetDefaultValue();
         private ResourceCache cache = ResolverFeature.CACHE.GetDefaultValue(); // null
+        private bool cacheEnabled = ResolverFeature.CACHE_ENABLED.GetDefaultValue();
         private CatalogManager manager = ResolverFeature.CATALOG_MANAGER.GetDefaultValue(); // also null
         private bool uriForSystem = ResolverFeature.URI_FOR_SYSTEM.GetDefaultValue();
         private bool mergeHttps = ResolverFeature.MERGE_HTTPS.GetDefaultValue();
@@ -188,6 +193,7 @@ namespace Org.XmlResolver {
             cacheDirectory = current.cacheDirectory;
             cacheUnderHome = current.cacheUnderHome;
             cache = current.cache;
+            cacheEnabled = current.cacheEnabled;
             if (current.manager == null) {
                 manager = null;
             } else {
@@ -327,6 +333,7 @@ namespace Org.XmlResolver {
             }
 
             SetBoolean("XML_CATALOG_CACHE_UNDER_HOME", "Cache under home: {0}", ref cacheUnderHome);
+            SetBoolean("XML_CATALOG_CACHE_ENABLED", "Cache enabled: {0}", ref cacheEnabled);
             SetBoolean("XML_CATALOG_URI_FOR_SYSTEM", "URI-for-system: {0}", ref uriForSystem);
             SetBoolean("XML_CATALOG_MERGE_HTTPS", "Merge https: {0}", ref mergeHttps);
             SetBoolean("XML_CATALOG_MASK_PACK_URIS", "Mask-pack-URIs: {0}", ref maskPackUris);
@@ -439,6 +446,7 @@ namespace Org.XmlResolver {
             }
 
             SetPropertyBoolean(section.GetSection("cacheUnderHome"), "Cache under home: {0}", ref cacheUnderHome);
+            SetPropertyBoolean(section.GetSection("cacheEnabled"), "Cache enabled: {0}", ref cacheEnabled);
             SetPropertyBoolean(section.GetSection("uriForSystem"), "URI-for-system: {0}", ref uriForSystem);
             SetPropertyBoolean(section.GetSection("mergeHttps"), "Merge https: {0}", ref mergeHttps);
             SetPropertyBoolean(section.GetSection("maskPackUris"), "Mask-pack-URIs: {0}", ref maskPackUris);
@@ -576,6 +584,9 @@ namespace Org.XmlResolver {
             } else if (feature == ResolverFeature.CACHE_UNDER_HOME) {
                 cacheUnderHome = (Boolean) value;
                 cache = null;
+            } else if (feature == ResolverFeature.CACHE_ENABLED) {
+                cacheEnabled = (Boolean) value;
+                cache = null;
             } else if (feature == ResolverFeature.CATALOG_MANAGER) {
                 manager = (CatalogManager) value;
             } else if (feature == ResolverFeature.URI_FOR_SYSTEM) {
@@ -688,6 +699,8 @@ namespace Org.XmlResolver {
                 return cache;
             } else if (feature == ResolverFeature.CACHE_UNDER_HOME) {
                 return cacheUnderHome;
+            } else if (feature == ResolverFeature.CACHE_ENABLED) {
+                return cacheEnabled;
             } else {
                 logger.Log(ResolverLogger.ERROR, "Ignoring unknown feature: %s", feature.GetFeatureName());
                 return null;
