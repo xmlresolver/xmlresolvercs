@@ -133,5 +133,15 @@ namespace UnitTests {
                 Assert.Fail();
             }
         }
+
+        [Test]
+        public void TestCacheDisabled() {
+            XmlResolverConfiguration localConfig = new XmlResolverConfiguration();
+            localConfig.SetFeature(ResolverFeature.CACHE_DIRECTORY, "/tmp/cache");
+            localConfig.SetFeature(ResolverFeature.CACHE_ENABLED, false);
+            ResourceCache localCache = new ResourceCache(localConfig);
+            Assert.Null(localCache.GetDirectory());
+            Assert.False(localCache.CacheUri("http://example.com/test.dtd"));
+        }
     }
 }
