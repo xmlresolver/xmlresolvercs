@@ -81,7 +81,7 @@ namespace Org.XmlResolver.Features {
             "http://xmlresolver.org/feature/catalog-manager", null));
 
         public static readonly BoolResolverFeature URI_FOR_SYSTEM = register(new BoolResolverFeature(
-            "http://xmlresolver.org/feature/uri-for-system", false));
+            "http://xmlresolver.org/feature/uri-for-system", true));
 
         public static readonly BoolResolverFeature MERGE_HTTPS = register(new BoolResolverFeature(
             "http://xmlresolver.org/feature/merge-https", true));
