@@ -54,7 +54,7 @@ namespace Org.XmlResolver.Features {
         }
         
         public static readonly ListOfStringResolverFeature CATALOG_FILES = register(new ListOfStringResolverFeature(
-            "http://xmlresolver.org/feature/catalog-files1", new()));
+            "http://xmlresolver.org/feature/catalog-files", new()));
 
         public static readonly ListOfStringResolverFeature CATALOG_ADDITIONS = register(new ListOfStringResolverFeature(
             "http://xmlresolver.org/feature/catalog-additions", new()));
