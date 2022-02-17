@@ -54,7 +54,7 @@ namespace Org.XmlResolver.Features {
         }
         
         public static readonly ListOfStringResolverFeature CATALOG_FILES = register(new ListOfStringResolverFeature(
-            "http://xmlresolver.org/feature/catalog-files1", new()));
+            "http://xmlresolver.org/feature/catalog-files", new()));
 
         public static readonly ListOfStringResolverFeature CATALOG_ADDITIONS = register(new ListOfStringResolverFeature(
             "http://xmlresolver.org/feature/catalog-additions", new()));
@@ -81,7 +81,7 @@ namespace Org.XmlResolver.Features {
             "http://xmlresolver.org/feature/catalog-manager", null));
 
         public static readonly BoolResolverFeature URI_FOR_SYSTEM = register(new BoolResolverFeature(
-            "http://xmlresolver.org/feature/uri-for-system", false));
+            "http://xmlresolver.org/feature/uri-for-system", true));
 
         public static readonly BoolResolverFeature MERGE_HTTPS = register(new BoolResolverFeature(
             "http://xmlresolver.org/feature/merge-https", true));
