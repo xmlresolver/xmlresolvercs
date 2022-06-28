@@ -104,7 +104,7 @@ namespace Org.XmlResolver {
             ResolverFeature.MERGE_HTTPS, ResolverFeature.MASK_PACK_URIS,
             ResolverFeature.CATALOG_MANAGER, ResolverFeature.URI_FOR_SYSTEM, ResolverFeature.CATALOG_LOADER_CLASS,
             ResolverFeature.PARSE_RDDL, ResolverFeature.ASSEMBLY_CATALOGS, ResolverFeature.ARCHIVED_CATALOGS,
-            ResolverFeature.USE_DATA_ASSEMBLY
+            ResolverFeature.USE_DATA_ASSEMBLY, ResolverFeature.FIX_WINDOWS_SYSTEM_IDENTIFIERS
         };
 
         // private static List<string> classpathCatalogList = null;
@@ -129,6 +129,7 @@ namespace Org.XmlResolver {
         private bool parseRddl = ResolverFeature.PARSE_RDDL.GetDefaultValue();
         private bool archivedCatalogs = ResolverFeature.ARCHIVED_CATALOGS.GetDefaultValue();
         private bool useDataAssembly = ResolverFeature.USE_DATA_ASSEMBLY.GetDefaultValue();
+        private bool fixWindowsSystemIdentifiers = ResolverFeature.FIX_WINDOWS_SYSTEM_IDENTIFIERS.GetDefaultValue();
         private bool showConfigChanges = false; // make the config process a bit less chatty
         
         /// <summary>
@@ -207,6 +208,7 @@ namespace Org.XmlResolver {
             archivedCatalogs = current.archivedCatalogs;
             useDataAssembly = current.useDataAssembly;
             showConfigChanges = current.showConfigChanges;
+            fixWindowsSystemIdentifiers = current.fixWindowsSystemIdentifiers;
         }
 
         private void LoadConfiguration(List<Uri> propertyFiles, List<string> catalogFiles) {
@@ -337,6 +339,7 @@ namespace Org.XmlResolver {
             SetBoolean("XML_CATALOG_URI_FOR_SYSTEM", "URI-for-system: {0}", ref uriForSystem);
             SetBoolean("XML_CATALOG_MERGE_HTTPS", "Merge https: {0}", ref mergeHttps);
             SetBoolean("XML_CATALOG_MASK_PACK_URIS", "Mask-pack-URIs: {0}", ref maskPackUris);
+            SetBoolean("XML_CATALOG_FIX_WINDOWS_SYSTEM_IDENTIFIERS", "Fix Windows system identifiers: {0}", ref fixWindowsSystemIdentifiers);
             
             property = Environment.GetEnvironmentVariable("XML_CATALOG_LOADER_CLASS");
             if (property != null) {
@@ -450,6 +453,7 @@ namespace Org.XmlResolver {
             SetPropertyBoolean(section.GetSection("uriForSystem"), "URI-for-system: {0}", ref uriForSystem);
             SetPropertyBoolean(section.GetSection("mergeHttps"), "Merge https: {0}", ref mergeHttps);
             SetPropertyBoolean(section.GetSection("maskPackUris"), "Mask-pack-URIs: {0}", ref maskPackUris);
+            SetPropertyBoolean(section.GetSection("fixWindowsSystemIdentifiers"), "Fix Windows system identifiers: {0}", ref fixWindowsSystemIdentifiers);
             
             property = section.GetSection("catalogLoaderClass");
             if (property.Value != null) {
@@ -617,6 +621,8 @@ namespace Org.XmlResolver {
                 if (useDataAssembly) {
                     builtinAssemblyCatalogs.Add(XmlResolverDataAssembly);
                 }
+            } else if (feature == ResolverFeature.FIX_WINDOWS_SYSTEM_IDENTIFIERS) {
+                fixWindowsSystemIdentifiers = (Boolean) value;
             } else {
                 logger.Log(ResolverLogger.ERROR, "Ignoring unknown feature: %s", feature.GetFeatureName());
             }        
@@ -701,6 +707,8 @@ namespace Org.XmlResolver {
                 return cacheUnderHome;
             } else if (feature == ResolverFeature.CACHE_ENABLED) {
                 return cacheEnabled;
+            } else if (feature == ResolverFeature.FIX_WINDOWS_SYSTEM_IDENTIFIERS) {
+                return fixWindowsSystemIdentifiers;
             } else {
                 logger.Log(ResolverLogger.ERROR, "Ignoring unknown feature: %s", feature.GetFeatureName());
                 return null;

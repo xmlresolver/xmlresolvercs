@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.IO.Packaging;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Org.XmlResolver.Utils {
@@ -18,6 +19,15 @@ namespace Org.XmlResolver.Utils {
     /// that may arise (because resources aren't found, for example, or aren't accessible.</para>
     /// 
     public class UriUtils {
+        /// <summary>
+        /// Report if the platform is Windows.
+        /// </summary>
+        /// <returns>True if the platform is Windows, false otherwise.</returns>
+        public static Boolean isWindows()
+        {
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        }
+        
         /// <summary>
         /// Resolve a string against a base URI, taking special care of pack: URIs.
         /// </summary>
