@@ -221,6 +221,11 @@ namespace Org.XmlResolver {
                 return null;
             }
 
+            if (UriUtils.isWindows() && (bool) config.GetFeature(ResolverFeature.FIX_WINDOWS_SYSTEM_IDENTIFIERS))
+            {
+                systemId = systemId.Replace("\\", "/");
+            }
+            
             if (name != null && publicId == null && systemId == null) {
                 logger.Log(ResolverLogger.REQUEST, "ResolveEntity: name: {0} ({1})", name, baseUri);
                 return ResolveDoctype(name, baseUri);

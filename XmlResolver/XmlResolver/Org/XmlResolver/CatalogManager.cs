@@ -107,6 +107,16 @@ namespace Org.XmlResolver {
         public EntryCatalog LoadCatalog(Uri catalog, Stream data) {
             return _catalogLoader.LoadCatalog(catalog, data);
         }
+
+        private String fixWindowsSystemIdentifier(String systemId)
+        {
+            if (UriUtils.isWindows() && (bool) _resolverConfiguration.GetFeature(ResolverFeature.FIX_WINDOWS_SYSTEM_IDENTIFIERS))
+            {
+                return systemId.Replace("\\", "/");
+            }
+
+            return systemId;
+        }
         
         /// <summary>
         /// Lookup a URI.
@@ -149,7 +159,9 @@ namespace Org.XmlResolver {
         /// <param name="systemId">The system identifier for the entity.</param>
         /// <param name="publicId">The public identifier for the entity.</param>
         /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-        public virtual Uri LookupPublic(string systemId, string publicId) {
+        public virtual Uri LookupPublic(string systemId, string publicId)
+        {
+            systemId = fixWindowsSystemIdentifier(systemId);
             ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, publicId);
             return new QueryPublic(external.SystemId, external.PublicId).Search(this).ResultUri();
         }
@@ -165,7 +177,9 @@ namespace Org.XmlResolver {
         /// corresponding public identifier and against <c>public</c> entries.</para>
         /// <param name="systemId">The system identifier for the entity.</param>
         /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-        public virtual Uri LookupSystem(string systemId) {
+        public virtual Uri LookupSystem(string systemId) 
+        {
+            systemId = fixWindowsSystemIdentifier(systemId);
             ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, null);
             if (external.SystemId == null) {
                 return null;
@@ -184,7 +198,9 @@ namespace Org.XmlResolver {
         /// <param name="systemId">The system identifier, may be null.</param>
         /// <param name="publicId">The public identifier, may be null.</param>
         /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-        public virtual Uri LookupDoctype(string entityName, string systemId, string publicId) {
+        public virtual Uri LookupDoctype(string entityName, string systemId, string publicId) 
+        {
+            systemId = fixWindowsSystemIdentifier(systemId);
             ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, publicId);
             return new QueryDoctype(entityName, external.SystemId, external.PublicId).Search(this).ResultUri();
         }
@@ -199,7 +215,9 @@ namespace Org.XmlResolver {
         /// <param name="systemId">The system identifier, may be null.</param>
         /// <param name="publicId">The public identifier, may be null.</param>
         /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-        public virtual Uri LookupEntity(string entityName, string systemId, string publicId) {
+        public virtual Uri LookupEntity(string entityName, string systemId, string publicId)
+        {
+            systemId = fixWindowsSystemIdentifier(systemId);
             ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, publicId);
             return new QueryEntity(entityName, external.SystemId, external.PublicId).Search(this).ResultUri();
         }
@@ -214,7 +232,9 @@ namespace Org.XmlResolver {
         /// <param name="systemId">The system identifier, may be null.</param>
         /// <param name="publicId">The public identifier, may be null.</param>
         /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-        public Uri LookupNotation(string notationName, string systemId, string publicId) {
+        public Uri LookupNotation(string notationName, string systemId, string publicId) 
+        {
+            systemId = fixWindowsSystemIdentifier(systemId);
             ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, publicId);
             return new QueryNotation(notationName, external.SystemId, external.PublicId).Search(this).ResultUri();
         }

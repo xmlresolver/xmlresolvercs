@@ -107,5 +107,8 @@ namespace Org.XmlResolver.Features {
         public static readonly BoolResolverFeature CACHE_ENABLED = register(new BoolResolverFeature(
             "http://xmlresolver.org/feature/cache-enbled", true));
 
+        public static readonly BoolResolverFeature FIX_WINDOWS_SYSTEM_IDENTIFIERS = register(new BoolResolverFeature(
+            "http://xmlresolver.org/feature/fix-windows-system-identifiers", false));
+
     }
 }
