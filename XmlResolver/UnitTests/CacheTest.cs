@@ -143,5 +143,21 @@ namespace UnitTests {
             Assert.Null(localCache.GetDirectory());
             Assert.False(localCache.CacheUri("http://example.com/test.dtd"));
         }
+
+        [Test]
+        public void TestCacheDisabledAfterInitialization()
+        {
+            XmlResolverConfiguration localConfig = new XmlResolverConfiguration();
+            Assert.True((bool) localConfig.GetFeature(ResolverFeature.CACHE_ENABLED));
+
+            CatalogResolver resolver = new CatalogResolver(localConfig);
+            resolver.GetConfiguration().SetFeature(ResolverFeature.CACHE_ENABLED, false);
+
+            // With the cache disabled, we get back the external resource.
+            ResolvedResource result = resolver.ResolveUri("https://jats.nlm.nih.gov/publishing/1.3/JATS-journalpublishing1-3.dtd", null);
+            Assert.AreEqual("https://jats.nlm.nih.gov/publishing/1.3/JATS-journalpublishing1-3.dtd",
+                result.GetLocalUri().ToString());
+        }
+        
     }
 }
