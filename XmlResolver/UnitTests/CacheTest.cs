@@ -20,6 +20,7 @@ namespace UnitTests {
             ClearCache(cacheDir);
             config = new XmlResolverConfiguration();
             config.SetFeature(ResolverFeature.CACHE_DIRECTORY, Path.Combine(Directory.GetCurrentDirectory(), cacheDir));
+            config.SetFeature(ResolverFeature.CACHE_ENABLED, true);
             cache = new ResourceCache(config);
             cresolver = new CatalogResolver(config);
         }
@@ -83,6 +84,7 @@ namespace UnitTests {
             XmlResolverConfiguration secondConfig = new();
             secondConfig.SetFeature(ResolverFeature.CACHE_DIRECTORY,
                 UriUtils.Resolve(UriUtils.Cwd(), cacheDir).AbsolutePath);
+            secondConfig.SetFeature(ResolverFeature.CACHE_ENABLED, true);
             ResourceCache secondCache = new ResourceCache(secondConfig);
 
             Assert.AreEqual(6, secondCache.GetCacheInfoList().Count);
@@ -148,15 +150,14 @@ namespace UnitTests {
         public void TestCacheDisabledAfterInitialization()
         {
             XmlResolverConfiguration localConfig = new XmlResolverConfiguration();
-            Assert.True((bool) localConfig.GetFeature(ResolverFeature.CACHE_ENABLED));
+            Assert.False((bool) localConfig.GetFeature(ResolverFeature.CACHE_ENABLED));
 
             CatalogResolver resolver = new CatalogResolver(localConfig);
             resolver.GetConfiguration().SetFeature(ResolverFeature.CACHE_ENABLED, false);
 
-            // With the cache disabled, we get back the external resource.
+            // With the cache disabled, we get back null
             ResolvedResource result = resolver.ResolveUri("https://jats.nlm.nih.gov/publishing/1.3/JATS-journalpublishing1-3.dtd", null);
-            Assert.AreEqual("https://jats.nlm.nih.gov/publishing/1.3/JATS-journalpublishing1-3.dtd",
-                result.GetLocalUri().ToString());
+            Assert.IsNull(result);
         }
         
     }

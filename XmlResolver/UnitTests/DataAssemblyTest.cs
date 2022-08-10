@@ -40,10 +40,7 @@ namespace UnitTests {
             config.SetFeature(ResolverFeature.USE_DATA_ASSEMBLY, false);
             var res = resolver.CatalogResolver.ResolveEntity(null, null,
                 "http://www.rddl.org/rddl-resource-1.mod", null);
-            Assert.NotNull(res);
-            Assert.NotNull(res.GetInputStream());
-            Assert.NotNull(res.GetLocalUri());
-            Assert.That(res.GetLocalUri().Scheme != "pack");
+            Assert.IsNull(res);
         }
 
         [Test]

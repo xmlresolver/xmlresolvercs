@@ -18,7 +18,6 @@ namespace Org.XmlResolver {
     public class CatalogResolver : IResourceResolver {
         protected static readonly ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
         private XmlResolverConfiguration config;
-        private ResourceCache cache;
 
         /// <summary>
         /// Create a new resolver using a default configuration.
@@ -33,7 +32,6 @@ namespace Org.XmlResolver {
         /// <param name="config">The resolver configuration.</param>
         public CatalogResolver(XmlResolverConfiguration config) {
             this.config = config;
-            cache = (ResourceCache) config.GetFeature(ResolverFeature.CACHE);
         }
 
         private ResolvedResourceImpl Resource(string requestUri, Uri responseUri, CacheEntry cached) {
@@ -113,6 +111,8 @@ namespace Org.XmlResolver {
                 }
             }
 
+            ResourceCache cache = (ResourceCache) config.GetFeature(ResolverFeature.CACHE);
+
             CatalogManager catalog = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri resolved = catalog.LookupUri(href);
             if (resolved != null) {
@@ -167,6 +167,8 @@ namespace Org.XmlResolver {
                     return null;
                 }
             }
+
+            ResourceCache cache = (ResourceCache) config.GetFeature(ResolverFeature.CACHE);
 
             CatalogManager catalog = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri resolved = catalog.LookupNamespaceUri(href, nature, purpose);
@@ -241,6 +243,8 @@ namespace Org.XmlResolver {
             
             Uri absSystem = null;
 
+            ResourceCache cache = (ResourceCache) config.GetFeature(ResolverFeature.CACHE);
+
             CatalogManager catalog = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             ResolvedResourceImpl result = null;
             Uri resolved = catalog.LookupEntity(name, systemId, publicId);
@@ -296,6 +300,8 @@ namespace Org.XmlResolver {
                 logger.Log(ResolverLogger.RESPONSE, "resolveDoctype: null");
                 return null;
             } else {
+                ResourceCache cache = (ResourceCache) config.GetFeature(ResolverFeature.CACHE);
+
                 logger.Log(ResolverLogger.RESPONSE, "resolveDoctype: {0}", resolved.ToString());
                 ResolvedResourceImpl result = Resource(null, resolved, cache.CachedSystem(resolved, null));
                 return result;
