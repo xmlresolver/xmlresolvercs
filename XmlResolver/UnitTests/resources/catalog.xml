@@ -3,7 +3,7 @@
          x:extra="Extra attributes are ok"
          prefer="public">
 
-  <public publicId="-//Sample//DTD Simple 1.0//EN"
+  <public publicId="-//Sample//DTD   Simple   1.0//EN"
           x:more="her too"
           uri="sample10/sample.dtd"/>
 
@@ -40,7 +40,7 @@
   <systemSuffix systemIdSuffix="/2.0/sample.dtd"
                 uri="sample20/sample-suffix.dtd"/>
 
-  <delegatePublic publicIdStartString="-//Sample Delegated//"
+  <delegatePublic publicIdStartString="-//Sample   Delegated//"
                   catalog="lookup-delegated.xml"/>
 
   <!-- ============================================================ -->

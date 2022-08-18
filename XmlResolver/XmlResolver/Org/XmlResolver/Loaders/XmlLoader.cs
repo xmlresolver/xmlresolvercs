@@ -261,7 +261,7 @@ namespace Org.XmlResolver.Loaders {
                     break;
                 case "public":
                     // In XML, there will always be a system identifier.
-                    publicId = reader.GetAttribute("publicId", "");
+                    publicId = PublicId.Normalize(reader.GetAttribute("publicId", ""));
                     entry = catalog.AddPublic(baseUri, id, publicId, uri, preferPublic);
                     break;
                 case "system":
@@ -278,7 +278,7 @@ namespace Org.XmlResolver.Loaders {
                     entry = catalog.AddSystemSuffix(baseUri, id, suffix, uri);
                     break;
                 case "delegatePublic":
-                    start = reader.GetAttribute("publicIdStartString", "");
+                    start = PublicId.Normalize(reader.GetAttribute("publicIdStartString", ""));
                     entry = catalog.AddDelegatePublic(baseUri, id, start, caturi, preferPublic);
                     break;
                 case "delegateSystem":
