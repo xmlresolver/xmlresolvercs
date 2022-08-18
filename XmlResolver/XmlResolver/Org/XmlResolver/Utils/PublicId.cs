@@ -14,10 +14,15 @@ namespace Org.XmlResolver.Utils {
         /// </summary>
         /// <para>Whitespace normalization replaces tabs, new lines, and carriage returns with spaces,
         /// trims off leading and trailing whitespace, and replaces all occurrences of more than one
-        /// consecutive space with a single space.</para>
+        /// consecutive space with a single space. Returns null if the publicId is null.</para>
         /// <param name="publicId">The public identifier.</param>
         /// <returns>The normalized identifier.</returns>
-        public static string Normalize(string publicId) {
+        public static string Normalize(string publicId)
+        {
+            if (publicId == null) {
+                return null;
+            }
+            
             string normal = publicId.Replace('\t', ' ');
             normal = normal.Replace('\r', ' ');
             normal = normal.Replace('\n', ' ');
@@ -35,10 +40,15 @@ namespace Org.XmlResolver.Utils {
         /// <summary>
         /// Encodes a public identifier.
         /// </summary>
-        /// <para>Performs RFC 3151 encoding of a public identifier to yield a URN.</para>
+        /// <para>Performs RFC 3151 encoding of a public identifier to yield a URN.
+        /// Returns null if the publicId is null.</para>
         /// <param name="publicId">The public identifier.</param>
         /// <returns>A <c>urn:publicid:</c> URN.</returns>
         public static Uri EncodeUrn(string publicId) {
+            if (publicId == null) {
+                return null;
+            }
+            
             string urn = PublicId.Normalize(publicId)
                 .Replace("%", "%25")
                 .Replace(";", "%3B")
@@ -58,12 +68,17 @@ namespace Org.XmlResolver.Utils {
         /// <summary>
         /// Decodes a <c>urn:publicid:</c> URN into a public identifier.
         /// </summary>
-        /// <para>Performs RFC 3151 decoding of a URN to yield a public identifier.</para>
+        /// <para>Performs RFC 3151 decoding of a URN to yield a public identifier.
+        /// Returns null if the urn is null.</para>
         /// <para>If the specified <c>urn</c> does not appear to be a
         /// <c>urn:publicid:</c> URN, it is returned unchanged.</para>
         /// <param name="urn">The <c>urn:publicid:</c> URN.</param>
         /// <returns>The public identifier.</returns>
         public static string DecodeUrn(string urn) {
+            if (urn == null) {
+                return null;
+            }
+
             if (urn.StartsWith("urn:publicid:")) {
                 string publicId = urn.Substring(13)
                     .Replace("%2F", "/")
