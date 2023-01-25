@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -392,7 +393,7 @@ namespace Org.XmlResolver.Cache {
                 lastModified = conn.Date;
             }
 
-            if (conn.StatusCode != 200) {
+            if (conn.StatusCode != HttpStatusCode.OK) {
                 logger.Log(ResolverLogger.CACHE, "Not expired: {0} (HTTP {1})",
                     entry.CacheUri.ToString(), conn.StatusCode.ToString());
                 return false;
@@ -494,7 +495,7 @@ namespace Org.XmlResolver.Cache {
             if (entry == null || entry.Expired) {
                 if (CacheUri(uri.ToString())) {
                     ResourceConnection conn = new ResourceConnection(uri.ToString());
-                    if (conn.Stream != null && conn.StatusCode == 200) {
+                    if (conn.Stream != null && conn.StatusCode == HttpStatusCode.OK) {
                         entry = AddNamespaceUri(conn, nature, purpose);
                     }
                 }
@@ -513,7 +514,7 @@ namespace Org.XmlResolver.Cache {
             if (entry == null || entry.Expired) {
                 if (CacheUri(systemId.ToString())) {
                     ResourceConnection conn = new ResourceConnection(systemId.ToString());
-                    if (conn.Stream != null && conn.StatusCode == 200) {
+                    if (conn.Stream != null && conn.StatusCode == HttpStatusCode.OK) {
                         entry = AddSystem(conn);
                     }
                 }

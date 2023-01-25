@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.IO.Packaging;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -19,6 +20,8 @@ namespace Org.XmlResolver.Utils {
     /// that may arise (because resources aren't found, for example, or aren't accessible.</para>
     /// 
     public class UriUtils {
+        protected static HttpClient httpClient = new HttpClient();
+
         /// <summary>
         /// Report if the platform is Windows.
         /// </summary>
@@ -359,10 +362,9 @@ namespace Org.XmlResolver.Utils {
         }
         
         private static Stream _getHttpStream(string uri) {
-            using (WebClient client = new WebClient()) {
-                byte[] response = client.DownloadData(uri);
-                return new MemoryStream(response);
-            }
+            HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, uri);
+            HttpResponseMessage resp = httpClient.Send(req);
+            return resp.Content.ReadAsStream();
         }
         
         private static Stream _getPackStream(string uri, Assembly asm) {
