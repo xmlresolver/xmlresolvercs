@@ -1,0 +1,70 @@
+name: build-branch
+on: push
+
+jobs:
+  check_branch:
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.check_step.outputs.branch }}
+      reponame: ${{ steps.check_step.outputs.reponame }}
+      tag: ${{ steps.check_step.outputs.tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get branch name, etc.
+        id: check_step
+        run: |
+          raw=${{ github.repository }}
+          reponame=${raw##*/}
+          echo "reponame=$reponame" >> $GITHUB_OUTPUT
+          raw=$(git branch -r --contains ${{ github.ref }})
+          branch=${raw##*/}
+          echo "branch=$branch" >> $GITHUB_OUTPUT
+          tag=""
+          if [ ${{ github.ref_type }} = "tag" ]; then
+            tag=${{ github.ref_name }}
+            echo "Running in $reponame on $branch for $tag"
+          else
+            echo "Running in $reponame on $branch"
+          fi
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    needs: check_branch
+    env:
+      HAVE_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN != '' }}
+      HAVE_NUGET_KEY: ${{ secrets.NUGET_API_KEY != '' }}
+      CIWORKFLOW: yes
+      CI_SHA1: ${{ github.sha }}
+      CI_BUILD_NUM: ${{ github.run_number }}
+      CI_PROJECT_USERNAME: ${{ github.repository_owner }}
+      CI_PROJECT_REPONAME: ${{ needs.check_branch.outputs.reponame }}
+      CI_BRANCH: ${{ needs.check_branch.outputs.branch }}
+      CI_TAG: ${{ needs.check_branch.outputs.tag }}
+
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get install curl gnupg
+          sudo curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.gpg
+          sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" > /etc/apt/sources.list.d/dotnetdev.list'
+          sudo apt-get update
+          sudo apt-get install dotnet-sdk-6.0
+
+      - name: Checkout the branch
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          git submodule sync
+          git submodule update --init
+          ./gradlew dist
+
+      - name: Publish release
+        if: ${{ env.HAVE_NUGET_KEY == 'true' && env.CI_BRANCH == 'main' && env.CI_TAG != '' }}
+        run:
+          ./gradlew -PnugetApiKey=${{ secrets.NUGET_API_KEY }} -PnugetSource=${{ secrets.NUGET_SOURCE }} dotnetNugetPush
