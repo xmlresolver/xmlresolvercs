@@ -73,7 +73,8 @@ namespace Org.XmlResolver {
         /// <param name="role">The role, which is ignored.</param>
         /// <param name="ofObjectToReturn">The type of object to return, which is ignored.</param>
         /// <returns>A stream if the resource was located or null otherwise.</returns>
-        public override object? GetEntity(Uri absoluteUri, string? role, Type? ofObjectToReturn) {
+        public override object? GetEntity(Uri absoluteUri, string? role, Type? ofObjectToReturn)
+        {
             ResolvedResource rsrc = _resolver.ResolveEntity(null, null, absoluteUri.ToString(), null);
             if (rsrc == null) {
                 try {
@@ -139,7 +140,8 @@ namespace Org.XmlResolver {
         /// <param name="relativeUri">The relative URI.</param>
         /// <returns>The resolved absolute URI or null.</returns>
         /// <exception cref="NotSupportedException">If resolution produces a relative URI</exception>
-        public override Uri ResolveUri(Uri? baseUri, string? relativeUri) {
+        public override Uri ResolveUri(Uri? baseUri, string? relativeUri)
+        {
             // There's a horrible bug in System.Xml where it attempts to resolve public identifiers
             // as if they were relative URIs. It turns them into things like this:
             //    http://example.com/path/-//DTD//Example 1.0//EN
@@ -181,6 +183,7 @@ namespace Org.XmlResolver {
             }
             
             if (publicId) {
+                // The API doesn't expect null to be returned, but I'm not sure what else to do...
                 return null;
             }
 

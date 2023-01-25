@@ -32,11 +32,6 @@ namespace UnitTests
             try {
                 while (reader.Read())
                 {
-                    XmlNodeType ntype = reader.NodeType;
-                    if (ntype == XmlNodeType.Element)
-                    {
-                        Console.WriteLine("element");
-                    }
                 }
             }
             catch (Exception ex) {
@@ -57,11 +52,6 @@ namespace UnitTests
             try {
                 while (reader.Read())
                 {
-                    XmlNodeType ntype = reader.NodeType;
-                    if (ntype == XmlNodeType.Element)
-                    {
-                        Console.WriteLine("element");
-                    }
                 }
             }
             catch (Exception ex) {
