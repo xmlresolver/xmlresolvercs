@@ -40,7 +40,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: check_branch
     env:
-      HAVE_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN != '' }}
       CIWORKFLOW: yes
       CI_SHA1: ${{ github.sha }}
       CI_BUILD_NUM: ${{ github.run_number }}
