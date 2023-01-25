@@ -17,7 +17,8 @@ namespace Org.XmlResolver {
         /// <summary>
         /// Creates a new resolver with a default configuration.
         /// </summary>
-        public Resolver() {
+        public Resolver()
+        {
             _resolver = new CatalogResolver();
         }
 

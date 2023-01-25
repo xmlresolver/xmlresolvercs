@@ -12,7 +12,8 @@ namespace Org.XmlResolver.Catalog.Query {
             return true;
         }
 
-        public QueryResult Search(CatalogManager manager) {
+        public QueryResult Search(CatalogManager manager)
+        {
             List<Uri> catalogs = new(manager.Catalogs());
             while (catalogs.Count > 0) {
                 Uri uri = catalogs[0];

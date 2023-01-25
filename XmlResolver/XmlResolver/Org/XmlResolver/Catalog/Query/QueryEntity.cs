@@ -6,7 +6,8 @@ namespace Org.XmlResolver.Catalog.Query {
         public readonly string SystemId;
         public readonly string PublicId;
 
-        public QueryEntity(string entityName, string systemId, string publicId) : base() {
+        public QueryEntity(string entityName, string systemId, string publicId) : base()
+        {
             EntityName = entityName;
             SystemId = systemId;
             PublicId = publicId;

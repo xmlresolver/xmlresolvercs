@@ -30,7 +30,8 @@ namespace Org.XmlResolver {
         /// Create a new resolver using the specified configuration.
         /// </summary>
         /// <param name="config">The resolver configuration.</param>
-        public CatalogResolver(XmlResolverConfiguration config) {
+        public CatalogResolver(XmlResolverConfiguration config)
+        {
             this.config = config;
         }
 
@@ -253,7 +254,8 @@ namespace Org.XmlResolver {
             }
             if (resolved != null) {
                 result = Resource(systemId, resolved, cache.CachedSystem(resolved, publicId));
-            } else {
+            } else
+            {
                 if (systemId != null) {
                     absSystem = new Uri(systemId);
                 }
