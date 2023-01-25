@@ -80,7 +80,8 @@ namespace Org.XmlResolver {
         /// <returns>The list of catalog files, as absolute URIs.</returns>
         public List<Uri> Catalogs() {
             List<Uri> catlist = new();
-            foreach (var cat in (List<string>) _resolverConfiguration.GetFeature(ResolverFeature.CATALOG_FILES)) {
+            foreach (var cat in (List<string>) _resolverConfiguration.GetFeature(ResolverFeature.CATALOG_FILES))
+            {
                 catlist.Add(new Uri(UriUtils.Cwd(), cat));
             }
             return catlist;
@@ -219,7 +220,8 @@ namespace Org.XmlResolver {
         {
             systemId = fixWindowsSystemIdentifier(systemId);
             ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, publicId);
-            return new QueryEntity(entityName, external.SystemId, external.PublicId).Search(this).ResultUri();
+            QueryResult result = new QueryEntity(entityName, external.SystemId, external.PublicId).Search(this);
+            return result.ResultUri();
         }
 
         /// <summary>

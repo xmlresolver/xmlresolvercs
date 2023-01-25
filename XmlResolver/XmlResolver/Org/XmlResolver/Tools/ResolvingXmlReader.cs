@@ -178,7 +178,7 @@ namespace Org.XmlResolver.Tools {
         }
 
         public override int AttributeCount => _reader.AttributeCount;
-        public override string? BaseURI => _reader.BaseURI;
+        public override string BaseURI => _reader.BaseURI;
         public override int Depth => _reader.Depth;
         public override bool EOF => _reader.EOF;
         public override bool IsEmptyElement => _reader.IsEmptyElement;

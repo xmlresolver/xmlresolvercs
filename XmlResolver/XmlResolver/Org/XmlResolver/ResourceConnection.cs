@@ -1,7 +1,7 @@
 using System;
-using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using NLog;
 using Org.XmlResolver.Utils;
 
@@ -14,10 +14,11 @@ namespace Org.XmlResolver {
     /// that the caching layer can use to determine if the resource should be cached locally.</para>
     public class ResourceConnection {
         protected static ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
+        protected static HttpClient httpClient = new HttpClient();
 
         private Stream _stream = null;
         private Uri _uri = null;
-        private int _statusCode = -1;
+        private HttpStatusCode _statusCode = HttpStatusCode.OK;
         private string _contentType = null;
         private string _etag = null;
         private long _lastModified = -1;
@@ -45,50 +46,48 @@ namespace Org.XmlResolver {
             _uri = UriUtils.NewUri(resolved);
 
             if ("http".Equals(_uri.Scheme) || "https".Equals(_uri.Scheme)) {
-                try {
-                    HttpWebRequest req = WebRequest.CreateHttp(_uri);
-                    if (headOnly) {
-                        req.Method = "HEAD";
-                    }
-                    else {
-                        req.Method = "GET";
-                    }
+                HttpRequestMessage req;
+                if (headOnly)
+                {
+                    req = new HttpRequestMessage(HttpMethod.Head, _uri);
+                }
+                else
+                {
+                    req = new HttpRequestMessage(HttpMethod.Get, _uri);
+                }
 
-                    HttpWebResponse resp = (HttpWebResponse) req.GetResponse();
-                    _stream = resp.GetResponseStream();
-                    _statusCode = (int) resp.StatusCode;
-                    if (resp.ContentType == string.Empty) {
+                try
+                {
+                    HttpResponseMessage resp = httpClient.Send(req);
+                    _stream = resp.Content.ReadAsStream();
+                    _statusCode = resp.StatusCode;
+                    if (resp.Content.Headers.ContentType == null)
+                    {
                         _contentType = "application/octet-stream";
                     }
-                    else {
-                        _contentType = resp.ContentType;
+                    else
+                    {
+                        _contentType = resp.Content.Headers.ContentType.ToString();
+                    }
+                        
+                    if (resp.Headers.ETag != null)
+                    {
+                        _etag = resp.Headers.ETag.ToString();
                     }
 
-                    string retag = null;
-                    string date = null;
-                    for (int pos = 0; pos < resp.Headers.Count; pos++) {
-                        string header = resp.Headers.GetKey(pos);
-                        if (retag == null && "etag".Equals(header.ToLower())) {
-                            retag = resp.Headers.GetValues(pos)[0];
-                        }
-
-                        if (date == null && "date".Equals(header.ToLower())) {
-                            date = resp.Headers.GetValues(pos)[0];
-                        }
+                    if (resp.Content.Headers.LastModified != null)
+                    {
+                        _lastModified =
+                            ((DateTimeOffset)resp.Content.Headers.LastModified).ToUnixTimeMilliseconds();
                     }
-
-                    _etag = retag;
-                    _lastModified = ((DateTimeOffset) resp.LastModified).ToUnixTimeMilliseconds();
-
-                    if (date != null) {
-                        DateTime dt = DateTime.ParseExact(date,
-                            "ddd, dd MMM yyyy HH:mm:ss 'GMT'",
-                            CultureInfo.InvariantCulture.DateTimeFormat,
-                            DateTimeStyles.AssumeUniversal);
-                        _date = ((DateTimeOffset) dt).ToUnixTimeMilliseconds();
+                        
+                    if (resp.Headers.Date != null)
+                    {
+                        _date = ((DateTimeOffset)resp.Headers.Date).ToUnixTimeMilliseconds();
                     }
                 }
-                catch (WebException) {
+                catch (HttpRequestException)
+                {
                     // nop
                 }
             }
@@ -112,7 +111,7 @@ namespace Org.XmlResolver {
         /// <summary>
         /// The status code returned by the request.
         /// </summary>
-        public int StatusCode => _statusCode;
+        public HttpStatusCode StatusCode => _statusCode;
         
         /// <summary>
         /// The ETag of the resource as returned by the server. May be null.

@@ -93,7 +93,9 @@ namespace Org.XmlResolver {
     public class XmlResolverConfiguration : IResolverConfiguration {
         private readonly object _syncLock = new object();
 
-        private readonly string XmlResolverDataAssembly = "XmlResolverData.dll";
+        public readonly string AssemblyUriPrefix = "https://xmlresolver.org/assembly/";
+        private readonly string xmlResolverDataAssembly = "XmlResolverData, Culture=neutral, PublicKeyToken=null";
+        private readonly string catrsrc = "Org.XmlResolver.catalog.xml";
 
         protected static ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
 
@@ -280,7 +282,7 @@ namespace Org.XmlResolver {
             }
 
             if (useDataAssembly) {
-                builtinAssemblyCatalogs.Add(XmlResolverDataAssembly);
+                builtinAssemblyCatalogs.Add(xmlResolverDataAssembly);
             }
         }
 
@@ -611,7 +613,7 @@ namespace Org.XmlResolver {
                 List<string> updatedCatalogs = new();
                 foreach (string catalog in builtinAssemblyCatalogs)
                 {
-                    if (catalog != XmlResolverDataAssembly) {
+                    if (catalog != xmlResolverDataAssembly) {
                         updatedCatalogs.Add(catalog);
                     }
                 }
@@ -619,7 +621,7 @@ namespace Org.XmlResolver {
                 builtinAssemblyCatalogs.AddRange(updatedCatalogs);
                 // Put the XmlResolverData assembly in the list if it's enabled
                 if (useDataAssembly) {
-                    builtinAssemblyCatalogs.Add(XmlResolverDataAssembly);
+                    builtinAssemblyCatalogs.Add(xmlResolverDataAssembly);
                 }
             } else if (feature == ResolverFeature.FIX_WINDOWS_SYSTEM_IDENTIFIERS) {
                 fixWindowsSystemIdentifiers = (Boolean) value;
@@ -654,14 +656,16 @@ namespace Org.XmlResolver {
                             cats.Add(cat);
                         }
                     }
-                    foreach (string asm in assemblyCatalogs) {
-                        string cat = FindAssemblyCatalogFile(asm);
+                    foreach (string asm in assemblyCatalogs)
+                    {
+                        String cat = LoadAssemblyCatalog(asm);
                         if (cat != null && !cats.Contains(cat)) {
                             cats.Add(cat);
                         }
                     }
-                    foreach (string asm in builtinAssemblyCatalogs) {
-                        string cat = FindAssemblyCatalogFile(asm);
+                    foreach (string asm in builtinAssemblyCatalogs)
+                    {
+                        string cat = LoadAssemblyCatalog(asm);
                         if (cat != null && !cats.Contains(cat)) {
                             cats.Add(cat);
                         }
@@ -719,48 +723,35 @@ namespace Org.XmlResolver {
             return new(knownFeatures);
         }
 
-        private string FindAssemblyCatalogFile(string asmloc) {
-            if (assemblyCache.ContainsKey(asmloc)) {
+        private string LoadAssemblyCatalog(string asm)
+        {
+            String asmloc = AssemblyUriPrefix + asm;
+            if (assemblyCache.ContainsKey(asmloc))
+            {
                 return assemblyCache[asmloc];
             }
+            
+            try
+            {
+                AssemblyName asmname = new AssemblyName(asm);
+                Assembly xassembly = Assembly.Load(asmname);
 
-            try {
-                Assembly asm = Assembly.LoadFrom(asmloc);
-                string catrsrc = "Org.XmlResolver.catalog.xml";
-                foreach (var file in asm.GetManifestResourceNames()) {
+                foreach (var file in xassembly.GetManifestResourceNames()) {
                     if (catrsrc.Equals(file)) {
-                        String DllLoc = UriUtils.GetLocationUri(catrsrc, asm).ToString();
+                        String DllLoc = UriUtils.GetLocationUri(catrsrc, xassembly).ToString();
                         assemblyCache.Add(asmloc, DllLoc);
                         return DllLoc;
                     }
                 }
-            }
-            catch (FileNotFoundException ex) {
-                if (!asmloc.Contains("/") && !asmloc.Contains("\\")) {
-                    var loc = Assembly.GetExecutingAssembly().Location;
-                    var path = Path.GetDirectoryName(loc);
-                    var newloc = Path.Combine(path, asmloc);
-                    // Check for / or \ so we don't wind up in an infinite loop...
-                    if (newloc.Contains("/") || newloc.Contains("\\")) {
-                        String DllLoc = FindAssemblyCatalogFile(newloc);
-                        if (DllLoc != null) {
-                            // Cache the original value too
-                            assemblyCache.Add(asmloc, DllLoc);
-                        }
-                        return DllLoc;
-                    }
-                }
-                // Couldn't find it or couldn't load it
-                logger.Log(ResolverLogger.CONFIG, "Failed to load assembly: {0}", asmloc);
-                logger.Log(ResolverLogger.CONFIG, ex.Message);
-            }
-            catch (Exception ex) {
-                // Couldn't find it or couldn't load it
-                logger.Log(ResolverLogger.CONFIG, "Failed to load assembly: {0}", asmloc);
-                logger.Log(ResolverLogger.CONFIG, ex.Message);
-            }
 
-            return null; 
+                logger.Log(ResolverLogger.CONFIG, "Failed to load catalog from assembly: {0}", asm);
+                return null; 
+            }
+            catch (Exception)
+            {
+                logger.Log(ResolverLogger.CONFIG, "Failed to load assembly: {0}", asm);
+                return null;
+            }
         }
     }
 }
