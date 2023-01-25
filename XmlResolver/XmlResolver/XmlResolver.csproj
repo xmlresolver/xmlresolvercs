@@ -2,12 +2,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Norman Walsh</Authors>
     <Description>The xmlresolver project provides an implementation of the System.Xml.XmlResolver. It uses the OASIS XML Catalogs V1.1 Standard to provide a mapping from external identifiers and URIs to local resources.</Description>
     <PackageTags>XML,XmlResolver</PackageTags>
-    <Copyright>Copyright © 2021, 2022 Norman Walsh. Portions Copyright © 2021, 2022 Saxonica, Ltd.</Copyright>
+    <Copyright>Copyright © 2021-2023 Norman Walsh. Portions Copyright © 202-2023 Saxonica, Ltd.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://xmlresolver.org/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/xmlresolver/xmlresolvercs</RepositoryUrl>
