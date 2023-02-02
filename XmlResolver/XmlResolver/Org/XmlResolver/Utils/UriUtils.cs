@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Web;
 
 namespace Org.XmlResolver.Utils {
     /// <summary>
@@ -78,7 +79,7 @@ namespace Org.XmlResolver.Utils {
         /// <returns>The current directory as a URI.</returns>
         public static Uri Cwd() {
             return new Uri(new Uri("file://"), 
-                System.IO.Directory.GetCurrentDirectory() + "/");
+                Directory.GetCurrentDirectory() + "/");
         }
         
         /// <summary>
@@ -310,10 +311,13 @@ namespace Org.XmlResolver.Utils {
         /// <c>pack:</c>, and <c>data:</c> URIs are supported.</para>
         /// <para>The assembly is only relevant for <c>pack:</c> scheme URIs.</para>
         /// <para>In addition to <c>ArgumentException</c>, any exceptions raised attempting to open the
-        /// resource will also be thrown.</para>
+        /// resource will also be thrown. In particular, <c>FileNotFoundException</c> or similar exceptions for unreadable
+        /// file: URIs and <c>HttpRequestException</c> for http(s) resources that return an error code other than 200.
+        /// (The underlying Http machinery follows redirects, so this shouldn't apply to 3xx error codes under
+        /// most circumstances.)</para>
         /// <param name="uri">The URI.</param>
         /// <param name="asm">The relevant assembly.</param>
-        /// <returns>The stream, or null if the stram could not be opened.</returns>
+        /// <returns>The stream, or null if the stream could not be opened.</returns>
         /// <exception cref="ArgumentException">If the URI is not absolute or has an unsupported scheme.</exception>
         public static Stream GetStream(string uri, Assembly asm) {
             if (uri.StartsWith("file:/")) {
@@ -331,7 +335,7 @@ namespace Org.XmlResolver.Utils {
             if (uri.StartsWith("data:")) {
                 return _getDataStream(uri);
             }
-            
+
             throw new ArgumentException("Unexpected URI scheme: " + uri);
         }
 
@@ -364,6 +368,11 @@ namespace Org.XmlResolver.Utils {
         private static Stream _getHttpStream(string uri) {
             HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, uri);
             HttpResponseMessage resp = httpClient.Send(req);
+
+            if (resp.StatusCode != HttpStatusCode.OK)
+            {
+                throw new HttpRequestException("Failed to read resource", null, resp.StatusCode);
+            }
             return resp.Content.ReadAsStream();
         }
         
@@ -460,7 +469,7 @@ namespace Org.XmlResolver.Utils {
             filestr = filestr.Replace("%3A", ":");
             filestr = filestr.Replace(",", "/");
 
-            Uri fileuri = UriUtils.NewUri(filestr);
+            Uri fileuri = NewUri(filestr);
             filestr = fileuri.AbsolutePath;
             
             // Assume this is a zip file...
@@ -486,7 +495,7 @@ namespace Org.XmlResolver.Utils {
                 String data = path.Substring(pos + 1);
                 if (mediatype.EndsWith(";base64")) {
                     // Base64 decode it
-                    var base64bytes = System.Convert.FromBase64String(data);
+                    var base64bytes = Convert.FromBase64String(data);
                     inputStream = new MemoryStream(base64bytes);
                 }
                 else {
@@ -501,7 +510,7 @@ namespace Org.XmlResolver.Utils {
                         }
                     }
 
-                    data = System.Web.HttpUtility.UrlDecode(data, System.Text.Encoding.GetEncoding(charset));
+                    data = HttpUtility.UrlDecode(data, Encoding.GetEncoding(charset));
                     inputStream = new MemoryStream(Encoding.UTF8.GetBytes(data));
                 }
 
