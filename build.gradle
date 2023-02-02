@@ -64,7 +64,7 @@ if (!hasProperty("nugetSource")) {
 tasks.register("dotnetBuild") {
   inputs.files fileTree(dir: "${projectDir}/XmlResolver/XmlResolver")
   outputs.file "${projectDir}/XmlResolver/XmlResolver/bin/Release/net5.0/XmlResolver.dll"
-  outputs.file "${projectDir}/XmlResolver/XmlResolver/bin/Release/XmlResolver.{$resolverVersion}.nupkg"
+  outputs.file "${projectDir}/XmlResolver/XmlResolver/bin/Release/XmlResolver.${resolverVersion}.nupkg"
 
   doLast {
     exec {
