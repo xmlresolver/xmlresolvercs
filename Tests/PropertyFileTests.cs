@@ -9,10 +9,10 @@ public class PropertyFileTest : XmlResolverTest
     [Test]
     public void TestRelativeCatalogs()
     {
-        List<Uri> pfiles = new List<Uri>();
+        var pfiles = new List<Uri>();
         pfiles.Add(UriUtils.Resolve(TestRootDirectory, "Tests/resources/pfile-rel.xml"));
-        XmlResolverConfiguration config = new XmlResolverConfiguration(pfiles, null);
-        List<string> catalogs = (List<string>)config.GetFeature(ResolverFeature.CATALOG_FILES);
+        var config = new XmlResolverConfiguration(pfiles, null);
+        var catalogs = (List<string>)config.GetFeature(ResolverFeature.CATALOG_FILES)!;
         string s1 = UriUtils.Resolve(TestRootDirectory, "Tests/resources/catalog.xml").ToString();
         bool f1 = false;
         string s2 = UriUtils.Resolve(TestRootDirectory, "Tests/resources/a/catalog.xml").ToString();
@@ -30,10 +30,10 @@ public class PropertyFileTest : XmlResolverTest
     [Test]
     public void TestNotRelativeCatalogs()
     {
-        List<Uri> pfiles = new List<Uri>();
+        var pfiles = new List<Uri>();
         pfiles.Add(UriUtils.Resolve(TestRootDirectory, "Tests/resources/pfile-abs.xml"));
-        XmlResolverConfiguration config = new XmlResolverConfiguration(pfiles, null);
-        List<string> catalogs = (List<string>)config.GetFeature(ResolverFeature.CATALOG_FILES);
+        var config = new XmlResolverConfiguration(pfiles, null);
+        var catalogs = (List<string>)config.GetFeature(ResolverFeature.CATALOG_FILES)!;
         string s1 = "./catalog.xml";
         bool f1 = false;
         string s2 = "a/catalog.xml";

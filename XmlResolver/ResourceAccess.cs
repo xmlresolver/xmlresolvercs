@@ -85,7 +85,7 @@ public static class ResourceAccess
                     throw new ArgumentException("Unexpected URI scheme: " + uri);
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return response;
         }

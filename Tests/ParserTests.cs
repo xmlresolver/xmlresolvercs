@@ -9,35 +9,42 @@ namespace Tests;
 
 public class ParserTest
 {
-    private XmlResolverConfiguration config = null;
-    private XmlResolver.XmlResolver resolver = null;
+    private XmlResolverConfiguration? _config = null;
+    private XmlResolver.XmlResolver? _resolver = null;
 
     [SetUp]
     public void Setup()
     {
-        config = new XmlResolverConfiguration();
-        resolver = new XmlResolver.XmlResolver(config);
-        config.SetFeature(ResolverFeature.ALLOW_CATALOG_PI, true);
+        _config = new XmlResolverConfiguration();
+        _resolver = new XmlResolver.XmlResolver(_config);
+        _config.SetFeature(ResolverFeature.ALLOW_CATALOG_PI, true);
     }
 
     [Test]
     public void ParseWithRedirect()
     {
-        Uri docuri = UriUtils.GetLocationUri("resources/xml/sample-dtd-redirect.xml", Assembly.GetExecutingAssembly());
-        XmlReaderSettings settings = new XmlReaderSettings();
+        var docUri = UriUtils.GetLocationUri("resources/xml/sample-dtd-redirect.xml", Assembly.GetExecutingAssembly());
+        var settings = new XmlReaderSettings();
         settings.DtdProcessing = DtdProcessing.Parse;
 
-        ResolvingXmlReader reader = new ResolvingXmlReader(docuri, settings, resolver);
-        try
+        if (_resolver == null)
         {
-            while (reader.Read())
-            {
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
             Assert.Fail();
+        }
+        else
+        {
+            ResolvingXmlReader reader = new ResolvingXmlReader(docUri, settings, _resolver);
+            try
+            {
+                while (reader.Read())
+                {
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Assert.Fail();
+            }
         }
     }
 
@@ -45,22 +52,30 @@ public class ParserTest
     public void ParseWithRedirect2()
     {
         // This will redirect to https: 
-        Uri docuri = new Uri("http://www.w3.org/TR/xmlschema11-1/XMLSchema.xsd");
-        XmlReaderSettings settings = new XmlReaderSettings();
+        var docUri = new Uri("http://www.w3.org/TR/xmlschema11-1/XMLSchema.xsd");
+        var settings = new XmlReaderSettings();
         settings.DtdProcessing = DtdProcessing.Parse;
 
-        ResolvingXmlReader reader = new ResolvingXmlReader(docuri, settings, resolver);
-        try
+        if (_resolver == null)
         {
-            while (reader.Read())
-            {
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
             Assert.Fail();
         }
+        else
+        {
+            var reader = new ResolvingXmlReader(docUri, settings, _resolver);
+            try
+            {
+                while (reader.Read())
+                {
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Assert.Fail();
+            }
+        }
+
     }
 }
 

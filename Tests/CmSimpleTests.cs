@@ -6,88 +6,95 @@ namespace Tests;
 
 public class CmSimpleTest : XmlResolverTest
 {
-    private readonly Uri baseUri = new Uri("file:///tmp/");
-    private CatalogManager manager = null;
+    private readonly Uri _baseUri = new("file:///tmp/");
+    private CatalogManager? _manager = null;
 
-    [SetUp]
-    public void Setup()
+    private CatalogManager Manager
     {
-        XmlResolverConfiguration config = new XmlResolverConfiguration();
-        config.SetFeature(ResolverFeature.PREFER_PUBLIC, true);
-        config.AddCatalog(UriUtils.Resolve(TestRootDirectory, "Tests/resources/cm/simple.xml")
-            .ToString());
-        manager = new CatalogManager(config);
+        get
+        {
+            if (_manager == null)
+            {
+                XmlResolverConfiguration config = new XmlResolverConfiguration();
+                config.SetFeature(ResolverFeature.PREFER_PUBLIC, true);
+                config.AddCatalog(UriUtils.Resolve(TestRootDirectory, "Tests/resources/cm/simple.xml")
+                    .ToString());
+                _manager = new CatalogManager(config);
+            }
+
+            return _manager;
+        }
     }
 
     [Test]
     public void PublicTest1()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "public.dtd");
-        Uri result = manager.LookupPublic("http://example.com/miss", "-//EXAMPLE//DTD Example//EN");
+        var expected = UriUtils.Resolve(_baseUri, "public.dtd");
+        var result = Manager.LookupPublic("http://example.com/miss", "-//EXAMPLE//DTD Example//EN");
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void PublicTest2()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "system.dtd");
-        Uri result = manager.LookupPublic("http://example.com/system.dtd", "-//EXAMPLE//DTD Example//EN");
+        var expected = UriUtils.Resolve(_baseUri, "system.dtd");
+        var result = Manager.LookupPublic("http://example.com/system.dtd", "-//EXAMPLE//DTD Example//EN");
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void SystemTest()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "system.dtd");
-        Uri result = manager.LookupSystem("http://example.com/system.dtd");
+        var expected = UriUtils.Resolve(_baseUri, "system.dtd");
+        var result = Manager.LookupSystem("http://example.com/system.dtd");
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void RewriteSystemTest()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "local/path/system.dtd");
-        Uri result = manager.LookupSystem("http://example.com/rewrite/path/system.dtd");
+        var expected = UriUtils.Resolve(_baseUri, "local/path/system.dtd");
+        var result = Manager.LookupSystem("http://example.com/rewrite/path/system.dtd");
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void SystemSuffixTest1()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "suffix/base-long.dtd");
-        Uri result = manager.LookupSystem("http://example.com/path/base.dtd");
+        var expected = UriUtils.Resolve(_baseUri, "suffix/base-long.dtd");
+        var result = Manager.LookupSystem("http://example.com/path/base.dtd");
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void SystemSuffixTest2()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "suffix/base-short.dtd");
-        Uri result = manager.LookupSystem("http://example.com/alternate/base.dtd");
+        var expected = UriUtils.Resolve(_baseUri, "suffix/base-short.dtd");
+        var result = Manager.LookupSystem("http://example.com/alternate/base.dtd");
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void UriTest1()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "/path/document.xml");
-        Uri result = manager.LookupUri("http://example.com/document.xml");
+        var expected = UriUtils.Resolve(_baseUri, "/path/document.xml");
+        var result = Manager.LookupUri("http://example.com/document.xml");
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void UriTest2()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "/path/rddl.xml");
-        Uri result = manager.LookupUri("http://example.com/rddl.xml");
+        var expected = UriUtils.Resolve(_baseUri, "/path/rddl.xml");
+        var result = Manager.LookupUri("http://example.com/rddl.xml");
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void UriTest3()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "/path/rddl.xml");
-        Uri result = manager.LookupNamespaceUri("http://example.com/rddl.xml",
+        var expected = UriUtils.Resolve(_baseUri, "/path/rddl.xml");
+        var result = Manager.LookupNamespaceUri("http://example.com/rddl.xml",
             "nature", "purpose");
         Assert.That(expected, Is.EqualTo(result));
     }
@@ -95,7 +102,7 @@ public class CmSimpleTest : XmlResolverTest
     [Test]
     public void UriTest4()
     {
-        Uri result = manager.LookupNamespaceUri("http://example.com/rddl.xml",
+        var result = Manager.LookupNamespaceUri("http://example.com/rddl.xml",
             "not-nature", "not-purpose");
         Assert.That(result, Is.Null);
     }
@@ -103,40 +110,40 @@ public class CmSimpleTest : XmlResolverTest
     [Test]
     public void RewriteUriTest()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "/path/local/docs/document.xml");
-        Uri result = manager.LookupUri("http://example.com/rewrite/docs/document.xml");
+        var expected = UriUtils.Resolve(_baseUri, "/path/local/docs/document.xml");
+        var result = Manager.LookupUri("http://example.com/rewrite/docs/document.xml");
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void UriSuffixTest1()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "suffix/base-long.xml");
-        Uri result = manager.LookupUri("http://example.com/path/base.xml");
+        var expected = UriUtils.Resolve(_baseUri, "suffix/base-long.xml");
+        var result = Manager.LookupUri("http://example.com/path/base.xml");
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void UriSuffixTest2()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "suffix/base-short.xml");
-        Uri result = manager.LookupUri("http://example.com/alternate/base.xml");
+        var expected = UriUtils.Resolve(_baseUri, "suffix/base-short.xml");
+        var result = Manager.LookupUri("http://example.com/alternate/base.xml");
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void BookTest1()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "path/docbook.dtd");
-        Uri result = manager.LookupDoctype("book", null, null);
+        var expected = UriUtils.Resolve(_baseUri, "path/docbook.dtd");
+        var result = Manager.LookupDoctype("book", null, null);
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void BookTest2()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "system.dtd");
-        Uri result = manager.LookupDoctype("book",
+        var expected = UriUtils.Resolve(_baseUri, "system.dtd");
+        var result = Manager.LookupDoctype("book",
             "http://example.com/system.dtd", "-//EXAMPLE//DTD Example//EN");
         Assert.That(expected, Is.EqualTo(result));
     }
@@ -144,8 +151,8 @@ public class CmSimpleTest : XmlResolverTest
     [Test]
     public void BookTest3()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "public.dtd");
-        Uri result = manager.LookupDoctype("book",
+        var expected = UriUtils.Resolve(_baseUri, "public.dtd");
+        var result = Manager.LookupDoctype("book",
             "http://example.com/miss.dtd", "-//EXAMPLE//DTD Example//EN");
         Assert.That(expected, Is.EqualTo(result));
     }
@@ -153,24 +160,24 @@ public class CmSimpleTest : XmlResolverTest
     [Test]
     public void DocumentTest()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "path/default.xml");
-        Uri result = manager.LookupDocument();
+        var expected = UriUtils.Resolve(_baseUri, "path/default.xml");
+        var result = Manager.LookupDocument();
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void EntityTest1()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "chap01.xml");
-        Uri result = manager.LookupEntity("chap01", null, null);
+        var expected = UriUtils.Resolve(_baseUri, "chap01.xml");
+        var result = Manager.LookupEntity("chap01", null, null);
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void EntityTest2()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "system.dtd");
-        Uri result = manager.LookupEntity("chap01",
+        var expected = UriUtils.Resolve(_baseUri, "system.dtd");
+        var result = Manager.LookupEntity("chap01",
             "http://example.com/system.dtd", "-//EXAMPLE//DTD Example//EN");
         Assert.That(expected, Is.EqualTo(result));
     }
@@ -178,8 +185,8 @@ public class CmSimpleTest : XmlResolverTest
     [Test]
     public void EntityTest3()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "public.dtd");
-        Uri result = manager.LookupEntity("chap01",
+        var expected = UriUtils.Resolve(_baseUri, "public.dtd");
+        var result = Manager.LookupEntity("chap01",
             "http://example.com/miss.dtd", "-//EXAMPLE//DTD Example//EN");
         Assert.That(expected, Is.EqualTo(result));
     }
@@ -187,16 +194,16 @@ public class CmSimpleTest : XmlResolverTest
     [Test]
     public void NotationTest1()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "notation.xml");
-        Uri result = manager.LookupNotation("notename", null, null);
+        var expected = UriUtils.Resolve(_baseUri, "notation.xml");
+        var result = Manager.LookupNotation("notename", null, null);
         Assert.That(expected, Is.EqualTo(result));
     }
 
     [Test]
     public void NotationTest2()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "system.dtd");
-        Uri result = manager.LookupNotation("notename",
+        var expected = UriUtils.Resolve(_baseUri, "system.dtd");
+        var result = Manager.LookupNotation("notename",
             "http://example.com/system.dtd", "-//EXAMPLE//DTD Example//EN");
         Assert.That(expected, Is.EqualTo(result));
     }
@@ -204,8 +211,8 @@ public class CmSimpleTest : XmlResolverTest
     [Test]
     public void NotationTest3()
     {
-        Uri expected = UriUtils.Resolve(baseUri, "public.dtd");
-        Uri result = manager.LookupNotation("notename",
+        var expected = UriUtils.Resolve(_baseUri, "public.dtd");
+        var result = Manager.LookupNotation("notename",
             "http://example.com/miss.dtd", "-//EXAMPLE//DTD Example//EN");
         Assert.That(expected, Is.EqualTo(result));
     }

@@ -5,63 +5,122 @@ namespace Tests;
 
 public class NamespaceTest : XmlResolverTest
 {
-    public static readonly string catalog1 = "/Tests/resources/rescat.xml";
-    private XmlResolverConfiguration config = null;
-    private CatalogManager manager = null;
-    private XmlResolver.XmlResolver resolver = null;
+    private XmlResolverConfiguration? _nsConfig = null;
+    private CatalogManager? _manager = null;
+    private XmlResolver.XmlResolver? _resolver = null;
 
-    [SetUp]
-    public void BaseSetup()
+    private XmlResolverConfiguration NsConfig
     {
-        List<string> catalogs = new List<string>();
-        catalogs.Add(TestRootPath + catalog1);
-        config = new XmlResolverConfiguration(new List<Uri>(), catalogs);
-        config.SetFeature(ResolverFeature.URI_FOR_SYSTEM, true);
-        manager = (CatalogManager)config.GetFeature(ResolverFeature.CATALOG_MANAGER);
-        resolver = new XmlResolver.XmlResolver(config);
+        get
+        {
+            if (_nsConfig == null)
+            {
+                string catalog1 = "/Tests/resources/rescat.xml";
+                List<string> catalogs = new List<string>();
+                catalogs.Add(TestRootPath + catalog1);
+                _nsConfig = new XmlResolverConfiguration(new List<Uri>(), catalogs);
+                _nsConfig.SetFeature(ResolverFeature.URI_FOR_SYSTEM, true);
+            }
+
+            return _nsConfig;
+        }
+    }
+    
+    private CatalogManager Manager
+    {
+        get
+        {
+            if (_manager == null)
+            {
+                _manager = (CatalogManager)NsConfig.GetFeature(ResolverFeature.CATALOG_MANAGER)!;
+            }
+
+            return _manager;
+        }
     }
 
+    private XmlResolver.XmlResolver Resolver
+    {
+        get
+        {
+            if (_resolver == null)
+            {
+                _resolver = new XmlResolver.XmlResolver(NsConfig);
+            }
+
+            return _resolver;
+        }
+    }
+    
     [Test]
     public void LookupOneForValidation()
     {
-        Uri result = manager.LookupNamespaceUri("http://example.com/one", "the-one-nature", "validation");
-        Assert.That(result.ToString().EndsWith("/resources/one-validate.xml"));
+        var result = Manager.LookupNamespaceUri("http://example.com/one", "the-one-nature", "validation");
+        if (result == null)
+        {
+            Assert.Fail();
+        }
+        else
+        {
+            Assert.That(result.ToString().EndsWith("/resources/one-validate.xml"));
+        }
     }
 
     [Test]
     public void LookupOneForSomethingElse()
     {
-        Uri result = manager.LookupNamespaceUri("http://example.com/one", "the-one-nature", "somethingelse");
-        Assert.That(result.ToString().EndsWith("/resources/one-else.xml"));
+        var result = Manager.LookupNamespaceUri("http://example.com/one", "the-one-nature", "somethingelse");
+        if (result == null)
+        {
+            Assert.Fail();
+        }
+        else
+        {
+            Assert.That(result.ToString().EndsWith("/resources/one-else.xml"));
+        }
     }
 
     [Test]
     public void LookupTwoForValidation()
     {
-        Uri result = manager.LookupNamespaceUri("http://example.com/two", "the-two-nature", "validation");
-        Assert.That(result.ToString().EndsWith("/resources/two-validate.xml"));
+        var result = Manager.LookupNamespaceUri("http://example.com/two", "the-two-nature", "validation");
+        if (result == null)
+        {
+            Assert.Fail();
+        }
+        else
+        {
+            Assert.That(result.ToString().EndsWith("/resources/two-validate.xml"));
+        }
     }
 
     [Test]
     public void LookupTwoForAnythingElse()
     {
-        Uri result = manager.LookupNamespaceUri("http://example.com/two", "the-two-nature", "anything-else");
-        Assert.That(result.ToString().EndsWith("/resources/two-anything-else.xml"));
+        var result = Manager.LookupNamespaceUri("http://example.com/two", "the-two-nature", "anything-else");
+        if (result == null)
+        {
+            Assert.Fail();
+        }
+        else
+        {
+            Assert.That(result.ToString().EndsWith("/resources/two-anything-else.xml"));
+        }
     }
 
     [Test]
     public void ResolveWithHref()
     {
-        var req = resolver.GetRequest("one", "http://example.com/", "the-one-nature", "validation");
-        var resp = resolver.Resolve(req);
+        var req = Resolver.GetRequest("one", "http://example.com/", "the-one-nature", "validation");
+        var resp = Resolver.Resolve(req);
         Assert.That(resp.Stream, Is.Not.Null);
     }
 
     [Test]
     public void ResolveWithUri()
     {
-        var req = resolver.GetRequest("http://example.com/one", null, "the-one-nature", "validation");
-        var resp = resolver.Resolve(req);
+        var req = Resolver.GetRequest("http://example.com/one", null, "the-one-nature", "validation");
+        var resp = Resolver.Resolve(req);
         Assert.That(resp.Stream, Is.Not.Null);
     }
 }

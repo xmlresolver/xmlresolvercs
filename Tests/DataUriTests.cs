@@ -6,14 +6,20 @@ namespace Tests;
 
 public class DataUriTest : XmlResolverTest
 {
-    private XmlResolver.XmlResolver _resolver = null;
-
-    [SetUp]
-    public void Setup()
+    private XmlResolver.XmlResolver? _resolver = null;
+    private XmlResolver.XmlResolver Resolver
     {
-        XmlResolverConfiguration config = new XmlResolverConfiguration(UriUtils
-            .Resolve(TestRootDirectory, "Tests/resources/datauri.xml").ToString());
-        _resolver = new XmlResolver.XmlResolver(config);
+        get
+        {
+            if (_resolver == null)
+            {
+                var config = new XmlResolverConfiguration(UriUtils
+                    .Resolve(TestRootDirectory, "Tests/resources/datauri.xml").ToString());
+                _resolver = new XmlResolver.XmlResolver(config);
+            }
+
+            return _resolver;
+        }
     }
 
     [Test]
@@ -22,16 +28,16 @@ public class DataUriTest : XmlResolverTest
         string href = "example.txt";
         string baseuri = "http://example.com/";
 
-        string line = null;
-        var req = _resolver.GetRequest(href, baseuri);
-        var result = _resolver.Resolve(req);
+        var req = Resolver.GetRequest(href, baseuri);
+        var result = Resolver.Resolve(req);
         if (result.Stream == null)
         {
             Assert.Fail();
         }
         else
         {
-            using (StreamReader reader = new StreamReader(result.Stream))
+            string? line;
+            using (var reader = new StreamReader(result.Stream))
             {
                 line = reader.ReadLine();
             }
@@ -49,16 +55,16 @@ public class DataUriTest : XmlResolverTest
         // it will work in applications that use the resolver.
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-        string line = null;
-        var req = _resolver.GetRequest(href, baseuri);
-        var result = _resolver.Resolve(req);
+        var req = Resolver.GetRequest(href, baseuri);
+        var result = Resolver.Resolve(req);
         if (result.Stream == null)
         {
             Assert.Fail();
         }
         else
         {
-            using (StreamReader reader = new StreamReader(result.Stream))
+            string? line;
+            using (var reader = new StreamReader(result.Stream))
             {
                 line = reader.ReadLine();
             }
@@ -73,15 +79,15 @@ public class DataUriTest : XmlResolverTest
         string href = "example.xml";
         string baseuri = "http://example.com/";
 
-        string line = null;
-        var req = _resolver.GetRequest(href, baseuri);
-        var result = _resolver.Resolve(req);
+        var req = Resolver.GetRequest(href, baseuri);
+        var result = Resolver.Resolve(req);
         if (result.Stream == null)
         {
             Assert.Fail();
         }
         else
         {
+            string? line;
             using (StreamReader reader = new StreamReader(result.Stream))
             {
                 line = reader.ReadLine();

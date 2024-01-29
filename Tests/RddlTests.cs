@@ -5,30 +5,53 @@ namespace Tests;
 
 public class RddlTests
 {
-    public const string catalog = "src/test/resources/docker.xml";
-    private XmlResolverConfiguration config = null;
-    private XmlResolver.XmlResolver resolver = null;
+    private XmlResolverConfiguration? _config = null;
+    private XmlResolver.XmlResolver? _resolver = null;
+
+    private XmlResolverConfiguration Config
+    {
+        get
+        {
+            if (_config == null)
+            {
+                _config = new XmlResolverConfiguration("src/test/resources/docker.xml");
+                _config.SetFeature(ResolverFeature.USE_DATA_ASSEMBLY, true);
+            }
+
+            return _config;
+        }
+    }
+
+    private XmlResolver.XmlResolver Resolver
+    {
+        get
+        {
+            if (_resolver == null)
+            {
+                _resolver = new XmlResolver.XmlResolver(Config);
+            }
+
+            return _resolver;
+        }
+    }
 
     [SetUp]
-    public void setup()
+    public void Setup()
     {
-        config = new XmlResolverConfiguration(catalog);
-        resolver = new XmlResolver.XmlResolver(config);
-
-        var req = resolver.GetRequest("http://localhost:8222/docs/sample/sample.dtd");
-        var resp = resolver.Resolve(req);
+        var req = Resolver.GetRequest("http://localhost:8222/docs/sample/sample.dtd");
+        var resp = Resolver.Resolve(req);
         Assert.That(200, Is.EqualTo(resp.StatusCode));
     }
     
     [Test]
     public void XsdTest()
     {
-        resolver.Config.SetFeature(ResolverFeature.PARSE_RDDL, true);
-        var req = resolver.GetRequest("http://localhost:8222/docs/sample",
+        Resolver.Config.SetFeature(ResolverFeature.PARSE_RDDL, true);
+        var req = Resolver.GetRequest("http://localhost:8222/docs/sample",
             null,
             "http://www.w3.org/2001/XMLSchema",
             "http://www.rddl.org/purposes#schema-validation");
-        var resp = resolver.Resolve(req);
+        var resp = Resolver.Resolve(req);
         Assert.That(true, Is.EqualTo(resp.IsResolved));
         Assert.That("application/xml", Is.EqualTo(resp.ContentType));
     }
@@ -36,12 +59,12 @@ public class RddlTests
     [Test]
     public void XslTest()
     {
-        resolver.Config.SetFeature(ResolverFeature.PARSE_RDDL, true);
-        var req = resolver.GetRequest("http://localhost:8222/docs/sample",
+        Resolver.Config.SetFeature(ResolverFeature.PARSE_RDDL, true);
+        var req = Resolver.GetRequest("http://localhost:8222/docs/sample",
             null,
             "http://www.w3.org/1999/XSL/Transform",
             "http://www.rddl.org/purposes#transformation");
-        var resp = resolver.Resolve(req);
+        var resp = Resolver.Resolve(req);
         Assert.That(true, Is.EqualTo(resp.IsResolved));
         Assert.That("application/xml", Is.EqualTo(resp.ContentType));
     }
@@ -49,12 +72,12 @@ public class RddlTests
     [Test]
     public void XslTestBaseUri()
     {
-        resolver.Config.SetFeature(ResolverFeature.PARSE_RDDL, true);
-        var req = resolver.GetRequest("sample",
+        Resolver.Config.SetFeature(ResolverFeature.PARSE_RDDL, true);
+        var req = Resolver.GetRequest("sample",
             "http://localhost:8222/docs/",
             "http://www.w3.org/1999/XSL/Transform",
             "http://www.rddl.org/purposes#transformation");
-        var resp = resolver.Resolve(req);
+        var resp = Resolver.Resolve(req);
         Assert.That(true, Is.EqualTo(resp.IsResolved));
         Assert.That("application/xml", Is.EqualTo(resp.ContentType));
     }
@@ -62,12 +85,12 @@ public class RddlTests
     [Test]
     public void XslTestNoRddl()
     {
-        resolver.Config.SetFeature(ResolverFeature.PARSE_RDDL, false);
-        var req = resolver.GetRequest("http://localhost:8222/docs/sample",
+        Resolver.Config.SetFeature(ResolverFeature.PARSE_RDDL, false);
+        var req = Resolver.GetRequest("http://localhost:8222/docs/sample",
             null,
             "http://www.w3.org/2001/XMLSchema",
             "http://www.rddl.org/purposes#schema-validation");
-        var resp = resolver.Resolve(req);
+        var resp = Resolver.Resolve(req);
         Assert.That(true, Is.EqualTo(resp.IsResolved));
         // Extra "/" because Apache redirects to the directory listing.
         Assert.That("http://localhost:8222/docs/sample/", Is.EqualTo(resp.ResolvedUri));
@@ -88,8 +111,14 @@ public class RddlTests
             "http://www.rddl.org/purposes#validation");
         var resp = lresolver.Resolve(req);
         Assert.That(true, Is.EqualTo(resp.IsResolved));
-        Assert.That(true, Is.EqualTo(resp.ResolvedUri.ToString().EndsWith("xml.xsd")));
 
-
+        if (resp.ResolvedUri == null)
+        {
+            Assert.Fail();
+        }
+        else
+        {
+            Assert.That(true, Is.EqualTo(resp.ResolvedUri.ToString().EndsWith("xml.xsd")));
+        }
     }
 }

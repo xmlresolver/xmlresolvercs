@@ -9,15 +9,34 @@ namespace Tests;
 
 public class PiTest
 {
-    private XmlResolverConfiguration config = null;
-    private XmlResolver.XmlResolver resolver = null;
+    private XmlResolverConfiguration? _config = null;
+    private XmlResolver.XmlResolver? _resolver = null;
 
-    [SetUp]
-    public void Setup()
+    private XmlResolverConfiguration Config
     {
-        config = new XmlResolverConfiguration();
-        resolver = new XmlResolver.XmlResolver(config);
-        config.SetFeature(ResolverFeature.ALLOW_CATALOG_PI, true);
+        get
+        {
+            if (_config == null)
+            {
+                _config = new XmlResolverConfiguration();
+                _config.SetFeature(ResolverFeature.USE_DATA_ASSEMBLY, true);
+            }
+
+            return _config;
+        }
+    }
+
+    private XmlResolver.XmlResolver Resolver
+    {
+        get
+        {
+            if (_resolver == null)
+            {
+                _resolver = new XmlResolver.XmlResolver(Config);
+            }
+
+            return _resolver;
+        }
     }
 
     [Test]
@@ -27,7 +46,7 @@ public class PiTest
         XmlReaderSettings settings = new XmlReaderSettings();
         settings.DtdProcessing = DtdProcessing.Parse;
 
-        ResolvingXmlReader reader = new ResolvingXmlReader(docuri, settings, resolver);
+        ResolvingXmlReader reader = new ResolvingXmlReader(docuri, settings, Resolver);
         try
         {
             while (reader.Read())
@@ -49,7 +68,7 @@ public class PiTest
         XmlReaderSettings settings = new XmlReaderSettings();
         settings.DtdProcessing = DtdProcessing.Parse;
 
-        ResolvingXmlReader reader = new ResolvingXmlReader(docuri, settings, resolver);
+        ResolvingXmlReader reader = new ResolvingXmlReader(docuri, settings, Resolver);
         try
         {
             while (reader.Read())
@@ -65,8 +84,8 @@ public class PiTest
 
         // The catalog added by the PI in the previous parse should not
         // still be in the catalog list now.
-        config.SetFeature(ResolverFeature.ALLOW_CATALOG_PI, false);
-        reader = new ResolvingXmlReader(docuri, settings, resolver);
+        Config.SetFeature(ResolverFeature.ALLOW_CATALOG_PI, false);
+        reader = new ResolvingXmlReader(docuri, settings, Resolver);
         try
         {
             while (reader.Read())
@@ -82,8 +101,8 @@ public class PiTest
         }
 
         // But it should still be possible to do it again (make sure we haven't broken the parser)
-        config.SetFeature(ResolverFeature.ALLOW_CATALOG_PI, true);
-        reader = new ResolvingXmlReader(docuri, settings, resolver);
+        Config.SetFeature(ResolverFeature.ALLOW_CATALOG_PI, true);
+        reader = new ResolvingXmlReader(docuri, settings, Resolver);
         try
         {
             while (reader.Read())

@@ -333,7 +333,7 @@ public class XmlResolver
         }
 
         bool tryRddl = (bool)(Config.GetFeature(ResolverFeature.PARSE_RDDL) ?? false) &&
-                       lookup.Request.Nature != null && lookup.Request.Purpose != null;
+                       lookup.Request is { Nature: not null, Purpose: not null };
         if (tryRddl)
         {
             if (lookup.IsResolved)
@@ -342,9 +342,10 @@ public class XmlResolver
             }
             else
             {
-                if (lookup.Request.GetAbsoluteUri() != null)
+                var absUri = lookup.Request.GetAbsoluteUri();
+                if (absUri != null)
                 {
-                    lookup = _rddlLookup(lookup, lookup.Request.GetAbsoluteUri());
+                    lookup = _rddlLookup(lookup, absUri);
                 }
             }
         }
@@ -391,7 +392,7 @@ public class XmlResolver
 
     private ResourceResponse _rddlLookup(ResourceResponse lookup, Uri resolved)
     {
-        Uri rddl = checkRddl(resolved, lookup.Request.Nature, lookup.Request.Purpose);
+        Uri? rddl = checkRddl(resolved, lookup.Request.Nature!, lookup.Request.Purpose!);
         if (rddl == null)
         {
             return lookup;

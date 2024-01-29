@@ -7,30 +7,39 @@ using XmlResolver.Utils;
 namespace Tests;
 
 public class PublicIdTest {
-    private XmlResolverConfiguration config = null;
-    private XmlResolver.XmlResolver resolver = null;
+    private XmlResolverConfiguration? _config = null;
+    private XmlResolver.XmlResolver? _resolver = null;
 
     [SetUp]
     public void Setup() {
-        config = new XmlResolverConfiguration();
-        config.AddCatalog(UriUtils.GetLocationUri("resources/parse/catalog.xml", Assembly.GetExecutingAssembly()).ToString());
-        resolver = new XmlResolver.XmlResolver(config);
+        _config = new XmlResolverConfiguration();
+        _config.AddCatalog(UriUtils.GetLocationUri("resources/parse/catalog.xml", Assembly.GetExecutingAssembly()).ToString());
+        _resolver = new XmlResolver.XmlResolver(_config);
     }
         
     [Test]
     public void PublicTest() {
-        Uri docuri = UriUtils.GetLocationUri("resources/parse/doc.xml", Assembly.GetExecutingAssembly());
-        XmlReaderSettings settings = new XmlReaderSettings();
-        settings.DtdProcessing = DtdProcessing.Parse;
-            
-        ResolvingXmlReader reader = new ResolvingXmlReader(docuri, settings, resolver);
-        try {
-            while (reader.Read()) {
-                // nop;
-            }
-        }
-        catch (Exception) {
+        var docUri = UriUtils.GetLocationUri("resources/parse/doc.xml", Assembly.GetExecutingAssembly());
+        var settings = new XmlReaderSettings
+        {
+            DtdProcessing = DtdProcessing.Parse
+        };
+
+        if (_resolver == null)
+        {
             Assert.Fail();
+        }
+        else
+        {
+            var reader = new ResolvingXmlReader(docUri, settings, _resolver);
+            try {
+                while (reader.Read()) {
+                    // nop;
+                }
+            }
+            catch (Exception) {
+                Assert.Fail();
+            }
         }
     }
 }
