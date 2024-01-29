@@ -2,9 +2,6 @@
 
 A C# implementation of the XML Resolver
 
-If you’ve got experience with C# projects and you happen to notice me
-doing anything foolish, please do let me know.
-
 ## Cloning
 
 The build now includes a collection of schemas and resources that can
@@ -30,7 +27,5 @@ Releases are being pushed to [NuGet](https://www.nuget.org/packages/XmlResolver/
 
 ### Backwards incompatible changes
 
-* 0.2.0 Several interfaces have been renamed to follow C# conventions.
-  Methods related to the namespace resolver have been added to them
-  (given that I was breaking them anyway).
-* 0.1.0 Initial release.
+* This is the `legacy_v2` branch. Future development on the `main`
+  branch is for XmlResolver v6.x and beyond
