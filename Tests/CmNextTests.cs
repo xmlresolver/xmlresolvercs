@@ -133,7 +133,7 @@ public class CMNextTest : XmlResolverTest
             }
             else
             {
-                Assert.That(true, Is.EqualTo(result.ToString().EndsWith("cm/following.dtd")));
+                Assert.That(result.ToString().EndsWith("cm/following.dtd"), Is.EqualTo(true));
             }
         }
     }
@@ -164,7 +164,7 @@ public class CMNextTest : XmlResolverTest
         else
         {
             var result = manager.LookupSystem("http://example.com/delegated/one/system.dtd");
-            Assert.That(expected, Is.EqualTo(result));
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 
@@ -179,7 +179,7 @@ public class CMNextTest : XmlResolverTest
         else
         {
             var result = manager.LookupSystem("http://example.com/delegated/two/system.dtd");
-            Assert.That(expected, Is.EqualTo(result));
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 
@@ -194,7 +194,7 @@ public class CMNextTest : XmlResolverTest
         else
         {
             var result = manager.LookupSystem("http://example.com/delegated/three/system.dtd");
-            Assert.That(expected, Is.EqualTo(result));
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 
@@ -209,7 +209,7 @@ public class CMNextTest : XmlResolverTest
         else
         {
             var result = manager.LookupSystem("http://example.com/delegated/one/test/system.dtd");
-            Assert.That(expected, Is.EqualTo(result));
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 
@@ -240,7 +240,7 @@ public class CMNextTest : XmlResolverTest
         else
         {
             var result = manager.LookupSystem("http://example.com/delegated/five/system.dtd");
-            Assert.That(expected, Is.EqualTo(result));
+            Assert.That(result, Is.EqualTo(expected));
             
         }
     }

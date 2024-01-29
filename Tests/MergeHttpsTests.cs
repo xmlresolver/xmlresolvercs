@@ -79,70 +79,70 @@ public class MergeHttpsTests
     [Test]
     public void Equivalentcp1()
     {
-        Assert.That("classpath:path/to/thing",
-            Is.EqualTo(NoMergeManager.NormalizedForComparison("classpath:/path/to/thing")));
+        Assert.That(NoMergeManager.NormalizedForComparison("classpath:/path/to/thing"),
+            Is.EqualTo("classpath:path/to/thing"));
     }
 
     [Test]
     public void Equivalentcp2()
     {
-        Assert.That("classpath:path/to/thing",
-            Is.EqualTo(NoMergeManager.NormalizedForComparison("classpath:path/to/thing")));
+        Assert.That(NoMergeManager.NormalizedForComparison("classpath:path/to/thing"),
+            Is.EqualTo("classpath:path/to/thing"));
     }
 
     [Test]
     public void Equivalentcp1m()
     {
-        Assert.That("classpath:path/to/thing",
-            Is.EqualTo(MergeManager.NormalizedForComparison("classpath:/path/to/thing")));
+        Assert.That(MergeManager.NormalizedForComparison("classpath:/path/to/thing"),
+            Is.EqualTo("classpath:path/to/thing"));
     }
 
     [Test]
     public void Equivalentcp2m()
     {
-        Assert.That("classpath:path/to/thing", Is.EqualTo(MergeManager.NormalizedForComparison("classpath:path/to/thing")));
+        Assert.That(MergeManager.NormalizedForComparison("classpath:path/to/thing"), Is.EqualTo("classpath:path/to/thing"));
     }
 
     [Test]
     public void Equivalenthttp1()
     {
-        Assert.That("https://localhost/path/to/thing",
-            Is.EqualTo(NoMergeManager.NormalizedForComparison("https://localhost/path/to/thing")));
+        Assert.That(NoMergeManager.NormalizedForComparison("https://localhost/path/to/thing"),
+            Is.EqualTo("https://localhost/path/to/thing"));
     }
 
     [Test]
     public void Equivalenthttp2()
     {
-        Assert.That("http://localhost/path/to/thing",
-            Is.EqualTo(NoMergeManager.NormalizedForComparison("http://localhost/path/to/thing")));
+        Assert.That(NoMergeManager.NormalizedForComparison("http://localhost/path/to/thing"),
+            Is.EqualTo("http://localhost/path/to/thing"));
     }
 
     [Test]
     public void Equivalenthttp3()
     {
-        Assert.That("ftp://localhost/path/to/thing",
-            Is.EqualTo(NoMergeManager.NormalizedForComparison("ftp://localhost/path/to/thing")));
+        Assert.That(NoMergeManager.NormalizedForComparison("ftp://localhost/path/to/thing"),
+            Is.EqualTo("ftp://localhost/path/to/thing"));
     }
 
     [Test]
     public void Equivalenthttp1m()
     {
-        Assert.That("https://localhost/path/to/thing",
-            Is.EqualTo(MergeManager.NormalizedForComparison("https://localhost/path/to/thing")));
+        Assert.That(MergeManager.NormalizedForComparison("https://localhost/path/to/thing"),
+            Is.EqualTo("https://localhost/path/to/thing"));
     }
 
     [Test]
     public void Equivalenthttp2m()
     {
-        Assert.That("https://localhost/path/to/thing",
-            Is.EqualTo(MergeManager.NormalizedForComparison("http://localhost/path/to/thing")));
+        Assert.That(MergeManager.NormalizedForComparison("http://localhost/path/to/thing"),
+            Is.EqualTo("https://localhost/path/to/thing"));
     }
 
     [Test]
     public void Equivalenthttp3m()
     {
-        Assert.That("ftp://localhost/path/to/thing",
-            Is.EqualTo(MergeManager.NormalizedForComparison("ftp://localhost/path/to/thing")));
+        Assert.That(MergeManager.NormalizedForComparison("ftp://localhost/path/to/thing"),
+            Is.EqualTo("ftp://localhost/path/to/thing"));
     }
 
 

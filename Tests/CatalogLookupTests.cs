@@ -405,7 +405,7 @@ public class CatalogLookupTests : XmlResolverTest
             }
             else
             {
-                Assert.That("/usr/local/DTDs/svg11/system-svg11.dtd", Is.EqualTo(result.AbsolutePath));
+                Assert.That(result.AbsolutePath, Is.EqualTo("/usr/local/DTDs/svg11/system-svg11.dtd"));
             }
         }
     }
@@ -432,7 +432,7 @@ public class CatalogLookupTests : XmlResolverTest
             }
             else
             {
-                Assert.That("/usr/local/nested/DTDs/svg11/system-svg11-basic.dtd", Is.EqualTo(result.AbsolutePath));
+                Assert.That(result.AbsolutePath, Is.EqualTo("/usr/local/nested/DTDs/svg11/system-svg11-basic.dtd"));
             }
         }
     }
@@ -458,7 +458,7 @@ public class CatalogLookupTests : XmlResolverTest
             }
             else
             {
-                Assert.That("/usr/local/on/DTDs/test.dtd", Is.EqualTo(result.AbsolutePath));
+                Assert.That(result.AbsolutePath, Is.EqualTo("/usr/local/on/DTDs/test.dtd"));
             }
         }
     }

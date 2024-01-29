@@ -25,9 +25,9 @@ public class FeatureTest
     {
         var orig = (bool?)Config.GetFeature(feature)!;
         Config.SetFeature(feature, false);
-        Assert.That(false, Is.EqualTo(Config.GetFeature(feature)));
+        Assert.That(Config.GetFeature(feature), Is.EqualTo(false));
         Config.SetFeature(feature, true);
-        Assert.That(true, Is.EqualTo(Config.GetFeature(feature)));
+        Assert.That(Config.GetFeature(feature), Is.EqualTo(true));
         Config.SetFeature(feature, orig);
     }
 
@@ -35,70 +35,70 @@ public class FeatureTest
     {
         var orig = (string?)Config.GetFeature(feature);
         Config.SetFeature(feature, "apple pie");
-        Assert.That("apple pie", Is.EqualTo(Config.GetFeature(feature)));
+        Assert.That(Config.GetFeature(feature), Is.EqualTo("apple pie"));
         Config.SetFeature(feature, orig);
     }
 
     [Test]
     public void TestAllowCatalogPi()
     {
-        Assert.That(true, Is.EqualTo(Config.GetFeatures().Contains(ResolverFeature.ALLOW_CATALOG_PI)));
+        Assert.That(Config.GetFeatures().Contains(ResolverFeature.ALLOW_CATALOG_PI), Is.EqualTo(true));
         BooleanFeature(ResolverFeature.ALLOW_CATALOG_PI);
     }
 
     [Test]
     public void TestArchivedCatalogs()
     {
-        Assert.That(true, Is.EqualTo(Config.GetFeatures().Contains(ResolverFeature.ARCHIVED_CATALOGS)));
+        Assert.That(Config.GetFeatures().Contains(ResolverFeature.ARCHIVED_CATALOGS), Is.EqualTo(true));
         BooleanFeature(ResolverFeature.ARCHIVED_CATALOGS);
     }
 
     [Test]
     public void TestMaskPackUris()
     {
-        Assert.That(true, Is.EqualTo(Config.GetFeatures().Contains(ResolverFeature.MASK_PACK_URIS)));
+        Assert.That(Config.GetFeatures().Contains(ResolverFeature.MASK_PACK_URIS), Is.EqualTo(true));
         BooleanFeature(ResolverFeature.MASK_PACK_URIS);
     }
 
     [Test]
     public void TestMergeHttps()
     {
-        Assert.That(true, Is.EqualTo(Config.GetFeatures().Contains(ResolverFeature.MERGE_HTTPS)));
+        Assert.That(Config.GetFeatures().Contains(ResolverFeature.MERGE_HTTPS), Is.EqualTo(true));
         BooleanFeature(ResolverFeature.MERGE_HTTPS);
     }
 
     [Test]
     public void TestParseRddl()
     {
-        Assert.That(true, Is.EqualTo(Config.GetFeatures().Contains(ResolverFeature.PARSE_RDDL)));
+        Assert.That(Config.GetFeatures().Contains(ResolverFeature.PARSE_RDDL), Is.EqualTo(true));
         BooleanFeature(ResolverFeature.PARSE_RDDL);
     }
 
     [Test]
     public void TestPreferPropertyFile()
     {
-        Assert.That(true, Is.EqualTo(Config.GetFeatures().Contains(ResolverFeature.PREFER_PROPERTY_FILE)));
+        Assert.That(Config.GetFeatures().Contains(ResolverFeature.PREFER_PROPERTY_FILE), Is.EqualTo(true));
         BooleanFeature(ResolverFeature.PREFER_PROPERTY_FILE);
     }
 
     [Test]
     public void TestPreferPublic()
     {
-        Assert.That(true, Is.EqualTo(Config.GetFeatures().Contains(ResolverFeature.PREFER_PUBLIC)));
+        Assert.That(Config.GetFeatures().Contains(ResolverFeature.PREFER_PUBLIC), Is.EqualTo(true));
         BooleanFeature(ResolverFeature.PREFER_PUBLIC);
     }
 
     [Test]
     public void TestUriForSystem()
     {
-        Assert.That(true, Is.EqualTo(Config.GetFeatures().Contains(ResolverFeature.URI_FOR_SYSTEM)));
+        Assert.That(Config.GetFeatures().Contains(ResolverFeature.URI_FOR_SYSTEM), Is.EqualTo(true));
         BooleanFeature(ResolverFeature.URI_FOR_SYSTEM);
     }
 
     [Test]
     public void TestAssemblyCatalog()
     {
-        Assert.That(true, Is.EqualTo(Config.GetFeatures().Contains(ResolverFeature.ASSEMBLY_CATALOGS)));
+        Assert.That(Config.GetFeatures().Contains(ResolverFeature.ASSEMBLY_CATALOGS), Is.EqualTo(true));
 
         var orig = (List<string>)Config.GetFeature(ResolverFeature.ASSEMBLY_CATALOGS)!;
 
@@ -126,7 +126,7 @@ public class FeatureTest
     [Test]
     public void TestCatalogLoaderClass()
     {
-        Assert.That(true, Is.EqualTo(Config.GetFeatures().Contains(ResolverFeature.CATALOG_LOADER_CLASS)));
+        Assert.That(Config.GetFeatures().Contains(ResolverFeature.CATALOG_LOADER_CLASS), Is.EqualTo(true));
         StringFeature(ResolverFeature.CATALOG_LOADER_CLASS);
     }
 
@@ -135,19 +135,19 @@ public class FeatureTest
         // Hack
         foreach (var cur in list1)
         {
-            Assert.That(true, Is.EqualTo(list2.Contains(cur)));
+            Assert.That(list2.Contains(cur), Is.EqualTo(true));
         }
 
         foreach (var cur in list2)
         {
-            Assert.That(true, Is.EqualTo(list1.Contains(cur)));
+            Assert.That(list1.Contains(cur), Is.EqualTo(true));
         }
     }
 
     [Test]
     public void TestFeatureCatalogFiles()
     {
-        Assert.That(true, Is.EqualTo(Config.GetFeatures().Contains(ResolverFeature.CATALOG_FILES)));
+        Assert.That(Config.GetFeatures().Contains(ResolverFeature.CATALOG_FILES), Is.EqualTo(true));
 
         var orig = (List<string>)Config.GetFeature(ResolverFeature.CATALOG_FILES)!;
         var myList = new List<string> { "One", "Two", "Three" };
@@ -163,7 +163,7 @@ public class FeatureTest
         // None of "mine" survived
         foreach (var cur in myList)
         {
-            Assert.That(false, Is.EqualTo(current.Contains(cur)));
+            Assert.That(current.Contains(cur), Is.EqualTo(false));
         }
 
         SameLists(current, newList);
@@ -174,7 +174,7 @@ public class FeatureTest
     [Test]
     public void TestFeatureCatalogAdditions()
     {
-        Assert.That(true, Is.EqualTo(Config.GetFeatures().Contains(ResolverFeature.CATALOG_ADDITIONS)));
+        Assert.That(Config.GetFeatures().Contains(ResolverFeature.CATALOG_ADDITIONS), Is.EqualTo(true));
 
         var origCatalogs = (List<string>)Config.GetFeature(ResolverFeature.CATALOG_FILES)!;
         var origAdditions = (List<string>)Config.GetFeature(ResolverFeature.CATALOG_ADDITIONS)!;
@@ -191,12 +191,12 @@ public class FeatureTest
 
         foreach (var mine in myCatalogs)
         {
-            Assert.That(true, Is.EqualTo(current.Contains(mine)));
+            Assert.That(current.Contains(mine), Is.EqualTo(true));
         }
 
         foreach (var mine in myList)
         {
-            Assert.That(true, Is.EqualTo(current.Contains(mine)));
+            Assert.That(current.Contains(mine), Is.EqualTo(true));
         }
 
         Config.SetFeature(ResolverFeature.CATALOG_FILES, origCatalogs);
@@ -206,11 +206,11 @@ public class FeatureTest
     [Test]
     public void TestFeatureCatalogManager()
     {
-        Assert.That(true, Is.EqualTo(Config.GetFeatures().Contains(ResolverFeature.CATALOG_MANAGER)));
+        Assert.That(Config.GetFeatures().Contains(ResolverFeature.CATALOG_MANAGER), Is.EqualTo(true));
         CatalogManager manager = new CatalogManager(Config);
         CatalogManager orig = (CatalogManager)Config.GetFeature(ResolverFeature.CATALOG_MANAGER)!;
         Config.SetFeature(ResolverFeature.CATALOG_MANAGER, manager);
-        Assert.That(true, Is.EqualTo(manager == Config.GetFeature(ResolverFeature.CATALOG_MANAGER)));
+        Assert.That(manager == Config.GetFeature(ResolverFeature.CATALOG_MANAGER), Is.EqualTo(true));
         Config.SetFeature(ResolverFeature.CATALOG_MANAGER, orig);
     }
 }

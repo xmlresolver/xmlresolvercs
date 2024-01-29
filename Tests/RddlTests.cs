@@ -40,7 +40,7 @@ public class RddlTests
     {
         var req = Resolver.GetRequest("http://localhost:8222/docs/sample/sample.dtd");
         var resp = Resolver.Resolve(req);
-        Assert.That(200, Is.EqualTo(resp.StatusCode));
+        Assert.That(resp.StatusCode, Is.EqualTo(200));
     }
     
     [Test]
@@ -52,8 +52,8 @@ public class RddlTests
             "http://www.w3.org/2001/XMLSchema",
             "http://www.rddl.org/purposes#schema-validation");
         var resp = Resolver.Resolve(req);
-        Assert.That(true, Is.EqualTo(resp.IsResolved));
-        Assert.That("application/xml", Is.EqualTo(resp.ContentType));
+        Assert.That(resp.IsResolved, Is.EqualTo(true));
+        Assert.That(resp.ContentType, Is.EqualTo("application/xml"));
     }
     
     [Test]
@@ -65,8 +65,8 @@ public class RddlTests
             "http://www.w3.org/1999/XSL/Transform",
             "http://www.rddl.org/purposes#transformation");
         var resp = Resolver.Resolve(req);
-        Assert.That(true, Is.EqualTo(resp.IsResolved));
-        Assert.That("application/xml", Is.EqualTo(resp.ContentType));
+        Assert.That(resp.IsResolved, Is.EqualTo(true));
+        Assert.That(resp.ContentType, Is.EqualTo("application/xml"));
     }
 
     [Test]
@@ -78,8 +78,8 @@ public class RddlTests
             "http://www.w3.org/1999/XSL/Transform",
             "http://www.rddl.org/purposes#transformation");
         var resp = Resolver.Resolve(req);
-        Assert.That(true, Is.EqualTo(resp.IsResolved));
-        Assert.That("application/xml", Is.EqualTo(resp.ContentType));
+        Assert.That(resp.IsResolved, Is.EqualTo(true));
+        Assert.That(resp.ContentType, Is.EqualTo("application/xml"));
     }
 
     [Test]
@@ -91,9 +91,9 @@ public class RddlTests
             "http://www.w3.org/2001/XMLSchema",
             "http://www.rddl.org/purposes#schema-validation");
         var resp = Resolver.Resolve(req);
-        Assert.That(true, Is.EqualTo(resp.IsResolved));
+        Assert.That(resp.IsResolved, Is.EqualTo(true));
         // Extra "/" because Apache redirects to the directory listing.
-        Assert.That("http://localhost:8222/docs/sample/", Is.EqualTo(resp.ResolvedUri));
+        Assert.That(resp.ResolvedUri, Is.EqualTo(new Uri("http://localhost:8222/docs/sample/")));
     }
 
     [Test]
@@ -110,7 +110,7 @@ public class RddlTests
             "http://www.w3.org/2001/XMLSchema",
             "http://www.rddl.org/purposes#validation");
         var resp = lresolver.Resolve(req);
-        Assert.That(true, Is.EqualTo(resp.IsResolved));
+        Assert.That(resp.IsResolved, Is.EqualTo(true));
 
         if (resp.ResolvedUri == null)
         {
@@ -118,7 +118,7 @@ public class RddlTests
         }
         else
         {
-            Assert.That(true, Is.EqualTo(resp.ResolvedUri.ToString().EndsWith("xml.xsd")));
+            Assert.That(resp.ResolvedUri.ToString().EndsWith("xml.xsd"), Is.EqualTo(true));
         }
     }
 }

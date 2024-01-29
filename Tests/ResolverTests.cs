@@ -33,7 +33,7 @@ public class ResolverTest : XmlResolverTest
             {
                 var req = resolver.GetRequest("https://example.com/not/in/catalog");
                 var resp = resolver.Resolve(req);
-                Assert.That(false, Is.EqualTo(resp.IsResolved));
+                Assert.That(resp.IsResolved, Is.EqualTo(false));
             }
             catch (Exception)
             {
@@ -56,7 +56,7 @@ public class ResolverTest : XmlResolverTest
             {
                 var req = resolver.GetRequest("file:///path/to/thing/that/isnt/likely/to/exist");
                 var resp = resolver.Resolve(req);
-                Assert.That(false, Is.EqualTo(resp.IsResolved));
+                Assert.That(resp.IsResolved, Is.EqualTo(false));
             }
             catch (Exception ex)
             {
@@ -82,7 +82,7 @@ public class ResolverTest : XmlResolverTest
                     ResolverConstants.EXTERNAL_ENTITY_NATURE, ResolverConstants.ANY_PURPOSE);
                 var resp = resolver.Resolve(req);
 
-                Assert.That(true, Is.EqualTo(resp.IsResolved));
+                Assert.That(resp.IsResolved, Is.EqualTo(true));
                 Assert.That(resp.Stream, Is.Not.Null);
                 Assert.That(result, Is.EqualTo(resp.ResolvedUri));
             }
@@ -110,7 +110,7 @@ public class ResolverTest : XmlResolverTest
                     ResolverConstants.EXTERNAL_ENTITY_NATURE, ResolverConstants.ANY_PURPOSE);
                 var resp = resolver.Resolve(req);
 
-                Assert.That(true, Is.EqualTo(resp.IsResolved));
+                Assert.That(resp.IsResolved, Is.EqualTo(true));
                 Assert.That(resp.Stream, Is.Not.Null);
                 Assert.That(result, Is.EqualTo(resp.ResolvedUri));
             }
@@ -144,7 +144,7 @@ public class ResolverTest : XmlResolverTest
                 var req = lresolver.GetRequest("https://xmlresolver.org/ns/sample-as-uri/sample.dtd");
                 var resp = lresolver.Resolve(req);
             
-                Assert.That(true, Is.EqualTo(resp.IsResolved));
+                Assert.That(resp.IsResolved, Is.EqualTo(true));
                 Assert.That(resp.Stream, Is.Not.Null);
             }
             catch (Exception)

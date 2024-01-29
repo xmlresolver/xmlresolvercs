@@ -23,8 +23,8 @@ public class PropertyFileTest : XmlResolverTest
             f2 = f2 || cat.EndsWith(s2);
         }
 
-        Assert.That(true, Is.EqualTo(f1));
-        Assert.That(true, Is.EqualTo(f2));
+        Assert.That(f1, Is.EqualTo(true));
+        Assert.That(f2, Is.EqualTo(true));
     }
 
     [Test]
@@ -44,7 +44,7 @@ public class PropertyFileTest : XmlResolverTest
             f2 = f2 || cat.Equals(s2);
         }
 
-        Assert.That(true, Is.EqualTo(f1));
-        Assert.That(true, Is.EqualTo(f2));
+        Assert.That(f1, Is.EqualTo(true));
+        Assert.That(f2, Is.EqualTo(true));
     }
 }

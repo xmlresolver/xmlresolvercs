@@ -384,7 +384,7 @@ public class CatalogQuerierTests : XmlResolverTest
         CatalogManager uManager = new CatalogManager(uconfig);
 
         Uri? result = uManager.LookupUri("https://example.com/delegated/sample/3.0/sample.rng");
-        Assert.That(UriUtils.Resolve(CatLoc, "sample30/fail.rng"), Is.EqualTo(result));
+        Assert.That(result, Is.EqualTo(UriUtils.Resolve(CatLoc, "sample30/fail.rng")));
     }
 
     [Test]
@@ -410,7 +410,7 @@ public class CatalogQuerierTests : XmlResolverTest
             }
             else
             {
-                Assert.That("/usr/local/DTDs/svg11/system-svg11.dtd", Is.EqualTo(result.AbsolutePath));
+                Assert.That(result.AbsolutePath, Is.EqualTo("/usr/local/DTDs/svg11/system-svg11.dtd"));
             }
         }
 
@@ -439,7 +439,7 @@ public class CatalogQuerierTests : XmlResolverTest
             }
             else
             {
-                Assert.That("/usr/local/nested/DTDs/svg11/system-svg11-basic.dtd", Is.EqualTo(result.AbsolutePath));
+                Assert.That(result.AbsolutePath, Is.EqualTo("/usr/local/nested/DTDs/svg11/system-svg11-basic.dtd"));
             }
         }
     }
@@ -467,7 +467,7 @@ public class CatalogQuerierTests : XmlResolverTest
             }
             else
             {
-                Assert.That("/usr/local/on/DTDs/test.dtd", Is.EqualTo(result.AbsolutePath));
+                Assert.That(result.AbsolutePath, Is.EqualTo("/usr/local/on/DTDs/test.dtd"));
             }
         }
 

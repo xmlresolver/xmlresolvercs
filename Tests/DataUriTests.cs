@@ -41,7 +41,7 @@ public class DataUriTest : XmlResolverTest
             {
                 line = reader.ReadLine();
             }
-            Assert.That("A short note.", Is.EqualTo(line));
+            Assert.That(line, Is.EqualTo("A short note."));
         }
     }
 
@@ -69,7 +69,7 @@ public class DataUriTest : XmlResolverTest
                 line = reader.ReadLine();
             }
 
-            Assert.That("ΎχΎ", Is.EqualTo(line));
+            Assert.That(line, Is.EqualTo("ΎχΎ"));
         }
     }
 
@@ -93,7 +93,7 @@ public class DataUriTest : XmlResolverTest
                 line = reader.ReadLine();
             }
 
-            Assert.That("<doc>I was a data URI</doc>", Is.EqualTo(line));
+            Assert.That(line, Is.EqualTo("<doc>I was a data URI</doc>"));
         }
     }
 }
