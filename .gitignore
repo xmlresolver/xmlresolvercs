@@ -5,3 +5,5 @@
 /build
 *.DotSettings.user
 .DS_Store
+/XmlResolverData/Data
+/XmlResolverData/XmlResolverData.csproj

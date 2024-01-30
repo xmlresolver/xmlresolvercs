@@ -86,6 +86,12 @@ git submodule update --init
 That will make sure that the submodule is checked out and the data
 files are available.
 
+Run the Gradle tasks to build the data.
+
+```
+./gradlew make_data_csproj make_data_tests
+```
+
 ### Loading assembly catalogs
 
 Assembly catalogs are loaded using their `AssemblyName`, not their

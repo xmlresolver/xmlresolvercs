@@ -2,6 +2,11 @@ buildscript {
   repositories {
     mavenCentral()
     mavenLocal()
+    maven { url "https://maven.saxonica.com/maven" }
+  }
+
+  dependencies {
+    classpath group: 'net.sf.saxon', name: 'Saxon-HE', version: '12.4'
   }
 }
 
@@ -72,6 +77,42 @@ tasks.register('clean') {
   }
 }
 
+// ============================================================
+
+tasks.register('copy_data', Copy) {
+  into "${projectDir}/XmlResolverData/Data"
+  from ("${projectDir}/data/src/data") {
+    exclude "manifest.xml"
+  }
+}
+
+tasks.register('make_data_catalog', SaxonXsltTask) {
+  dependsOn = ['copy_data']
+  input "${projectDir}/data/src/data/manifest.xml"
+  output "${projectDir}/XmlResolverData/Data/catalog.xml"
+  stylesheet "${projectDir}/tools/make-catalog.xsl"
+}
+
+tasks.register('make_data_tests', SaxonXsltTask) {
+  dependsOn = ['copy_data']
+  outputs.file "${projectDir}/DataTests/DataTest.cs"
+  input "${projectDir}/data/src/data/manifest.xml"
+  output "${projectDir}/XmlResolverData/Data/catalog.xml"
+  stylesheet "${projectDir}/tools/make-catalog.xsl"
+  parameters (
+    'generate-tests': "${projectDir}/DataTests/DataTest.cs"
+  )
+}
+
+tasks.register('make_data_csproj', SaxonXsltTask) {
+  dependsOn = ['copy_data', 'make_data_catalog']
+  input "${projectDir}/data/src/data/manifest.xml"
+  output "${projectDir}/XmlResolverData/XmlResolverData.csproj"
+  stylesheet "${projectDir}/tools/make-csproj.xsl"
+}
+
+// ============================================================
+
 tasks.register('dotnetBuild') {
   dependsOn = ['dotnetBuildXmlResolver', 'dotnetBuildXmlResolverData']
 }
@@ -98,6 +139,7 @@ tasks.register("dotnetBuildXmlResolver") {
 }
 
 tasks.register("dotnetBuildXmlResolverData") {
+  dependsOn = ['make_data_csproj']
   inputs.files fileTree(dir: "${projectDir}/XmlResolverData")
   outputs.file "${projectDir}/XmlResolverData/bin/Release/net6.0/XmlResolver.dll"
   outputs.file "${projectDir}/XmlResolverData/bin/Release/XmlResolver.${resolverVersion}.nupkg"
@@ -123,7 +165,7 @@ tasks.register('dotnetTest') {
 }
 
 tasks.register("dotnetTestXmlResolver") {
-  dependsOn "dockerup"
+  dependsOn ['dockerup']
   doLast {
     exec {
       workingDir = projectDir
@@ -140,7 +182,7 @@ tasks.register("dotnetTestXmlResolver") {
 }
 
 tasks.register("dotnetTestXmlResolverData") {
-  dependsOn "dockerup"
+  dependsOn = ['dockerup', 'make_data_tests']
   doLast {
     exec {
       workingDir = projectDir
