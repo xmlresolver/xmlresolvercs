@@ -87,7 +87,7 @@ tasks.register("dotnetTest") {
   doLast {
     exec {
       workingDir = projectDir
-      environment "CSHARP_XMLRESOLVER_ROOT", projectDir
+      environment "CSHARP_XMLRESOLVER_PATH", projectDir
       commandLine dotnetex, 'test', 'XmlResolver.sln',
         '--verbosity', 'Normal', '--configuration', 'Release',
         '/p:CollectCoverage=true',
