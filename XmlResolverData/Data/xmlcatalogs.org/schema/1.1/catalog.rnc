@@ -1,0 +1,131 @@
+namespace local = ""
+default namespace ns1 = "urn:oasis:names:tc:entity:xmlns:xml:catalog"
+
+# $Id: catalog.rng,v 1.4 2005/02/25 18:54:25 ndw Exp $
+start = Catalog
+pubIdChars =
+  xsd:string { pattern = "[a-zA-Z0-9\-'\(\)+,./:=?;!*#@$_% ]*" }
+publicIdentifier = pubIdChars
+partialPublicIdentifier = pubIdChars
+systemOrPublic = "system" | "public"
+uriReference = xsd:anyURI
+OptionalAttributes =
+  attribute id { xsd:ID }?,
+  attribute * - (local:* | ns1:*) { text }*
+PreferAttribute = attribute prefer { systemOrPublic }
+Catalog =
+  element catalog {
+    OptionalAttributes,
+    PreferAttribute?,
+    (Group
+     | Public
+     | System
+     | Uri
+     | RewriteSystem
+     | RewriteURI
+     | SystemSuffix
+     | UriSuffix
+     | DelegatePublic
+     | DelegateSystem
+     | DelegateURI
+     | NextCatalog
+     | AnyOtherElement)+
+  }
+Group =
+  element group {
+    OptionalAttributes,
+    PreferAttribute?,
+    (Public
+     | System
+     | Uri
+     | RewriteSystem
+     | RewriteURI
+     | SystemSuffix
+     | UriSuffix
+     | DelegatePublic
+     | DelegateSystem
+     | DelegateURI
+     | NextCatalog
+     | AnyOtherElement)+
+  }
+Public =
+  element public {
+    attribute publicId { publicIdentifier },
+    attribute uri { uriReference },
+    OptionalAttributes,
+    empty
+  }
+System =
+  element system {
+    attribute systemId { text },
+    attribute uri { uriReference },
+    OptionalAttributes,
+    empty
+  }
+Uri =
+  element uri {
+    attribute name { text },
+    attribute uri { uriReference },
+    OptionalAttributes,
+    empty
+  }
+RewriteSystem =
+  element rewriteSystem {
+    attribute systemIdStartString { text },
+    attribute rewritePrefix { text },
+    OptionalAttributes,
+    empty
+  }
+RewriteURI =
+  element rewriteURI {
+    attribute uriStartString { text },
+    attribute rewritePrefix { text },
+    OptionalAttributes,
+    empty
+  }
+SystemSuffix =
+  element systemSuffix {
+    attribute systemIdSuffix { text },
+    attribute uri { uriReference },
+    OptionalAttributes,
+    empty
+  }
+UriSuffix =
+  element uriSuffix {
+    attribute uriSuffix { text },
+    attribute uri { uriReference },
+    OptionalAttributes,
+    empty
+  }
+DelegatePublic =
+  element delegatePublic {
+    attribute publicIdStartString { text },
+    attribute catalog { text },
+    OptionalAttributes,
+    empty
+  }
+DelegateSystem =
+  element delegateSystem {
+    attribute systemIdStartString { text },
+    attribute catalog { text },
+    OptionalAttributes,
+    empty
+  }
+DelegateURI =
+  element delegateURI {
+    attribute uriStartString { text },
+    attribute catalog { text },
+    OptionalAttributes,
+    empty
+  }
+NextCatalog =
+  element nextCatalog {
+    attribute catalog { text },
+    OptionalAttributes,
+    empty
+  }
+AnyOtherElement =
+  element * - (local:* | ns1:*) {
+    attribute * { text }*,
+    (text | AnyOtherElement)
+  }

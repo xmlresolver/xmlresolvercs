@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlResolver", "XmlResolver\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{DD0DD8F8-D19C-4F8E-A30E-89AD1444712E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlResolverData", "XmlResolverData\XmlResolverData.csproj", "{2FA3F78D-605B-4DE8-8621-3C0CC2314F4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTests", "DataTests\DataTests.csproj", "{6E472F99-4464-46E8-AF6F-FBA340102753}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{DD0DD8F8-D19C-4F8E-A30E-89AD1444712E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD0DD8F8-D19C-4F8E-A30E-89AD1444712E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD0DD8F8-D19C-4F8E-A30E-89AD1444712E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FA3F78D-605B-4DE8-8621-3C0CC2314F4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FA3F78D-605B-4DE8-8621-3C0CC2314F4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FA3F78D-605B-4DE8-8621-3C0CC2314F4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FA3F78D-605B-4DE8-8621-3C0CC2314F4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E472F99-4464-46E8-AF6F-FBA340102753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E472F99-4464-46E8-AF6F-FBA340102753}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E472F99-4464-46E8-AF6F-FBA340102753}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E472F99-4464-46E8-AF6F-FBA340102753}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

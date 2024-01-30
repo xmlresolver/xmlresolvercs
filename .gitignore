@@ -1,9 +1,7 @@
 /.gradle
 /.idea
-/XmlResolver/bin
-/XmlResolver/obj
-/Tests/bin
-/Tests/obj
+/*/bin
+/*/obj
 /build
 *.DotSettings.user
 .DS_Store

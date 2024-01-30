@@ -32,7 +32,10 @@
       <PackageReference Include="NUnit" Version="4.0.1" />
       <PackageReference Include="NuGet.Frameworks" Version="5.10.0" />
       <PackageReference Include="System.IO.Packaging" Version="8.0.0" />
-      <PackageReference Include="XmlResolverData" Version="1.2.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\XmlResolverData\XmlResolverData.csproj" />
     </ItemGroup>
 
     <ItemGroup>

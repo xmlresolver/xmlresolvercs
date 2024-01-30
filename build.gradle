@@ -6,8 +6,8 @@ buildscript {
 }
 
 plugins {
-  id 'com.nwalsh.gradle.saxon.saxon-gradle' version '0.9.3'
-  id 'com.nwalsh.gradle.docker.container' version '0.0.3'
+  id 'com.nwalsh.gradle.saxon.saxon-gradle' version '0.10.7'
+  id 'com.nwalsh.gradle.docker.container' version '0.0.5'
 }
 
 import com.nwalsh.gradle.saxon.SaxonXsltTask
@@ -61,9 +61,24 @@ if (!hasProperty("nugetSource")) {
   ext.nugetSource = "SOURCEREQUIREDTOPUSH"
 }
 
-tasks.register("dotnetBuild") {
+tasks.register('clean') {
+  doLast {
+    ['XmlResolver', 'XmlResolverData',
+     'Tests', 'DataTests'].each { proj ->
+      ['bin', 'obj'].each { dir ->
+        delete "${proj}/${dir}"
+      }
+    }
+  }
+}
+
+tasks.register('dotnetBuild') {
+  dependsOn = ['dotnetBuildXmlResolver', 'dotnetBuildXmlResolverData']
+}
+
+tasks.register("dotnetBuildXmlResolver") {
   inputs.files fileTree(dir: "${projectDir}/XmlResolver")
-  outputs.file "${projectDir}/XmlResolver/bin/Release/net5.0/XmlResolver.dll"
+  outputs.file "${projectDir}/XmlResolver/bin/Release/net6.0/XmlResolver.dll"
   outputs.file "${projectDir}/XmlResolver/bin/Release/XmlResolver.${resolverVersion}.nupkg"
 
   doLast {
@@ -82,7 +97,32 @@ tasks.register("dotnetBuild") {
   }
 }
 
-tasks.register("dotnetTest") {
+tasks.register("dotnetBuildXmlResolverData") {
+  inputs.files fileTree(dir: "${projectDir}/XmlResolverData")
+  outputs.file "${projectDir}/XmlResolverData/bin/Release/net6.0/XmlResolver.dll"
+  outputs.file "${projectDir}/XmlResolverData/bin/Release/XmlResolver.${resolverVersion}.nupkg"
+
+  doLast {
+    exec {
+      workingDir = projectDir
+      commandLine dotnetex, 'restore', 'XmlResolverData.sln', '--verbosity', 'Normal'
+    }
+  }
+  doLast {
+    exec {
+      workingDir = projectDir
+      commandLine dotnetex, 'build', 'XmlResolverData.sln', '--verbosity', 'Normal',
+        '--configuration', 'Release',  '/nodereuse:false', '--no-restore',
+        "-p:Version=${resolverVersion}", "-p:PackageVersion=${resolverVersion}"
+    }
+  }
+}
+
+tasks.register('dotnetTest') {
+  dependsOn = ['dockerup', 'dotnetTestXmlResolver', 'dotnetTestXmlResolverData']
+}
+
+tasks.register("dotnetTestXmlResolver") {
   dependsOn "dockerup"
   doLast {
     exec {
@@ -99,10 +139,28 @@ tasks.register("dotnetTest") {
   }
 }
 
+tasks.register("dotnetTestXmlResolverData") {
+  dependsOn "dockerup"
+  doLast {
+    exec {
+      workingDir = projectDir
+      environment "CSHARP_XMLRESOLVER_PATH", projectDir
+      commandLine dotnetex, 'test', 'XmlResolverData.sln',
+        '--verbosity', 'Normal', '--configuration', 'Release',
+        '/p:CollectCoverage=true',
+        '/p:CoverletOutputFormat=opencover',
+        "/p:CoverletOutput=${buildDir}/reports/coverlet/",
+        '--',
+        "NUnit.TestOutputXml=${buildDir}/reports/nunit"
+    }
+  }
+}
+
 tasks.register("dotnetNugetPush") {
   dependsOn "dotnetBuild", "dotnetTest"
 
   inputs.files "${projectDir}/XmlResolver/bin/Release/XmlResolver.${resolverVersion}.nupkg"
+  inputs.files "${projectDir}/XmlResolverData/bin/Release/XmlResolverData.${resolverVersion}.nupkg"
 
   doLast {
     exec {
@@ -116,6 +174,22 @@ tasks.register("dotnetNugetPush") {
       workingDir = projectDir
       commandLine dotnetex, "nuget", "push",
         "${projectDir}/XmlResolver/bin/Release/XmlResolver.${resolverVersion}.nupkg",
+        "--api-key", nugetApiKey, "--source", nugetSource
+    }
+  }
+
+  doLast {
+    exec {
+      workingDir = projectDir
+      commandLine dotnetex, "restore", "XmlResolverData.sln", "--verbosity", "Normal"
+    }
+  }
+
+  doLast {
+    exec {
+      workingDir = projectDir
+      commandLine dotnetex, "nuget", "push",
+        "${projectDir}/XmlResolverData/bin/Release/XmlResolverData.${resolverVersion}.nupkg",
         "--api-key", nugetApiKey, "--source", nugetSource
     }
   }
