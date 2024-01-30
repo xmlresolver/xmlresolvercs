@@ -62,19 +62,19 @@ if (!hasProperty("nugetSource")) {
 }
 
 tasks.register("dotnetBuild") {
-  inputs.files fileTree(dir: "${projectDir}/XmlResolver/XmlResolver")
-  outputs.file "${projectDir}/XmlResolver/XmlResolver/bin/Release/net5.0/XmlResolver.dll"
-  outputs.file "${projectDir}/XmlResolver/XmlResolver/bin/Release/XmlResolver.${resolverVersion}.nupkg"
+  inputs.files fileTree(dir: "${projectDir}/XmlResolver")
+  outputs.file "${projectDir}/XmlResolver/bin/Release/net5.0/XmlResolver.dll"
+  outputs.file "${projectDir}/XmlResolver/bin/Release/XmlResolver.${resolverVersion}.nupkg"
 
   doLast {
     exec {
-      workingDir = "${projectDir}/XmlResolver"
+      workingDir = projectDir
       commandLine dotnetex, 'restore', 'XmlResolver.sln', '--verbosity', 'Normal'
     }
   }
   doLast {
     exec {
-      workingDir = "${projectDir}/XmlResolver"
+      workingDir = projectDir
       commandLine dotnetex, 'build', 'XmlResolver.sln', '--verbosity', 'Normal',
         '--configuration', 'Release',  '/nodereuse:false', '--no-restore',
         "-p:Version=${resolverVersion}", "-p:PackageVersion=${resolverVersion}"
@@ -88,7 +88,7 @@ tasks.register("dotnetTest") {
     exec {
       workingDir = projectDir
       environment "CSHARP_XMLRESOLVER_ROOT", projectDir
-      commandLine dotnetex, 'test', 'XmlResolver/XmlResolver.sln',
+      commandLine dotnetex, 'test', 'XmlResolver.sln',
         '--verbosity', 'Normal', '--configuration', 'Release',
         '--no-build', '/p:CollectCoverage=true',
         '/p:ExcludeByFile="**/*.designer.cs;**/*.xaml.cs;**/*.g.cs"',
@@ -103,12 +103,12 @@ tasks.register("dotnetTest") {
 tasks.register("dotnetNugetPush") {
   dependsOn "dotnetBuild", "dotnetTest"
 
-  inputs.files "${projectDir}/XmlResolver/XmlResolver/bin/Release/XmlResolver.${resolverVersion}.nupkg"
+  inputs.files "${projectDir}/XmlResolver/bin/Release/XmlResolver.${resolverVersion}.nupkg"
 
   doLast {
     exec {
       workingDir = projectDir
-      commandLine dotnetex, "restore", "XmlResolver/XmlResolver.sln", "--verbosity", "Normal"
+      commandLine dotnetex, "restore", "XmlResolver.sln", "--verbosity", "Normal"
     }
   }
 
@@ -116,7 +116,7 @@ tasks.register("dotnetNugetPush") {
     exec {
       workingDir = projectDir
       commandLine dotnetex, "nuget", "push",
-        "${projectDir}/XmlResolver/XmlResolver/bin/Release/XmlResolver.${resolverVersion}.nupkg",
+        "${projectDir}/XmlResolver/bin/Release/XmlResolver.${resolverVersion}.nupkg",
         "--api-key", nugetApiKey, "--source", nugetSource
     }
   }
