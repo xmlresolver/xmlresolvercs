@@ -1,12 +1,9 @@
 /.gradle
-/XmlResolver/.idea
-/XmlResolver/SampleApp/bin
-/XmlResolver/SampleApp/obj
-/XmlResolver/UnitTests/.idea
-/XmlResolver/UnitTests/bin
-/XmlResolver/UnitTests/obj
-/XmlResolver/XmlResolver/bin
-/XmlResolver/XmlResolver/obj
+/.idea
+/XmlResolver/bin
+/XmlResolver/obj
+/Tests/bin
+/Tests/obj
 /build
 *.DotSettings.user
 .DS_Store
