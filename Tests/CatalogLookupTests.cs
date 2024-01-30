@@ -79,8 +79,6 @@ public class CatalogLookupTests : XmlResolverTest
     public void LookupSystem()
     {
         Uri? result = Manager.LookupSystem("https://example.com/sample/1.0/sample.dtd");
-        Console.WriteLine(UriUtils.Resolve(Catalog1, "sample10/sample-system.dtd"));
-        Console.WriteLine(result);
         Assert.That(UriUtils.Resolve(Catalog1, "sample10/sample-system.dtd"), Is.EqualTo(result));
     }
 

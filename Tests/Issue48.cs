@@ -22,7 +22,6 @@ public class Issue48 {
         {
             while (xmlReader.Read())
             {
-                Console.WriteLine(xmlReader.ReadOuterXml());
             }
         }
     }
