@@ -71,9 +71,12 @@ tasks.register('clean') {
     ['XmlResolver', 'XmlResolverData',
      'Tests', 'DataTests'].each { proj ->
       ['bin', 'obj'].each { dir ->
-        delete "${proj}/${dir}"
+        delete "${projectDir}/${proj}/${dir}"
       }
     }
+    delete "${projectDir}/XmlResolverData/Data"
+    delete "${projectDir}/XmlResolverData/XmlResolverData.csproj"
+    delete "${projectDir}/DataTests/DataTest.cs"
   }
 }
 
@@ -118,6 +121,8 @@ tasks.register('dotnetBuild') {
 }
 
 tasks.register("dotnetBuildXmlResolver") {
+  dependsOn = ['make_data_csproj']
+
   inputs.files fileTree(dir: "${projectDir}/XmlResolver")
   outputs.file "${projectDir}/XmlResolver/bin/Release/net6.0/XmlResolver.dll"
   outputs.file "${projectDir}/XmlResolver/bin/Release/XmlResolver.${resolverVersion}.nupkg"
@@ -139,7 +144,7 @@ tasks.register("dotnetBuildXmlResolver") {
 }
 
 tasks.register("dotnetBuildXmlResolverData") {
-  dependsOn = ['make_data_csproj']
+  dependsOn = ['make_data_csproj', 'make_data_tests']
   inputs.files fileTree(dir: "${projectDir}/XmlResolverData")
   outputs.file "${projectDir}/XmlResolverData/bin/Release/net6.0/XmlResolver.dll"
   outputs.file "${projectDir}/XmlResolverData/bin/Release/XmlResolver.${resolverVersion}.nupkg"
@@ -161,34 +166,18 @@ tasks.register("dotnetBuildXmlResolverData") {
 }
 
 tasks.register('dotnetTest') {
-  dependsOn = ['dockerup', 'dotnetTestXmlResolver', 'dotnetTestXmlResolverData']
+  dependsOn = ['dockerup', 'dotnetTestXmlResolver']
 }
 
 tasks.register("dotnetTestXmlResolver") {
-  dependsOn ['dockerup']
+  dependsOn = ['dockerup', 'dotnetBuildXmlResolverData', 'dotnetBuildXmlResolver']
   doLast {
     exec {
       workingDir = projectDir
       environment "CSHARP_XMLRESOLVER_PATH", projectDir
       commandLine dotnetex, 'test', 'XmlResolver.sln',
         '--verbosity', 'Normal', '--configuration', 'Release',
-        '/p:CollectCoverage=true',
-        '/p:CoverletOutputFormat=opencover',
-        "/p:CoverletOutput=${buildDir}/reports/coverlet/",
-        '--',
-        "NUnit.TestOutputXml=${buildDir}/reports/nunit"
-    }
-  }
-}
-
-tasks.register("dotnetTestXmlResolverData") {
-  dependsOn = ['dockerup', 'make_data_tests']
-  doLast {
-    exec {
-      workingDir = projectDir
-      environment "CSHARP_XMLRESOLVER_PATH", projectDir
-      commandLine dotnetex, 'test', 'XmlResolverData.sln',
-        '--verbosity', 'Normal', '--configuration', 'Release',
+        '--no-build',
         '/p:CollectCoverage=true',
         '/p:CoverletOutputFormat=opencover',
         "/p:CoverletOutput=${buildDir}/reports/coverlet/",

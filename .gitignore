@@ -7,3 +7,4 @@
 .DS_Store
 /XmlResolverData/Data
 /XmlResolverData/XmlResolverData.csproj
+/DataTests/DataTest.cs
