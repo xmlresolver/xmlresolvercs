@@ -14,7 +14,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>A catalog-based XML Resolver API for .NET</PackageReleaseNotes>
     <PackageSummary>This is an XML Catalog resolver for .NET.</PackageSummary>
-    <PackageReadmeFile>../README.md</PackageReadmeFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
     <PropertyGroup>
