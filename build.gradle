@@ -90,8 +90,7 @@ tasks.register("dotnetTest") {
       environment "CSHARP_XMLRESOLVER_ROOT", projectDir
       commandLine dotnetex, 'test', 'XmlResolver.sln',
         '--verbosity', 'Normal', '--configuration', 'Release',
-        '--no-build', '/p:CollectCoverage=true',
-        '/p:ExcludeByFile="**/*.designer.cs;**/*.xaml.cs;**/*.g.cs"',
+        '/p:CollectCoverage=true',
         '/p:CoverletOutputFormat=opencover',
         "/p:CoverletOutput=${buildDir}/reports/coverlet/",
         '--',
