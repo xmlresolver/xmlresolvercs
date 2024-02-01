@@ -338,7 +338,7 @@ public class XmlResolver
         {
             if (lookup.IsResolved)
             {
-                lookup = _rddlLookup(lookup);
+                lookup = _rddlLookup(lookup, lookup.ResolvedUri);
             }
             else
             {
