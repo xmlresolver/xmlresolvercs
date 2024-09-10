@@ -11,6 +11,7 @@ namespace XmlResolver;
 public static class ResourceAccess
 {
     public const int FollowRedirectLimit = 64;
+    private static HttpClient _httpClient = new HttpClient();
     
     public static ResourceResponse GetResource(ResourceRequest request)
     {
@@ -143,9 +144,9 @@ public static class ResourceAccess
             count--;
             done = count <= 0;
 
-            HttpClient httpClient = new HttpClient();
-            HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, resolvedUri);
-            HttpResponseMessage resp = httpClient.Send(req);
+            var httpClient = _httpClient;
+            var req = new HttpRequestMessage(HttpMethod.Get, resolvedUri);
+            var resp = httpClient.Send(req);
 
             status = resp.StatusCode;
             if (seen.Contains(resolvedUri))
