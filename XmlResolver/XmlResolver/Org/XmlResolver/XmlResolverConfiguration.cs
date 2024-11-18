@@ -244,17 +244,20 @@ namespace Org.XmlResolver {
                             loaded = pfile;
                             section = config.GetSection("xmlResolver");
                         }
-                        catch (XmlException) {
-                            // Maybe it's a JSON file?
-                            cfgBuilder = new ConfigurationBuilder();
-                            cfgBuilder.AddJsonFile(pfile.AbsolutePath);
-                            try {
-                                var config = cfgBuilder.Build();
-                                section = config.GetSection("XmlResolver");
-                                loaded = pfile;
-                            }
-                            catch (FormatException) {
-                                logger.Log(ResolverLogger.CONFIG, "Failed to read {0}", pfile.AbsolutePath);
+                        catch (Exception ex) {
+                            if (ex is XmlException || ex is InvalidDataException)
+                            {
+                                // Maybe it's a JSON file?
+                                cfgBuilder = new ConfigurationBuilder();
+                                cfgBuilder.AddJsonFile(pfile.AbsolutePath);
+                                try {
+                                    var config = cfgBuilder.Build();
+                                    section = config.GetSection("XmlResolver");
+                                    loaded = pfile;
+                                }
+                                catch (FormatException) {
+                                    logger.Log(ResolverLogger.CONFIG, "Failed to read {0}", pfile.AbsolutePath);
+                                }
                             }
                         }
                     }
