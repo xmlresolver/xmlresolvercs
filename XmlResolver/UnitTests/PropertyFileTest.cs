@@ -21,8 +21,8 @@ namespace UnitTests {
                 f1 = f1 || cat.EndsWith(s1);
                 f2 = f2 || cat.EndsWith(s2);
             }
-            Assert.True(f1);
-            Assert.True(f2);
+            Assert.That(f1, Is.EqualTo(true));
+            Assert.That(f2, Is.EqualTo(true));
         }
         
         [Test]
@@ -39,8 +39,8 @@ namespace UnitTests {
                 f1 = f1 || cat.Equals(s1);
                 f2 = f2 || cat.Equals(s2);
             }
-            Assert.True(f1);
-            Assert.True(f2);
+            Assert.That(f1, Is.EqualTo(true));
+            Assert.That(f2, Is.EqualTo(true));
         }
     }
 }

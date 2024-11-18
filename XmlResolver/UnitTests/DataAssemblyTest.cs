@@ -29,9 +29,9 @@ namespace UnitTests {
         public void LookupRddl() {
             var res = resolver.CatalogResolver.ResolveEntity(null, null,
                 "http://www.rddl.org/rddl-resource-1.mod", null);
-            Assert.NotNull(res);
-            Assert.NotNull(res.GetInputStream());
-            Assert.NotNull(res.GetLocalUri());
+            Assert.That(res, Is.Not.Null);
+            Assert.That(res.GetInputStream(), Is.Not.Null);
+            Assert.That(res.GetLocalUri(), Is.Not.Null);
             Assert.That(res.GetLocalUri().Scheme == "pack");
         }
         
@@ -40,7 +40,7 @@ namespace UnitTests {
             config.SetFeature(ResolverFeature.USE_DATA_ASSEMBLY, false);
             var res = resolver.CatalogResolver.ResolveEntity(null, null,
                 "http://www.rddl.org/rddl-resource-1.mod", null);
-            Assert.IsNull(res);
+            Assert.That(res, Is.Null);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace UnitTests {
                 "http://www.rddl.org/rddl-resource-1.mod", null);
             
             // With the cache and the data assembly disabled, we won't return anything
-            Assert.Null(res);
+            Assert.That(res, Is.Null);
         }
 
         [Test]
@@ -77,9 +77,9 @@ namespace UnitTests {
         [Test]
         public void lookupCheckUri() {
             var res = resolver.CatalogResolver.ResolveUri("https://xmlresolver.org/data/resolver/succeeded/test/check.xml", null);
-            Assert.NotNull(res);
-            Assert.NotNull(res.GetInputStream());
-            Assert.NotNull(res.GetLocalUri());
+            Assert.That(res, Is.Not.Null);
+            Assert.That(res.GetInputStream(), Is.Not.Null);
+            Assert.That(res.GetLocalUri(), Is.Not.Null);
             Assert.That(res.GetLocalUri().Scheme == "pack");
         }
     }

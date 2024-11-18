@@ -27,7 +27,7 @@ namespace UnitTests {
 
             try {
                 object stream = resolver.GetEntity(UriUtils.NewUri(systemId), null, typeof(Stream));
-                Assert.NotNull(stream);
+                Assert.That(stream, Is.Not.Null);
             } catch (Exception) {
                 Assert.Fail();
             }

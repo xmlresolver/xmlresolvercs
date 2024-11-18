@@ -18,38 +18,38 @@ namespace UnitTests {
         }
         
         [Test]
-        public void publicTest1() {
+        public void PublicTest1() {
             Uri expected = UriUtils.Resolve(baseUri, "prefer-public.dtd");
             Uri result = manager.LookupPublic("http://example.com/miss", "-//EXAMPLE//DTD Example//EN");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
         
         [Test]
-        public void publicTest2() {
+        public void PublicTest2() {
             Uri expected = UriUtils.Resolve(baseUri, "system.dtd");
             Uri result = manager.LookupPublic("http://example.com/system.dtd", "-//EXAMPLE//DTD Example//EN");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void publicTest3() {
+        public void PublicTest3() {
             Uri expected = UriUtils.Resolve(baseUri, "prefer-system.dtd");
             Uri result = manager.LookupNotation("irrelevant", null, "-//EXAMPLE//DTD Example//EN");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void publicTest4() {
+        public void PublicTest4() {
             Uri expected = UriUtils.Resolve(baseUri, "prefer-system.dtd");
             Uri result = manager.LookupPublic(PublicId.EncodeUrn("-//EXAMPLE//DTD Example//EN").ToString(), null);
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void publicTest5() {
+        public void PublicTest5() {
             Uri expected = UriUtils.Resolve(baseUri, "prefer-system.dtd");
             Uri result = manager.LookupPublic(PublicId.EncodeUrn("-//EXAMPLE//DTD Different//EN").ToString(), "-//EXAMPLE//DTD Example//EN");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 }

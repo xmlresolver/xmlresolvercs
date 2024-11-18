@@ -15,7 +15,7 @@ namespace UnitTests {
         }
         
         [Test]
-        public void testDataUritext() {
+        public void TestDataUritext() {
             string href = "example.txt";
             string baseuri = "http://example.com/";
 
@@ -24,11 +24,11 @@ namespace UnitTests {
             using (StreamReader reader = new StreamReader(result.GetInputStream())) {
                 line = reader.ReadLine();
             }
-            Assert.AreEqual("A short note.", line);
+            Assert.That(line, Is.EqualTo("A short note."));
         }
         
         [Test]
-        public void testDataUricharset() {
+        public void TestDataUricharset() {
             string href = "greek.txt";
             string baseuri = "http://example.com/";
 
@@ -41,11 +41,11 @@ namespace UnitTests {
             using (StreamReader reader = new StreamReader(result.GetInputStream())) {
                 line = reader.ReadLine();
             }
-            Assert.AreEqual("ΎχΎ", line);
+            Assert.That(line, Is.EqualTo("ΎχΎ"));
         }
         
         [Test]
-        public void testDataUriencoded() {
+        public void TestDataUriencoded() {
             string href = "example.xml";
             string baseuri = "http://example.com/";
 
@@ -54,7 +54,7 @@ namespace UnitTests {
             using (StreamReader reader = new StreamReader(result.GetInputStream())) {
                 line = reader.ReadLine();
             }
-            Assert.AreEqual("<doc>I was a data URI</doc>", line);
+            Assert.That(line, Is.EqualTo("<doc>I was a data URI</doc>"));
         }
     }
 }

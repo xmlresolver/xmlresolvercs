@@ -22,39 +22,39 @@ namespace UnitTests {
         }
 
         [Test]
-        public void lookupOneForValidation() {
+        public void LookupOneForValidation() {
             Uri result = manager.LookupNamespaceUri("http://example.com/one", "the-one-nature", "validation");
             Assert.That(result.ToString().EndsWith("/resources/one-validate.xml"));
         }
 
         [Test]
-        public void lookupOneForSomethingElse() {
+        public void LookupOneForSomethingElse() {
             Uri result = manager.LookupNamespaceUri("http://example.com/one", "the-one-nature", "somethingelse");
             Assert.That(result.ToString().EndsWith("/resources/one-else.xml"));
         }
 
         [Test]
-        public void lookupTwoForValidation() {
+        public void LookupTwoForValidation() {
             Uri result = manager.LookupNamespaceUri("http://example.com/two", "the-two-nature", "validation");
             Assert.That(result.ToString().EndsWith("/resources/two-validate.xml"));
         }
 
         [Test]
-        public void lookupTwoForAnythingElse() {
+        public void LookupTwoForAnythingElse() {
             Uri result = manager.LookupNamespaceUri("http://example.com/two", "the-two-nature", "anything-else");
             Assert.That(result.ToString().EndsWith("/resources/two-anything-else.xml"));
         }
         
         [Test]
-        public void resolveWithHref() {
+        public void ResolveWithHref() {
             object stream = resolver.GetEntity("one", new Uri("http://example.com/"), "the-one-nature", "validation");
-            Assert.NotNull(stream);
+            Assert.That(stream, Is.Not.Null);
         }
 
         [Test]
-        public void resolveWithURI() {
+        public void ResolveWithURI() {
             object stream = resolver.GetEntity(new Uri("http://example.com/one"), "the-one-nature", "validation");
-            Assert.NotNull(stream);
+            Assert.That(stream, Is.Not.Null);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace UnitTests {
         public void InstantiateTest() {
             var handle = Activator.CreateInstance("XmlResolver", "Org.XmlResolver.Resolver");
             Resolver resolver = (Resolver) handle.Unwrap();
-            Assert.NotNull(resolver);
+            Assert.That(resolver, Is.Not.Null);
         }
     }
 }

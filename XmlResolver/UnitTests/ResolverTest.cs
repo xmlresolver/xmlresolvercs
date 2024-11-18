@@ -27,7 +27,7 @@ namespace UnitTests {
 
                 ResolvedResource rsrc = cresolver.ResolveEntity(null, null, "https://example.com/not/in/catalog", null);
 
-                Assert.Null(rsrc);
+                Assert.That(rsrc, Is.Null);
             } catch (Exception) {
                 Assert.Fail();
             }
@@ -40,7 +40,7 @@ namespace UnitTests {
 
                 ResolvedResource rsrc = cresolver.ResolveEntity(null, null, "file:///path/to/thing/that/isnt/likely/to/exist", null);
 
-                Assert.Null(rsrc);
+                Assert.That(rsrc, Is.Null);
             } catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
@@ -56,8 +56,8 @@ namespace UnitTests {
 
                 ResolvedResource rsrc = cresolver.ResolveEntity(null, null, "https://example.com/sample/1.0/sample.dtd", null);
 
-                Assert.NotNull(rsrc.GetInputStream());
-                Assert.AreEqual(result, rsrc.GetLocalUri());
+                Assert.That(rsrc.GetInputStream(), Is.Not.Null);
+                Assert.That(rsrc.GetLocalUri(), Is.EqualTo(result));
             } catch (Exception ex) {
                 Console.WriteLine(ex.Message);
                 Assert.Fail();
@@ -72,8 +72,8 @@ namespace UnitTests {
 
                 ResolvedResource rsrc = cresolver.ResolveEntity(null, null, "https://example.com/sample/1.0/uri.dtd", null);
 
-                Assert.NotNull(rsrc.GetInputStream());
-                Assert.AreEqual(result, rsrc.GetLocalUri());
+                Assert.That(rsrc.GetInputStream(), Is.Not.Null);
+                Assert.That(rsrc.GetLocalUri(), Is.EqualTo(result));
             } catch (Exception) {
                 Assert.Fail();
             }
@@ -94,7 +94,7 @@ namespace UnitTests {
 
                 ResolvedResource rsrc = cresolver.ResolveEntity(null, null, "https://xmlresolver.org/ns/sample-as-uri/sample.dtd", null);
 
-                Assert.NotNull(rsrc.GetInputStream());
+                Assert.That(rsrc.GetInputStream(), Is.Not.Null);
             } catch (Exception) {
                 Assert.Fail();
             }

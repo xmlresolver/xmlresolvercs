@@ -17,76 +17,76 @@ namespace UnitTests {
         private void BooleanFeature(BoolResolverFeature feature) {
             bool orig = (bool) config.GetFeature(feature);
             config.SetFeature(feature, false);
-            Assert.AreEqual(false, config.GetFeature(feature));
+            Assert.That(config.GetFeature(feature), Is.EqualTo(false));
             config.SetFeature(feature, true);
-            Assert.AreEqual(true, config.GetFeature(feature));
+            Assert.That(config.GetFeature(feature), Is.EqualTo(true));
             config.SetFeature(feature, orig);
         }
 
         private void StringFeature(StringResolverFeature feature) {
             string orig = (string) config.GetFeature(feature);
             config.SetFeature(feature, "apple pie");
-            Assert.AreEqual("apple pie", config.GetFeature(feature));
+            Assert.That(config.GetFeature(feature), Is.EqualTo("apple pie"));
             config.SetFeature(feature, orig);
         }
 
         [Test]
         public void TestAllowCatalogPi() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.ALLOW_CATALOG_PI));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.ALLOW_CATALOG_PI), Is.EqualTo(true));
             BooleanFeature(ResolverFeature.ALLOW_CATALOG_PI);
         }
         
         [Test]
         public void TestArchivedCatalogs() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.ARCHIVED_CATALOGS));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.ARCHIVED_CATALOGS), Is.EqualTo(true));
             BooleanFeature(ResolverFeature.ARCHIVED_CATALOGS);
         }
 
         [Test]
         public void TestCacheUnderHome() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.CACHE_UNDER_HOME));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.CACHE_UNDER_HOME), Is.EqualTo(true));
             BooleanFeature(ResolverFeature.CACHE_UNDER_HOME);
         }
 
         [Test]
         public void TestMaskPackUris() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.MASK_PACK_URIS));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.MASK_PACK_URIS), Is.EqualTo(true));
             BooleanFeature(ResolverFeature.MASK_PACK_URIS);
         }
 
         [Test]
         public void TestMergeHttps() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.MERGE_HTTPS));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.MERGE_HTTPS), Is.EqualTo(true));
             BooleanFeature(ResolverFeature.MERGE_HTTPS);
         }
 
         [Test]
         public void TestParseRddl() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.PARSE_RDDL));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.PARSE_RDDL), Is.EqualTo(true));
             BooleanFeature(ResolverFeature.PARSE_RDDL);
         }
 
         [Test]
         public void TestPreferPropertyFile() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.PREFER_PROPERTY_FILE));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.PREFER_PROPERTY_FILE), Is.EqualTo(true));
             BooleanFeature(ResolverFeature.PREFER_PROPERTY_FILE);
         }
 
         [Test]
         public void TestPreferPublic() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.PREFER_PUBLIC));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.PREFER_PUBLIC), Is.EqualTo(true));
             BooleanFeature(ResolverFeature.PREFER_PUBLIC);
         }
 
         [Test]
         public void TestUriForSystem() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.URI_FOR_SYSTEM));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.URI_FOR_SYSTEM), Is.EqualTo(true));
             BooleanFeature(ResolverFeature.URI_FOR_SYSTEM);
         }
 
         [Test]
         public void TestAssemblyCatalog() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.ASSEMBLY_CATALOGS));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.ASSEMBLY_CATALOGS), Is.EqualTo(true));
             
             List<string> orig = (List<string>)config.GetFeature(ResolverFeature.ASSEMBLY_CATALOGS);
             
@@ -113,29 +113,29 @@ namespace UnitTests {
 
         [Test]
         public void TestCacheDirectory() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.CACHE_DIRECTORY));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.CACHE_DIRECTORY), Is.EqualTo(true));
             StringFeature(ResolverFeature.CACHE_DIRECTORY);
         }
 
         [Test]
         public void TestCatalogLoaderClass() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.CATALOG_LOADER_CLASS));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.CATALOG_LOADER_CLASS), Is.EqualTo(true));
             StringFeature(ResolverFeature.CATALOG_LOADER_CLASS);
         }
 
         private void sameLists(List<string> list1, List<string> list2) {
             // Hack
             foreach (var cur in list1) {
-                Assert.True(list2.Contains(cur));
+                Assert.That(list2.Contains(cur), Is.EqualTo(true));
             }
             foreach (var cur in list2) {
-                Assert.True(list1.Contains(cur));
+                Assert.That(list1.Contains(cur), Is.EqualTo(true));
             }
         }
 
         [Test]
         public void TestFeatureCatalogFiles() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.CATALOG_FILES));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.CATALOG_FILES), Is.EqualTo(true));
 
             List<string> orig = (List<string>)config.GetFeature(ResolverFeature.CATALOG_FILES);
             List<string> myList = new List<string> { "One", "Two", "Three" };
@@ -150,7 +150,7 @@ namespace UnitTests {
 
             // None of "mine" survived
             foreach (var cur in myList) {
-                Assert.False(current.Contains(cur));
+                Assert.That(current.Contains(cur), Is.EqualTo(false));
             }
             
             sameLists(current, newList);
@@ -160,7 +160,7 @@ namespace UnitTests {
         
         [Test]
         public void TestFeatureCatalogAdditions() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.CATALOG_ADDITIONS));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.CATALOG_ADDITIONS), Is.EqualTo(true));
 
             List<string> origCatalogs = (List<string>)config.GetFeature(ResolverFeature.CATALOG_FILES);
             List<string> origAdditions = (List<string>)config.GetFeature(ResolverFeature.CATALOG_ADDITIONS);
@@ -176,10 +176,10 @@ namespace UnitTests {
             current = (List<string>)config.GetFeature(ResolverFeature.CATALOG_FILES);
 
             foreach (var mine in myCatalogs) {
-                Assert.True(current.Contains(mine));
+                Assert.That(current.Contains(mine), Is.EqualTo(true));
             }
             foreach (var mine in myList) {
-                Assert.True(current.Contains(mine));
+                Assert.That(current.Contains(mine), Is.EqualTo(true));
             }
 
             config.SetFeature(ResolverFeature.CATALOG_FILES, origCatalogs);
@@ -188,21 +188,21 @@ namespace UnitTests {
 
         [Test]
         public void TestFeatureCatalogManager() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.CATALOG_MANAGER));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.CATALOG_MANAGER), Is.EqualTo(true));
             CatalogManager manager = new CatalogManager(config);
             CatalogManager orig = (CatalogManager)config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             config.SetFeature(ResolverFeature.CATALOG_MANAGER, manager);
-            Assert.AreSame(manager, config.GetFeature(ResolverFeature.CATALOG_MANAGER));
+            Assert.That(manager, Is.SameAs(config.GetFeature(ResolverFeature.CATALOG_MANAGER)));
             config.SetFeature(ResolverFeature.CATALOG_MANAGER, orig);
         }
 
         [Test]
         public void TestFeatureCache() {
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.CACHE));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.CACHE), Is.EqualTo(true));
             ResourceCache myCache = new ResourceCache(config);
             ResourceCache orig = (ResourceCache)config.GetFeature(ResolverFeature.CACHE);
             config.SetFeature(ResolverFeature.CACHE, myCache);
-            Assert.AreSame(myCache, config.GetFeature(ResolverFeature.CACHE));
+            Assert.That(myCache, Is.SameAs(config.GetFeature(ResolverFeature.CACHE)));
             config.SetFeature(ResolverFeature.CACHE, orig);
         }
     }
