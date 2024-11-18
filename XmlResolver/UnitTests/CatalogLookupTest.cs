@@ -40,15 +40,15 @@ namespace UnitTests {
         }
 
         [Test]
-        public void lookupSystem() {
+        public void LookupSystem() {
             Uri result = manager.LookupSystem("https://example.com/sample/1.0/sample.dtd");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd")));
         }
 
         [Test]
-        public void lookupSystemMiss() {
+        public void LookupSystemMiss() {
             Uri result = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.rng");
-            Assert.Null(result);
+            Assert.That(result, Is.Null);
         }
 
         // ============================================================
@@ -56,240 +56,234 @@ namespace UnitTests {
         // Note that the N/A entries in column three are a bit misleading.
 
         [Test]
-        public void lookupPublic_prefer_public_nosystem_public1() {
+        public void LookupPublic_prefer_public_nosystem_public1() {
             // Catalog contains a matching public entry, but not a matching system entry
             Uri result = manager.LookupPublic(null, "-//Sample//DTD Sample 1.0//EN");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-public.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-public.dtd")));
         }
 
         [Test]
-        public void lookupPublic_prefer_public_nosystem_public2() {
+        public void LookupPublic_prefer_public_nosystem_public2() {
             // Catalog contains a matching system entry, but not a matching public entry
-            Assert.True(true); // N/A
         }
 
         [Test]
-        public void lookupPublic_prefer_public_nosystem_public3() {
+        public void LookupPublic_prefer_public_nosystem_public3() {
             // Catalog contains both a matching system entry and a matching public entry
-            Assert.True(true); // N/A
         }
 
         [Test]
-        public void lookupPublic_prefer_public_system_nopublic1() {
+        public void LookupPublic_prefer_public_system_nopublic1() {
             // Catalog contains a matching public entry, but not a matching system entry
-            Assert.True(true); // N/A
         }
 
         [Test]
-        public void lookupPublic_prefer_public_system_nopublic2() {
+        public void LookupPublic_prefer_public_system_nopublic2() {
             // Catalog contains a matching system entry, but not a matching public entry
             Uri result = manager.LookupPublic("https://example.com/sample/1.0/sample.dtd", null);
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd")));
         }
 
 
         [Test]
-        public void lookupPublic_prefer_public_system_nopublic3() {
+        public void LookupPublic_prefer_public_system_nopublic3() {
             // Catalog contains both a matching system entry and a matching public entry
             Uri result = manager.LookupPublic("https://example.com/sample/1.0/sample.dtd", null);
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd")));
         }
 
         [Test]
-        public void lookupPublic_prefer_public_system_public1() {
+        public void LookupPublic_prefer_public_system_public1() {
             // Catalog contains a matching public entry, but not a matching system entry
             Uri result = manager.LookupPublic("https://example.com/not-sample/1.0/sample.dtd",
                 "-//Sample//DTD Sample 1.0//EN");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-public.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-public.dtd")));
         }
 
         [Test]
-        public void lookupPublic_prefer_public_system_public2() {
+        public void LookupPublic_prefer_public_system_public2() {
             // Catalog contains a matching system entry, but not a matching public entry
             Uri result = manager.LookupPublic("https://example.com/sample/1.0/sample.dtd",
                 "-//Sample//DTD Not Sample 1.0//EN");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd")));
         }
 
         [Test]
-        public void lookupPublic_prefer_public_system_public3() {
+        public void LookupPublic_prefer_public_system_public3() {
             // Catalog contains both a matching system entry and a matching public entry
             Uri result = manager.LookupPublic("https://example.com/sample/1.0/sample.dtd",
                 "-//Sample//DTD Sample 1.0//EN");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd")));
         }
 
         [Test]
-        public void lookupPublic_prefer_system_nosystem_public1() {
+        public void LookupPublic_prefer_system_nosystem_public1() {
             // Catalog contains a matching public entry, but not a matching system entry
             Uri result = manager.LookupPublic(null, "-//Sample//DTD Sample 1.0//EN");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-public.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-public.dtd")));
         }
 
         [Test]
-        public void lookupPublic_prefer_system_nosystem_public2() {
+        public void LookupPublic_prefer_system_nosystem_public2() {
             // Catalog contains a matching system entry, but not a matching public entry
-            Assert.True(true); // N/A
         }
 
         [Test]
-        public void lookupPublic_prefer_system_nosystem_public3() {
+        public void LookupPublic_prefer_system_nosystem_public3() {
             // Catalog contains both a matching system entry and a matching public entry
-            Assert.True(true); // N/A
         }
 
         [Test]
-        public void lookupPublic_prefer_system_system_nopublic1() {
+        public void LookupPublic_prefer_system_system_nopublic1() {
             // Catalog contains a matching public entry, but not a matching system entry
-            Assert.True(true); // N/A
         }
 
         [Test]
-        public void lookupPublic_prefer_system_system_nopublic2() {
+        public void LookupPublic_prefer_system_system_nopublic2() {
             // Catalog contains a matching system entry, but not a matching public entry
             Uri result = manager.LookupPublic("https://example.com/sample/1.0/sample.dtd", null);
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd")));
         }
 
         [Test]
-        public void lookupPublic_prefer_system_system_nopublic3() {
+        public void LookupPublic_prefer_system_system_nopublic3() {
             // Catalog contains both a matching system entry and a matching public entry
             Uri result = manager.LookupPublic("https://example.com/sample/1.0/sample.dtd", null);
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd")));
         }
 
         [Test]
-        public void lookupPublic_prefer_system_system_public1() {
+        public void LookupPublic_prefer_system_system_public1() {
             // Catalog contains a matching public entry, but not a matching system entry
             Uri result = manager.LookupPublic("https://example.com/not-sample/1.0/sample.dtd",
                 "-//Sample//DTD Prefer Sample 1.0//EN");
-            Assert.Null(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test]
-        public void lookupPublic_prefer_system_system_public2() {
+        public void LookupPublic_prefer_system_system_public2() {
             // Catalog contains a matching system entry, but not a matching public entry
             Uri result = manager.LookupPublic("https://example.com/sample/1.0/sample.dtd",
                 "-//Sample//DTD Not Sample 1.0//EN");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd")));
         }
 
         [Test]
-        public void lookupPublic_prefer_system_system_public3() {
+        public void LookupPublic_prefer_system_system_public3() {
             // Catalog contains both a matching system entry and a matching public entry
             Uri result = manager.LookupPublic("https://example.com/sample/1.0/sample.dtd",
                 "-//Sample//DTD Prefer Sample 1.0//EN");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-system.dtd")));
         }
 
         // ============================================================
 
         [Test]
-        public void rewriteSystem() {
+        public void RewriteSystem() {
             Uri result = manager.LookupSystem("https://example.com/path1/sample/3.0/sample.dtd");
             Uri expected = new Uri("https://example.com/path2/sample/3.0/sample.dtd");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void systemSuffix() {
+        public void SystemSuffix() {
             Uri result = manager.LookupSystem("https://example.com/whatever/you/want/suffix.dtd");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample20/sample-suffix.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample20/sample-suffix.dtd")));
         }
 
         [Test]
-        public void delegatePublicLong() {
+        public void DelegatePublicLong() {
             Uri result = manager.LookupPublic(null, "-//Sample Delegated//DTD Sample 1.0//EN");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-delegated.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-delegated.dtd")));
         }
 
         [Test]
-        public void delegatePublicShort() {
+        public void DelegatePublicShort() {
             Uri result = manager.LookupPublic(null, "-//Sample Delegated//DTD Sample 2.0//EN");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample20/sample-shorter.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample20/sample-shorter.dtd")));
         }
 
         [Test]
-        public void delegatePublicFail() {
+        public void DelegatePublicFail() {
             Uri result = manager.LookupPublic(null, "-//Sample Delegated//DTD Sample 3.0//EN");
-            Assert.Null(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test]
-        public void delegateSystemLong() {
+        public void DelegateSystemLong() {
             Uri result = manager.LookupPublic("https://example.com/delegated/sample/1.0/sample.dtd", null);
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-delegated.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-delegated.dtd")));
         }
 
         [Test]
-        public void delegateSystemShort() {
+        public void DelegateSystemShort() {
             Uri result = manager.LookupPublic("https://example.com/delegated/sample/2.0/sample.dtd", null);
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample20/sample-shorter.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample20/sample-shorter.dtd")));
         }
 
         [Test]
-        public void delegateSystemFail() {
+        public void DelegateSystemFail() {
             Uri result = manager.LookupPublic("https://example.com/delegated/sample/3.0/sample.dtd", null);
-            Assert.Null(result);
+            Assert.That(result, Is.Null);
         }
 
         /*
         [Test]
-        public void undelegated() {
+        public void Undelegated() {
             // If there aren't any delegate entries, the entries in lookup2.xml really do match.
             XMLResolverConfiguration uconfig = new XMLResolverConfiguration(Collections.emptyList(), Collections.emptyList());
             uconfig.setFeature(ResolverFeature.CATALOG_FILES, Collections.singletonList(catalog2));
             CatalogManager umanager = new CatalogManager(uconfig);
     
             Uri result = umanager.LookupPublic(null, "-//Sample Delegated//DTD Sample 3.0//EN");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample30/fail.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample30/fail.dtd")));
     
             result = umanager.LookupPublic("https://example.com/delegated/sample/3.0/sample.dtd", null);
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample30/fail.dtd"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample30/fail.dtd")));
         }
         */
 
         // ============================================================
 
         [Test]
-        public void lookupUri() {
+        public void LookupUri() {
             Uri result = manager.LookupUri("https://xmlresolver.org/ns/sample/sample.rng");
-            Assert.AreEqual(UriUtils.Resolve(UriUtils.Resolve(UriUtils.Cwd(), catalog1), "sample/sample.rng"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(UriUtils.Resolve(UriUtils.Cwd(), catalog1), "sample/sample.rng")));
         }
 
         [Test]
-        public void rewriteUri() {
+        public void RewriteUri() {
             Uri result = manager.LookupUri("https://example.com/path1/sample/sample.rng");
             Uri expected = new Uri("https://example.com/path2/sample/sample.rng");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void uriSuffix() {
+        public void UriSuffix() {
             Uri result = manager.LookupUri("https://example.com/whatever/you/want/suffix.rnc");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample20/sample-suffix.rnc"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample20/sample-suffix.rnc")));
         }
 
         [Test]
-        public void delegateUriLong() {
+        public void DelegateUriLong() {
             Uri result = manager.LookupUri("https://example.com/delegated/sample/1.0/sample.rng");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample10/sample-delegated.rng"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample10/sample-delegated.rng")));
         }
 
         [Test]
-        public void delegateUriShort() {
+        public void DelegateUriShort() {
             Uri result = manager.LookupUri("https://example.com/delegated/sample/2.0/sample.rng");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample20/sample-shorter.rng"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample20/sample-shorter.rng")));
         }
 
         [Test]
-        public void delegateUriFail() {
+        public void DelegateUriFail() {
             Uri result = manager.LookupUri("https://example.com/delegated/sample/3.0/sample.rng");
-            Assert.Null(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test]
-        public void undelegatedUri() {
+        public void UndelegatedUri() {
             // If there aren't any delegate entries, the entries in lookup2.xml really do match.
             XmlResolverConfiguration uconfig = new XmlResolverConfiguration(new(), new());
             List<string> cats = new();
@@ -298,40 +292,40 @@ namespace UnitTests {
             CatalogManager umanager = (CatalogManager) uconfig.GetFeature(ResolverFeature.CATALOG_MANAGER);
     
             Uri result = umanager.LookupUri("https://example.com/delegated/sample/3.0/sample.rng");
-            Assert.AreEqual(UriUtils.Resolve(catalog1, "sample30/fail.rng"), result);
+            Assert.That(result, Is.EqualTo(UriUtils.Resolve(catalog1, "sample30/fail.rng")));
         }
     
         [Test]
-        public void baseUriRootTest() {
+        public void BaseUriRootTest() {
             // Make sure an xml:base attribute on the root element works
             List<String> catalog = new();
             catalog.Add(UriUtils.Resolve(catalog1, "lookup-test.xml").ToString());
             XmlResolverConfiguration config = new XmlResolverConfiguration(new(), catalog);
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri result = manager.LookupPublic("https://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd", "-//W3C//DTD SVG 1.1//EN");
-            Assert.AreEqual("/usr/local/DTDs/svg11/system-svg11.dtd", result.AbsolutePath);
+            Assert.That(result.AbsolutePath, Is.EqualTo("/usr/local/DTDs/svg11/system-svg11.dtd"));
         }
     
         [Test]
-        public void baseUriGroupTest() {
+        public void BaseUriGroupTest() {
             // Make sure an xml:base attribute on a group element works
             List<String> catalog = new();
             catalog.Add(UriUtils.Resolve(catalog1, "lookup-test.xml").ToString());
             XmlResolverConfiguration config = new XmlResolverConfiguration(new(), catalog);
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri result = manager.LookupPublic("https://www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic.dtd", "-//W3C//DTD SVG 1.1 Basic//EN");
-            Assert.AreEqual("/usr/local/nested/DTDs/svg11/system-svg11-basic.dtd", result.AbsolutePath);
+            Assert.That(result.AbsolutePath, Is.EqualTo("/usr/local/nested/DTDs/svg11/system-svg11-basic.dtd"));
         }
     
         [Test]
-        public void baseUriOnElementTest() {
+        public void BaseUriOnElementTest() {
             // Make sure an xml:base attribute on the actual element works
             List<String> catalog = new();
             catalog.Add(UriUtils.Resolve(catalog1, "lookup-test.xml").ToString());
             XmlResolverConfiguration config = new XmlResolverConfiguration(new(), catalog);
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri result = manager.LookupSystem("https://example.com/test.dtd");
-            Assert.AreEqual("/usr/local/on/DTDs/test.dtd", result.AbsolutePath);
+            Assert.That(result.AbsolutePath, Is.EqualTo("/usr/local/on/DTDs/test.dtd"));
         }
     }
 }

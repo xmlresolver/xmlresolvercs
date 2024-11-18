@@ -33,47 +33,47 @@ namespace UnitTests {
 
         [Test]
         public void DefaultInfo() {
-            Assert.NotNull(cache.GetCacheInfo("^file:"));
-            Assert.NotNull(cache.GetCacheInfo("^jar:file:"));
-            Assert.NotNull(cache.GetCacheInfo("^classpath:"));
-            Assert.NotNull(cache.GetCacheInfo("^pack:"));
-            Assert.Null(cache.GetCacheInfo("^fribble:"));
-            Assert.AreEqual(4, cache.GetCacheInfoList().Count);
+            Assert.That(cache.GetCacheInfo("^file:"), Is.Not.Null);
+            Assert.That(cache.GetCacheInfo("^jar:file:"), Is.Not.Null);
+            Assert.That(cache.GetCacheInfo("^classpath:"), Is.Not.Null);
+            Assert.That(cache.GetCacheInfo("^pack:"), Is.Not.Null);
+            Assert.That(cache.GetCacheInfo("^fribble:"), Is.Null);
+            Assert.That(cache.GetCacheInfoList().Count, Is.EqualTo(4));
          }
 
         [Test]
         public void AddCacheInfoDefault() {
             cache.AddCacheInfo("^fribble:", true);
-            Assert.AreEqual(5, cache.GetCacheInfoList().Count);
+            Assert.That(cache.GetCacheInfoList().Count, Is.EqualTo(5));
             CacheInfo info = cache.GetCacheInfo("^fribble:");
-            Assert.AreEqual("^fribble:", info.UriPattern.ToString());
-            Assert.AreEqual(ResourceCache.CacheSize, info.CacheSize);
-            Assert.AreEqual(ResourceCache.CacheSpace, info.CacheSpace);
-            Assert.AreEqual(ResourceCache.DeleteWait, info.DeleteWait);
-            Assert.AreEqual(ResourceCache.MaxAge, info.MaxAge);
+            Assert.That(info.UriPattern.ToString(), Is.EqualTo("^fribble:"));
+            Assert.That(info.CacheSize, Is.EqualTo(ResourceCache.CacheSize));
+            Assert.That(info.CacheSpace, Is.EqualTo(ResourceCache.CacheSpace));
+            Assert.That(info.DeleteWait, Is.EqualTo(ResourceCache.DeleteWait));
+            Assert.That(info.MaxAge, Is.EqualTo(ResourceCache.MaxAge));
             cache.RemoveCacheInfo("^fribble:");
-            Assert.AreEqual(4, cache.GetCacheInfoList().Count);
-            Assert.Null(cache.GetCacheInfo("^fribble:"));
+            Assert.That(cache.GetCacheInfoList().Count, Is.EqualTo(4));
+            Assert.That(cache.GetCacheInfo("^fribble:"), Is.Null);
         }
 
         [Test]
         public void AddCacheInfoExplicit() {
             cache.AddCacheInfo("^fribble:", true);
             cache.AddCacheInfo("^frabble:", false, 123, 456, 789, 10);
-            Assert.AreEqual(6, cache.GetCacheInfoList().Count);
+            Assert.That(cache.GetCacheInfoList().Count, Is.EqualTo(6));
             CacheInfo info = cache.GetCacheInfo("^frabble:");
-            Assert.AreEqual("^frabble:", info.UriPattern.ToString());
-            Assert.AreEqual(456, info.CacheSize);
-            Assert.AreEqual(789, info.CacheSpace);
-            Assert.AreEqual(123, info.DeleteWait);
-            Assert.AreEqual(10, info.MaxAge);
+            Assert.That(info.UriPattern.ToString(), Is.EqualTo("^frabble:"));
+            Assert.That(info.CacheSize, Is.EqualTo(456));
+            Assert.That(info.CacheSpace, Is.EqualTo(789));
+            Assert.That(info.DeleteWait, Is.EqualTo(123));
+            Assert.That(info.MaxAge, Is.EqualTo(10));
             cache.RemoveCacheInfo("^frabble:");
-            Assert.AreEqual(5, cache.GetCacheInfoList().Count);
-            Assert.Null(cache.GetCacheInfo("^frabble:"));
-            Assert.NotNull(cache.GetCacheInfo("^fribble:"));
+            Assert.That(cache.GetCacheInfoList().Count, Is.EqualTo(5));
+            Assert.That(cache.GetCacheInfo("^frabble:"), Is.Null);
+            Assert.That(cache.GetCacheInfo("^fribble:"), Is.Not.Null);
             cache.RemoveCacheInfo("^fribble:");
-            Assert.AreEqual(4, cache.GetCacheInfoList().Count);
-            Assert.Null(cache.GetCacheInfo("^fribble:"));
+            Assert.That(cache.GetCacheInfoList().Count, Is.EqualTo(4));
+            Assert.That(cache.GetCacheInfo("^fribble:"), Is.Null);
         }
 
         [Test]
@@ -87,20 +87,20 @@ namespace UnitTests {
             secondConfig.SetFeature(ResolverFeature.CACHE_ENABLED, true);
             ResourceCache secondCache = new ResourceCache(secondConfig);
 
-            Assert.AreEqual(6, secondCache.GetCacheInfoList().Count);
+            Assert.That(secondCache.GetCacheInfoList().Count, Is.EqualTo(6));
             CacheInfo info = secondCache.GetCacheInfo("^frabble:");
-            Assert.AreEqual("^frabble:", info.UriPattern.ToString());
-            Assert.AreEqual(456, info.CacheSize);
-            Assert.AreEqual(789, info.CacheSpace);
-            Assert.AreEqual(123, info.DeleteWait);
-            Assert.AreEqual(10, info.MaxAge);
+            Assert.That(info.UriPattern.ToString(), Is.EqualTo("^frabble:"));
+            Assert.That(info.CacheSize, Is.EqualTo(456));
+            Assert.That(info.CacheSpace, Is.EqualTo(789));
+            Assert.That(info.DeleteWait, Is.EqualTo(123));
+            Assert.That(info.MaxAge, Is.EqualTo(10));
             secondCache.RemoveCacheInfo("^frabble:");
-            Assert.AreEqual(5, secondCache.GetCacheInfoList().Count);
-            Assert.Null(secondCache.GetCacheInfo("^frabble:"));
-            Assert.NotNull(secondCache.GetCacheInfo("^fribble:"));
+            Assert.That(secondCache.GetCacheInfoList().Count, Is.EqualTo(5));
+            Assert.That(secondCache.GetCacheInfo("^frabble:"), Is.Null);
+            Assert.That(secondCache.GetCacheInfo("^fribble:"), Is.Not.Null);
             secondCache.RemoveCacheInfo("^fribble:");
-            Assert.AreEqual(4, secondCache.GetCacheInfoList().Count);
-            Assert.Null(secondCache.GetCacheInfo("^fribble:"));
+            Assert.That(secondCache.GetCacheInfoList().Count, Is.EqualTo(4));
+            Assert.That(secondCache.GetCacheInfo("^fribble:"), Is.Null);
         }
 
         [Test]
@@ -109,15 +109,15 @@ namespace UnitTests {
             cache.AddCacheInfo("^frabble:", false, 123, 456, 789, 10);
             cache.AddCacheInfo("\\.dtd$", false);
 
-            Assert.True(cache.CacheUri("http://example.com"));
-            Assert.True(cache.CacheUri("fribble://example.com"));
-            Assert.False(cache.CacheUri("frabble://example.com"));
-            Assert.False(cache.CacheUri("file:///foo"));
-            Assert.False(cache.CacheUri("jar:file:///foo"));
-            Assert.False(cache.CacheUri("classpath:whatever"));
+            Assert.That(cache.CacheUri("http://example.com"), Is.EqualTo(true));
+            Assert.That(cache.CacheUri("fribble://example.com"), Is.EqualTo(true));
+            Assert.That(cache.CacheUri("frabble://example.com"), Is.EqualTo(false));
+            Assert.That(cache.CacheUri("file:///foo"), Is.EqualTo(false));
+            Assert.That(cache.CacheUri("jar:file:///foo"), Is.EqualTo(false));
+            Assert.That(cache.CacheUri("classpath:whatever"), Is.EqualTo(false));
 
-            Assert.True(cache.CacheUri("jar:http://example.com"));
-            Assert.False(cache.CacheUri("http://examle.com/path/to/some.dtd"));
+            Assert.That(cache.CacheUri("jar:http://example.com"), Is.EqualTo(true));
+            Assert.That(cache.CacheUri("http://examle.com/path/to/some.dtd"), Is.EqualTo(false));
 
             cache.RemoveCacheInfo("^fribble:");
             cache.RemoveCacheInfo("^frabble:");
@@ -128,7 +128,7 @@ namespace UnitTests {
         public void TestCacheData() {
             try {
                 ResolvedResource rsrc = cresolver.ResolveUri("http://localhost:8222/docs/sample/xlink.xsd", null);
-                Assert.NotNull(rsrc.GetInputStream());
+                Assert.That(rsrc.GetInputStream(), Is.Not.Null);
                 rsrc.GetInputStream().Close();
             } catch (Exception ex) {
                 Console.WriteLine(ex.Message);
@@ -142,22 +142,22 @@ namespace UnitTests {
             localConfig.SetFeature(ResolverFeature.CACHE_DIRECTORY, "/tmp/cache");
             localConfig.SetFeature(ResolverFeature.CACHE_ENABLED, false);
             ResourceCache localCache = new ResourceCache(localConfig);
-            Assert.Null(localCache.GetDirectory());
-            Assert.False(localCache.CacheUri("http://example.com/test.dtd"));
+            Assert.That(localCache.GetDirectory(), Is.Null);
+            Assert.That(localCache.CacheUri("http://example.com/test.dtd"), Is.EqualTo(false));
         }
 
         [Test]
         public void TestCacheDisabledAfterInitialization()
         {
             XmlResolverConfiguration localConfig = new XmlResolverConfiguration();
-            Assert.False((bool) localConfig.GetFeature(ResolverFeature.CACHE_ENABLED));
+            Assert.That((bool) localConfig.GetFeature(ResolverFeature.CACHE_ENABLED), Is.EqualTo(false));
 
             CatalogResolver resolver = new CatalogResolver(localConfig);
             resolver.GetConfiguration().SetFeature(ResolverFeature.CACHE_ENABLED, false);
 
             // With the cache disabled, we get back null
             ResolvedResource result = resolver.ResolveUri("https://jats.nlm.nih.gov/publishing/1.3/JATS-journalpublishing1-3.dtd", null);
-            Assert.IsNull(result);
+            Assert.That(result, Is.Null);
         }
         
     }

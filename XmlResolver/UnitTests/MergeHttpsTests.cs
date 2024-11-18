@@ -48,98 +48,99 @@ namespace UnitTests {
 
         [Test]
         public void Equivalentcp1() {
-            Assert.AreEqual("classpath:path/to/thing",
-                noMergeManager.NormalizedForComparison("classpath:/path/to/thing"));
+            Assert.That(noMergeManager.NormalizedForComparison("classpath:/path/to/thing"),
+                        Is.EqualTo("classpath:path/to/thing"));
+                
         }
 
         [Test]
         public void Equivalentcp2() {
-            Assert.AreEqual("classpath:path/to/thing",
-                noMergeManager.NormalizedForComparison("classpath:path/to/thing"));
+            Assert.That(noMergeManager.NormalizedForComparison("classpath:path/to/thing"),
+                        Is.EqualTo("classpath:path/to/thing"));
         }
 
         [Test]
         public void Equivalentcp1m() {
-            Assert.AreEqual("classpath:path/to/thing",
-                mergeManager.NormalizedForComparison("classpath:/path/to/thing"));
+            Assert.That(mergeManager.NormalizedForComparison("classpath:/path/to/thing"),
+                        Is.EqualTo("classpath:path/to/thing"));
         }
 
         [Test]
         public void Equivalentcp2m() {
-            Assert.AreEqual("classpath:path/to/thing", mergeManager.NormalizedForComparison("classpath:path/to/thing"));
+            Assert.That(mergeManager.NormalizedForComparison("classpath:path/to/thing"), Is.EqualTo("classpath:path/to/thing"));
         }
 
         [Test]
         public void Equivalenthttp1() {
-            Assert.AreEqual("https://localhost/path/to/thing",
-                noMergeManager.NormalizedForComparison("https://localhost/path/to/thing"));
+            Assert.That(noMergeManager.NormalizedForComparison("https://localhost/path/to/thing"),
+                        Is.EqualTo("https://localhost/path/to/thing"));
         }
 
         [Test]
         public void Equivalenthttp2() {
-            Assert.AreEqual("http://localhost/path/to/thing",
-                noMergeManager.NormalizedForComparison("http://localhost/path/to/thing"));
+            Assert.That(noMergeManager.NormalizedForComparison("http://localhost/path/to/thing"),
+                        Is.EqualTo("http://localhost/path/to/thing"));
         }
 
         [Test]
         public void Equivalenthttp3() {
-            Assert.AreEqual("ftp://localhost/path/to/thing",
-                noMergeManager.NormalizedForComparison("ftp://localhost/path/to/thing"));
+            Assert.That(noMergeManager.NormalizedForComparison("ftp://localhost/path/to/thing"),
+                        Is.EqualTo("ftp://localhost/path/to/thing"));
         }
 
         [Test]
         public void Equivalenthttp1m() {
-            Assert.AreEqual("https://localhost/path/to/thing",
-                mergeManager.NormalizedForComparison("https://localhost/path/to/thing"));
+            Assert.That(mergeManager.NormalizedForComparison("https://localhost/path/to/thing"),
+                        Is.EqualTo("https://localhost/path/to/thing"));
         }
 
         [Test]
         public void Equivalenthttp2m() {
-            Assert.AreEqual("https://localhost/path/to/thing",
-                mergeManager.NormalizedForComparison("http://localhost/path/to/thing"));
+            Assert.That(mergeManager.NormalizedForComparison("http://localhost/path/to/thing"),
+                        Is.EqualTo("https://localhost/path/to/thing"));
         }
 
         [Test]
         public void Equivalenthttp3m() {
-            Assert.AreEqual("ftp://localhost/path/to/thing",
-                mergeManager.NormalizedForComparison("ftp://localhost/path/to/thing"));
+            Assert.That(mergeManager.NormalizedForComparison("ftp://localhost/path/to/thing"),
+                        Is.EqualTo("ftp://localhost/path/to/thing"));
         }
 
 
         [Test]
         public void LookupHttpUri() {
             Uri result = mergeManager.LookupUri("http://www.w3.org/2001/xml.xsd");
-            Assert.NotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
 
         [Test]
         public void LookupHttpSystem() {
             Uri result = mergeManager.LookupSystem("http://www.w3.org/MarkUp/DTD/xhtml-basic11.dtd");
-            Assert.NotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
 
         [Test]
         public void LookupHttpsSystem() {
             Uri result = mergeManager.LookupSystem("https://www.rddl.org/rddl-xhtml.dtd");
-            Assert.NotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
 
         [Test]
         public void LookupHttpUriNoMerge() {
             Uri result = noMergeManager.LookupUri("http://www.w3.org/2001/xml.xsd");
-            Assert.Null(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test]
         public void LookupHttpSystemNoMerge() {
             Uri result = noMergeManager.LookupSystem("http://www.w3.org/MarkUp/DTD/xhtml-basic11.dtd");
-            Assert.Null(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test]
         public void LookupHttpsSystemNoMerge() {
             Uri result = noMergeManager.LookupSystem("https://www.rddl.org/rddl-xhtml.dtd");
-            Assert.Null(result);
+            Assert.That(result, Is.Null);
         }
     }
 }

@@ -18,171 +18,171 @@ namespace UnitTests {
         }
 
         [Test]
-        public void publicTest1() {
+        public void PublicTest1() {
             Uri expected = UriUtils.Resolve(baseUri, "public.dtd");
             Uri result = manager.LookupPublic("http://example.com/miss", "-//EXAMPLE//DTD Example//EN");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void publicTest2() {
+        public void PublicTest2() {
             Uri expected = UriUtils.Resolve(baseUri, "system.dtd");
             Uri result = manager.LookupPublic("http://example.com/system.dtd", "-//EXAMPLE//DTD Example//EN");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void systemTest() {
+        public void SystemTest() {
             Uri expected = UriUtils.Resolve(baseUri, "system.dtd");
             Uri result = manager.LookupSystem("http://example.com/system.dtd");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void rewriteSystemTest() {
+        public void RewriteSystemTest() {
             Uri expected = UriUtils.Resolve(baseUri, "local/path/system.dtd");
             Uri result = manager.LookupSystem("http://example.com/rewrite/path/system.dtd");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void systemSuffixTest1() {
+        public void SystemSuffixTest1() {
             Uri expected = UriUtils.Resolve(baseUri, "suffix/base-long.dtd");
             Uri result = manager.LookupSystem("http://example.com/path/base.dtd");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void systemSuffixTest2() {
+        public void SystemSuffixTest2() {
             Uri expected = UriUtils.Resolve(baseUri, "suffix/base-short.dtd");
             Uri result = manager.LookupSystem("http://example.com/alternate/base.dtd");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void uriTest1() {
+        public void UriTest1() {
             Uri expected = UriUtils.Resolve(baseUri, "/path/document.xml");
             Uri result = manager.LookupUri("http://example.com/document.xml");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void uriTest2() {
+        public void UriTest2() {
             Uri expected = UriUtils.Resolve(baseUri, "/path/rddl.xml");
             Uri result = manager.LookupUri("http://example.com/rddl.xml");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void uriTest3() {
+        public void UriTest3() {
             Uri expected = UriUtils.Resolve(baseUri, "/path/rddl.xml");
             Uri result = manager.LookupNamespaceUri("http://example.com/rddl.xml",
                 "nature", "purpose");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void uriTest4() {
+        public void UriTest4() {
             Uri result = manager.LookupNamespaceUri("http://example.com/rddl.xml",
                 "not-nature", "not-purpose");
-            Assert.Null(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test]
-        public void rewriteUriTest() {
+        public void RewriteUriTest() {
             Uri expected = UriUtils.Resolve(baseUri, "/path/local/docs/document.xml");
             Uri result = manager.LookupUri("http://example.com/rewrite/docs/document.xml");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void uriSuffixTest1() {
+        public void UriSuffixTest1() {
             Uri expected = UriUtils.Resolve(baseUri, "suffix/base-long.xml");
             Uri result = manager.LookupUri("http://example.com/path/base.xml");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void uriSuffixTest2() {
+        public void UriSuffixTest2() {
             Uri expected = UriUtils.Resolve(baseUri, "suffix/base-short.xml");
             Uri result = manager.LookupUri("http://example.com/alternate/base.xml");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void bookTest1() {
+        public void BookTest1() {
             Uri expected = UriUtils.Resolve(baseUri, "path/docbook.dtd");
             Uri result = manager.LookupDoctype("book", null, null);
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void bookTest2() {
+        public void BookTest2() {
             Uri expected = UriUtils.Resolve(baseUri, "system.dtd");
             Uri result = manager.LookupDoctype("book",
                 "http://example.com/system.dtd", "-//EXAMPLE//DTD Example//EN");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void bookTest3() {
+        public void BookTest3() {
             Uri expected = UriUtils.Resolve(baseUri, "public.dtd");
             Uri result = manager.LookupDoctype("book",
                 "http://example.com/miss.dtd", "-//EXAMPLE//DTD Example//EN");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void documentTest() {
+        public void DocumentTest() {
             Uri expected = UriUtils.Resolve(baseUri, "path/default.xml");
             Uri result = manager.LookupDocument();
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void entityTest1() {
+        public void EntityTest1() {
             Uri expected = UriUtils.Resolve(baseUri, "chap01.xml");
             Uri result = manager.LookupEntity("chap01", null, null);
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void entityTest2() {
+        public void EntityTest2() {
             Uri expected = UriUtils.Resolve(baseUri, "system.dtd");
             Uri result = manager.LookupEntity("chap01",
                 "http://example.com/system.dtd", "-//EXAMPLE//DTD Example//EN");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void entityTest3() {
+        public void EntityTest3() {
             Uri expected = UriUtils.Resolve(baseUri, "public.dtd");
             Uri result = manager.LookupEntity("chap01",
                 "http://example.com/miss.dtd", "-//EXAMPLE//DTD Example//EN");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void notationTest1() {
+        public void NotationTest1() {
             Uri expected = UriUtils.Resolve(baseUri, "notation.xml");
             Uri result = manager.LookupNotation("notename", null, null);
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void notationTest2() {
+        public void NotationTest2() {
             Uri expected = UriUtils.Resolve(baseUri, "system.dtd");
             Uri result = manager.LookupNotation("notename",
                 "http://example.com/system.dtd", "-//EXAMPLE//DTD Example//EN");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void notationTest3() {
+        public void NotationTest3() {
             Uri expected = UriUtils.Resolve(baseUri, "public.dtd");
             Uri result = manager.LookupNotation("notename",
                 "http://example.com/miss.dtd", "-//EXAMPLE//DTD Example//EN");
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 }

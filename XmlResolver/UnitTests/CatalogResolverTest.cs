@@ -31,7 +31,7 @@ namespace UnitTests {
                 CatalogManager manager =
                     (CatalogManager) resolver.GetConfiguration().GetFeature(ResolverFeature.CATALOG_MANAGER);
                 Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample-as-uri/sample.dtd");
-                Assert.Null(rsrc);
+                Assert.That(rsrc, Is.Null);
             }
             catch (Exception) {
                 Assert.Fail();
@@ -44,7 +44,7 @@ namespace UnitTests {
             try {
                 object stream = resolver.GetEntity(new Uri("https://xmlresolver.org/ns/sample-as-uri/sample.dtd"),
                     null, null);
-                Assert.NotNull(stream);
+                Assert.That(stream, Is.Not.Null);
             }
             catch (Exception ex) {
                 Console.WriteLine(ex.Message);

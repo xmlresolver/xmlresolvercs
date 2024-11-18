@@ -26,8 +26,8 @@ namespace UnitTests {
             var manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
 
             Uri result = manager.LookupSystem("https://xmlresolver.org/ns/zipped/blocks.dtd");
-            Assert.True(result.ToString().StartsWith("pack://file%3"));
-            Assert.True(result.ToString().EndsWith(",sample.zip/sample.dtd"));
+            Assert.That(result.ToString().StartsWith("pack://file%3"), Is.EqualTo(true));
+            Assert.That(result.ToString().EndsWith(",sample.zip/sample.dtd"), Is.EqualTo(true));
         }
 
         [Test]
@@ -37,8 +37,8 @@ namespace UnitTests {
             var manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             
             Uri result = manager.LookupUri("https://xmlresolver.org/ns/zipped/sample.rnc");
-            Assert.True(result.ToString().StartsWith("pack://file%3"));
-            Assert.True(result.ToString().EndsWith(",dir-sample.zip/directory-x.y/sample.rnc"));
+            Assert.That(result.ToString().StartsWith("pack://file%3"), Is.EqualTo(true));
+            Assert.That(result.ToString().EndsWith(",dir-sample.zip/directory-x.y/sample.rnc"), Is.EqualTo(true));
         }
         [Test]
         public void lookupZip3Uri() {
@@ -47,8 +47,8 @@ namespace UnitTests {
             var manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
 
             Uri result = manager.LookupUri("https://xmlresolver.org/ns/zipped/blocks.rnc");
-            Assert.True(result.ToString().StartsWith("pack://file%3"));
-            Assert.True(result.ToString().EndsWith(",sample-org.zip/schemas/blocks.rnc"));
+            Assert.That(result.ToString().StartsWith("pack://file%3"), Is.EqualTo(true));
+            Assert.That(result.ToString().EndsWith(",sample-org.zip/schemas/blocks.rnc"), Is.EqualTo(true));
         }
     }
 }

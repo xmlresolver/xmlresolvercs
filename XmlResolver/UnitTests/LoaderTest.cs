@@ -13,7 +13,7 @@ namespace UnitTests {
             config.AddAssemblyCatalog("resources/catalog.xml", Assembly.GetExecutingAssembly());
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
-            Assert.NotNull(rsrc);
+            Assert.That(rsrc, Is.Not.Null);
         }
 
         [Test]
@@ -22,7 +22,7 @@ namespace UnitTests {
             config.AddAssemblyCatalog("resources/invalid-catalog.xml", Assembly.GetExecutingAssembly());
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
-            Assert.NotNull(rsrc);
+            Assert.That(rsrc, Is.Not.Null);
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace UnitTests {
             config.AddAssemblyCatalog("resources/catalog.xml", Assembly.GetExecutingAssembly());
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
-            Assert.NotNull(rsrc);
+            Assert.That(rsrc, Is.Not.Null);
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace UnitTests {
             config.SetFeature(ResolverFeature.CATALOG_LOADER_CLASS, "Org.XmlResolver.Loaders.ValidatingXmlLoader");
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
-            Assert.NotNull(rsrc);
+            Assert.That(rsrc, Is.Not.Null);
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace UnitTests {
             config.SetFeature(ResolverFeature.CATALOG_LOADER_CLASS, "Org.XmlResolver.Loaders.ValidatingXmlLoader");
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
-            Assert.NotNull(rsrc);
+            Assert.That(rsrc, Is.Not.Null);
         }
 
         //FIXME: [Test]
@@ -63,7 +63,7 @@ namespace UnitTests {
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             try {
                 Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
-                Assert.NotNull(rsrc);
+                Assert.That(rsrc, Is.Not.Null);
                 Assert.Fail();
             }
             catch (Exception) {
@@ -80,7 +80,7 @@ namespace UnitTests {
             CatalogManager manager = (CatalogManager) config.GetFeature(ResolverFeature.CATALOG_MANAGER);
             try {
                 Uri rsrc = manager.LookupSystem("https://xmlresolver.org/ns/sample/sample.dtd");
-                Assert.NotNull(rsrc);
+                Assert.That(rsrc, Is.Not.Null);
             }
             catch (Exception) {
                 Assert.Fail();

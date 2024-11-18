@@ -15,11 +15,11 @@ namespace UnitTests {
         [Test]
         public void TestFeatureCache() {
             // Test that a subclass of ResourceCache can be used as a ResourceCache.
-            Assert.True(config.GetFeatures().Contains(ResolverFeature.CACHE));
+            Assert.That(config.GetFeatures().Contains(ResolverFeature.CACHE), Is.EqualTo(true));
             CacheSubclass myCache = new CacheSubclass(config);
             ResourceCache orig = (ResourceCache)config.GetFeature(ResolverFeature.CACHE);
             config.SetFeature(ResolverFeature.CACHE, myCache);
-            Assert.AreSame(myCache, config.GetFeature(ResolverFeature.CACHE));
+            Assert.That(myCache, Is.SameAs(config.GetFeature(ResolverFeature.CACHE)));
             config.SetFeature(ResolverFeature.CACHE, orig);
         }
 
