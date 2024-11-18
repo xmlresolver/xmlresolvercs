@@ -336,7 +336,7 @@ public class XmlResolver
                        lookup.Request is { Nature: not null, Purpose: not null };
         if (tryRddl)
         {
-            if (lookup.IsResolved)
+            if (lookup.IsResolved && lookup.ResolvedUri != null)
             {
                 lookup = _rddlLookup(lookup, lookup.ResolvedUri);
             }
