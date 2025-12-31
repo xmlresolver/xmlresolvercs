@@ -12,7 +12,7 @@
 <xsl:template match="/">
   <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-      <TargetFramework>net6.0</TargetFramework>
+      <TargetFramework>net8.0</TargetFramework>
       <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
       <Authors>Norman Walsh</Authors>
       <Description>This package provides a common set of XML resources and an XML Catalog that resolves them. It’s most commonly used with the xmlresolver package.</Description>

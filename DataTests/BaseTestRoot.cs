@@ -1,7 +1,7 @@
 using System;
 using XmlResolver.Utils;
 
-namespace UnitTests;
+namespace DataTests;
 
 public class BaseTestRoot
 {

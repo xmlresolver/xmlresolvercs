@@ -1,3 +1,5 @@
+using System;
+
 namespace XmlResolver;
 
 /// <summary>
@@ -10,8 +12,8 @@ public interface IXmlCatalogResolver {
     /// <para>This method matches <c>uri</c> entries in the catalog.</para>
     /// <param name="uri">The URI to find</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public Uri? LookupUri(string? uri);
-
+    public Uri LookupUri(string uri);
+    
     /// <summary>
     /// Lookup an entity by its public and system identifiers.
     /// </summary>
@@ -24,8 +26,8 @@ public interface IXmlCatalogResolver {
     /// <param name="systemId">The system identifier for the entity.</param>
     /// <param name="publicId">The public identifier for the entity.</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public Uri? LookupPublic(string? systemId, string? publicId);
-        
+    public Uri LookupPublic(string systemId, string publicId);
+    
     /// <summary>
     /// Lookup an entity by its system identifier.
     /// </summary>
@@ -37,7 +39,7 @@ public interface IXmlCatalogResolver {
     /// corresponding public identifier and against <c>public</c> entries.</para>
     /// <param name="systemId">The system identifier for the entity.</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public Uri? LookupSystem(string? systemId);
+    public Uri LookupSystem(string systemId);
 
     /// <summary>
     /// Lookup a doctype.
@@ -49,8 +51,8 @@ public interface IXmlCatalogResolver {
     /// <param name="systemId">The system identifier, may be null.</param>
     /// <param name="publicId">The public identifier, may be null.</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public Uri? LookupDoctype(string? entityName, string? systemId, string? publicId);
-        
+    public Uri LookupDoctype(string entityName, string systemId, string publicId);
+    
     /// <summary>
     /// Lookup an external entity.
     /// </summary>
@@ -61,8 +63,8 @@ public interface IXmlCatalogResolver {
     /// <param name="systemId">The system identifier, may be null.</param>
     /// <param name="publicId">The public identifier, may be null.</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public Uri? LookupEntity(string? entityName, string? systemId, string? publicId);
-        
+    public Uri LookupEntity(string entityName, string systemId, string publicId);
+    
     /// <summary>
     /// Lookup a notation.
     /// </summary>
@@ -73,15 +75,15 @@ public interface IXmlCatalogResolver {
     /// <param name="systemId">The system identifier, may be null.</param>
     /// <param name="publicId">The public identifier, may be null.</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public Uri? LookupNotation(string? notationName, string? systemId, string? publicId);
-        
+    public Uri LookupNotation(string notationName, string systemId, string publicId);
+    
     /// <summary>
     /// Looks up the default document.
     /// </summary>
     /// <para>This method matches <c>document</c> entries in the catalog.
     /// <returns>The default document URI or null if no default document was specified.</returns>
-    public Uri? LookupDocument();
-        
+    public Uri LookupDocument();
+    
     /// <summary>
     /// Lookup a URI with a given nature and purpose.
     /// </summary>
@@ -97,5 +99,5 @@ public interface IXmlCatalogResolver {
     /// <param name="nature">The desired nature URI, may be null.</param>
     /// <param name="purpose">The desired purpose URI, may be null</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public Uri? LookupNamespaceUri(string uri, string? nature, string? purpose);
+    public Uri LookupNamespaceUri(string uri, string nature, string purpose);
 }
