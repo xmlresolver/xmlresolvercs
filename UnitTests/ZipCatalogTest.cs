@@ -1,22 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 using NUnit.Framework;
 using XmlResolver;
 using XmlResolver.Features;
-using XmlResolver.Utils;
 
 namespace UnitTests {
-    public class ZipCatalogTest {
-        private static string root = Environment.GetEnvironmentVariable("CSHARP_XMLRESOLVER_ROOT");
-
-        private static string zip1 = root + "/UnitTests/resources/sample.zip";
-        private static string zip2 = root + "/UnitTests/resources/dir-sample.zip";
-        private static string zip3 = root + "/UnitTests/resources/sample-org.zip";
-
+    public class ZipCatalogTest: BaseTestRoot
+    {
+        private string zip1 = "";
+        private string zip2 = "";
+        private string zip3 = "";
+        
         [SetUp]
-        public void Setup() {
+        public void Setup()
+        {
+            zip1 = TEST_ROOT_PATH + "/UnitTests/resources/sample.zip";
+            zip2 = TEST_ROOT_PATH + "/UnitTests/resources/dir-sample.zip";
+            zip3 = TEST_ROOT_PATH + "/UnitTests/resources/sample-org.zip";
         }
         
         [Test]
