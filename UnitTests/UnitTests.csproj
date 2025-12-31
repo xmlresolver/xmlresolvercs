@@ -1,25 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-
+        <TargetFramework>net8.0</TargetFramework>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1"/>
-        <PackageReference Include="NUnit" Version="4.2.2" />
-        <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
-        <PackageReference Include="NUnit.Analyzers" Version="4.4.0">
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+        <PackageReference Include="NuGet.Frameworks" Version="7.0.1" />
+        <PackageReference Include="NUnit" Version="3.13.1" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+        <PackageReference Include="coverlet.collector" Version="6.0.4">
           <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="coverlet.collector" Version="6.0.2" />
 
         <!-- Data -->
+
         <EmbeddedResource Include="Data/org/xmlresolver/catalog.xml">
           <LogicalName>XmlResolver.catalog.xml</LogicalName>
         </EmbeddedResource>
@@ -266,12 +263,20 @@
         <EmbeddedResource Include="resources/lookup-shorter.xml">
           <LogicalName>resources.lookup-shorter.xml</LogicalName>
         </EmbeddedResource>
-        <PackageReference Include="XmlResolverData" Version="1.2.4" />
 
+        <PackageReference Include="System.IO.Packaging" Version="10.0.1" />
+
+        <PackageReference Include="XmlResolverData" Version="6.0.3" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\XmlResolver\XmlResolver.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="CMPreferTest.cs">
+        <LogicalName>resources.CMPreferTest.cs</LogicalName>
+      </Compile>
     </ItemGroup>
 
 </Project>

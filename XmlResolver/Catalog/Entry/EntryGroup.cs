@@ -1,21 +1,19 @@
-namespace XmlResolver.Catalog.Entry;
+using System;
 
-public class EntryGroup : Entry 
-{
-    public readonly bool PreferPublic;
+namespace XmlResolver.Catalog.Entry {
+    public class EntryGroup : Entry {
+        public readonly bool preferPublic;
                 
-    public EntryGroup(Uri baseUri, string? id, bool prefer) : base(baseUri, id) 
-    {
-        PreferPublic = prefer;
-    }
+        public EntryGroup(Uri baseUri, string id, bool prefer) : base(baseUri, id) {
+            preferPublic = prefer;
+        }
         
-    public override EntryType GetEntryType()
-    {
-        return EntryType.Group;
-    }
+        public override EntryType GetEntryType() {
+            return EntryType.GROUP;
+        }
         
-    public override string ToString() 
-    {
-        return $"group prefer={(PreferPublic ? "public" : "system")}";
+        public override string ToString() {
+            return $"group prefer={(preferPublic ? "public" : "system")}";
+        }
     }
 }

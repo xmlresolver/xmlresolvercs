@@ -1,36 +1,95 @@
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+
 namespace XmlResolver;
 
-public class ResourceResponse
+#nullable enable
+
+public class ResourceResponse : IResourceResponse
 {
-    public readonly ResourceRequest Request;
+    private readonly Dictionary<string, List<string>> _headers = new();
 
-    public ResourceResponse(ResourceRequest request) : this(request, false)
-    {
-        // nop
-    }
-
-    public ResourceResponse(ResourceRequest request, bool rejected)
+    internal ResourceResponse(IResourceRequest request, Uri? uri = null)
     {
         Request = request;
-        IsRejected = rejected;
-    }
-
-    public ResourceResponse(ResourceRequest request, Uri? uri)
-    {
-        Request = request;
+        Rejected = false;
         Uri = uri;
         ResolvedUri = uri;
-        IsRejected = false;
-        IsResolved = uri != null;
+        Resolved = uri != null;
     }
 
-    public Uri? Uri { get; internal set; } = null;
-    public Uri? ResolvedUri { get; internal set; } = null;
-    public bool IsRejected { get; internal set; } = false;
-    public bool IsResolved { get; internal set; } = false;
-    public string? ContentType { get; internal set; } = null;
-    public Stream? Stream { get; internal set; } = null;
-    public int StatusCode { get; internal set; } = -1;
-    public Dictionary<string, List<String>> Headers { get; internal set; } = new Dictionary<string, List<string>>();
+    public IResourceRequest Request
+    {
+        get;
+        internal set;
+    }
 
+    public string? ContentType
+    {
+        get;
+        internal set;
+    }
+
+    public Stream? Stream
+    {
+        get;
+        internal set;
+    }
+
+    public bool Rejected
+    {
+        get;
+        internal set;
+    } = false;
+
+    public bool Resolved
+    {
+        get;
+        internal set;
+    } = false;
+
+    public Uri? Uri
+    {
+        get;
+        internal set;
+    }
+
+    public Uri? ResolvedUri
+    {
+        get;
+        internal set;
+    }
+
+    public string? Encoding
+    {
+        get;
+        internal set;
+    }
+
+    public IDictionary<string, List<string>> GetHeaders()
+    {
+        return _headers.ToImmutableDictionary();
+    }
+
+    internal void SetHeaders(IDictionary<string, List<string>> newHeaders)
+    {
+        _headers.Clear();
+        foreach (var item in newHeaders)
+        {
+            _headers.Add(item.Key, item.Value);
+        }
+    }
+    
+    public List<string> GetHeader(string name)
+    {
+        return _headers.TryGetValue(name, out var value) ? value : [];
+    }
+
+    public int StatusCode
+    {
+        get;
+        internal set;
+    } = -1;
 }

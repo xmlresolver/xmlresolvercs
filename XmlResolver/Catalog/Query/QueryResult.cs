@@ -1,54 +1,50 @@
+using System;
+using System.Collections.Generic;
 using NLog;
 using XmlResolver.Catalog.Entry;
 
-namespace XmlResolver.Catalog.Query;
+namespace XmlResolver.Catalog.Query {
+    public class QueryResult {
+        protected static Logger logger = LogManager.GetCurrentClassLogger();
 
-public class QueryResult
-{
-    protected static Logger Logger = LogManager.GetCurrentClassLogger();
+        public static readonly QueryResult EMPTY_RESULT = new QueryResult();
+        public static readonly QueryResult FINAL_RESULT = new QueryResult(null);
+        private Uri result = null;
+        private readonly bool _resolved;
 
-    public static readonly QueryResult EmptyResult = new QueryResult();
-    private Uri? _result = null;
-    private readonly bool _resolved;
-
-    protected QueryResult()
-    {
-        _resolved = false;
-    }
-
-    public QueryResult(Uri uri)
-    {
-        _resolved = true;
-        _result = uri;
-    }
-
-    public virtual bool Query()
-    {
-        return false;
-    }
-
-    public virtual bool Resolved()
-    {
-        return _resolved;
-    }
-
-    public Uri? ResultUri()
-    {
-        return _result;
-    }
-
-    public virtual List<Uri> UpdateCatalogSearchList(EntryCatalog catalog, List<Uri> catalogs)
-    {
-        // <nextCatalog>
-        List<Uri> next = new();
-        foreach (var raw in catalog.Entries(Entry.Entry.EntryType.NextCatalog)) {
-            next.Add(((EntryNextCatalog) raw).Catalog);
+        protected QueryResult() {
+            _resolved = false;
         }
 
-        foreach (var cat in catalogs) {
-            next.Add(cat);
+        public QueryResult(Uri uri) {
+            _resolved = true;
+            result = uri;
         }
 
-        return next;
+        public virtual bool Query() {
+            return false;
+        }
+
+        public virtual bool Resolved() {
+            return _resolved;
+        }
+
+        public Uri ResultUri() {
+            return result;
+        }
+
+        public virtual List<Uri> UpdateCatalogSearchList(EntryCatalog catalog, List<Uri> catalogs) {
+            // <nextCatalog>
+            List<Uri> next = new();
+            foreach (var raw in catalog.Entries(Entry.Entry.EntryType.NEXT_CATALOG)) {
+                next.Add(((EntryNextCatalog) raw).Catalog);
+            }
+
+            foreach (var cat in catalogs) {
+                next.Add(cat);
+            }
+
+            return next;
+        }
     }
 }

@@ -1,485 +1,490 @@
+using System;
+using System.Collections.Generic;
 using System.Xml;
 using NLog;
+using XmlResolver.Adapters;
 using XmlResolver.Features;
-using XmlResolver.Tools;
 using XmlResolver.Utils;
+
+#nullable enable
 
 namespace XmlResolver;
 
 public class XmlResolver
 {
-    public readonly IResolverConfiguration Config;
-    protected ResolverLogger Logger;
+    private static readonly ResolverLogger Logger = new(LogManager.GetCurrentClassLogger());
 
-    public XmlResolver(): this(new XmlResolverConfiguration())
+    /// <summary>
+    /// Creates a new resolver with a default configuration.
+    /// </summary>
+    public XmlResolver()
     {
-        // nop
-    }
-    
-    public XmlResolver(IResolverConfiguration config)
-    {
-        Config = config;
-        Logger = new(LogManager.GetCurrentClassLogger());
+        Configuration = new XmlResolverConfiguration();
     }
 
     /// <summary>
-    /// Implements <see cref="System.Xml.XmlResolver.GetEntity"/>.
+    /// Creates a new resolver with the specified configuration.
     /// </summary>
-    /// <para>The role and return type are ignored because they have no useful purpose in the system
-    /// version of the API.</para>
-    /// <para>There's an awful failing in the way that the system parser uses this API.
-    /// Presented with an entity that has both system and public identifiers, it calls
-    /// <c>GetEntity</c> initially passing the public identifier as the absolute URI.
-    /// This is complete madness, but if attempting to use the URI throws an exception and
-    /// the URI looks like it might be a public identifier, we try to resolve with it.</para>
-    /// <para>In principle, an XML document can't have only a public identifier, but this API forces
-    /// us to pretend that it might because the public and system identifiers are passed independently
-    /// in two separate API calls.</para>
-    /// <para>Note that this method will attempt to open the specified URI, for example, over the web,
-    /// if resolution fails to find something local in the catalog.</para>
-    /// <param name="absoluteUri">The URI.</param>
-    /// <param name="role">The role, which is ignored.</param>
-    /// <param name="ofObjectToReturn">The type of object to return, which is ignored.</param>
-    /// <returns>A stream if the resource was located or null otherwise.</returns>
-
-    public System.Xml.XmlResolver GetXmlResolver()
+    /// <param name="config">The configuration.</param>
+    public XmlResolver(XmlResolverConfiguration config)
     {
-        return new SystemXmlResolver(this);
-    }
-    
-    public ResourceRequest GetRequest(string? uri)
-    {
-        return GetRequest(uri, null, ResolverConstants.ANY_NATURE, ResolverConstants.ANY_PURPOSE);
+        Configuration = config;
     }
 
-    public ResourceRequest GetRequest(string? uri, string? baseUri)
+    /// <summary>
+    /// Returns the configuration of the underlying resolver.
+    /// </summary>
+    /// <returns>The configuration object.</returns>
+    public IResolverConfiguration Configuration
     {
-        return GetRequest(uri, baseUri, ResolverConstants.ANY_NATURE, ResolverConstants.ANY_PURPOSE);
+        get;
     }
 
-    public ResourceRequest GetRequest(string? uri, string? baseUri, string? nature, string? purpose)
+    public IResourceRequest GetRequest(string? uri)
     {
-        ResourceRequest request = new ResourceRequest(Config, nature, purpose)
+        var req = new ResourceRequest(Configuration, ResolverConstants.ANY_NATURE, ResolverConstants.ANY_PURPOSE)
+        {
+            Uri = uri
+        };
+        return req;
+    }
+
+    public IResourceRequest GetRequest(string? uri, string? baseUri)
+    {
+        var req = new ResourceRequest(Configuration, ResolverConstants.ANY_NATURE, ResolverConstants.ANY_PURPOSE)
         {
             Uri = uri,
-            BaseUri = baseUri,
+            BaseUri = baseUri
         };
-        
-        return request;
+        return req;
     }
 
-    public ResourceResponse LookupEntity(string? publicId, string? systemId)
+    public IResourceRequest GetRequest(string? uri, string? nature, string? purpose)
     {
-        return LookupEntity(publicId, systemId, null);
+        var req = new ResourceRequest(Configuration, nature, purpose)
+        {
+            Uri = uri
+        };
+        return req;
     }
 
-    public ResourceResponse LookupEntity(string? publicId, string? systemId, string? baseUri)
+    public IResourceRequest GetRequest(string? uri, string? baseUri, string? nature, string? purpose)
     {
-        ResourceRequest request =
-            new ResourceRequest(Config, ResolverConstants.EXTERNAL_ENTITY_NATURE, ResolverConstants.ANY_PURPOSE)
-            {
-                Uri = systemId,
-                BaseUri = baseUri,
-                PublicId = publicId
-            };
-        
-        return Lookup(request);
+        var req = new ResourceRequest(Configuration, nature, purpose)
+        {
+            Uri = uri,
+            BaseUri = baseUri
+        };
+        return req;
     }
 
-    public ResourceResponse LookupDoctype(String name)
+    public IResourceResponse LookupEntity(string? name, string? publicId, string? systemId, string? baseUri = null)
+    {
+        var req = GetRequest(systemId, ResolverConstants.EXTERNAL_ENTITY_NATURE, ResolverConstants.ANY_PURPOSE);
+        req.EntityName = name;
+        req.BaseUri = baseUri;
+        req.PublicId = publicId;
+        return Lookup(req);
+    }
+
+    public IResourceResponse ResolveEntity(string? name, string? publicId, string? systemId, string? baseUri = null)
+    {
+        var resp = LookupEntity(name, publicId, systemId, baseUri);
+        
+        if (resp.Resolved)
+        {
+            return ResourceAccess.GetResource(resp);
+        }
+
+        return resp;
+    }
+
+    public IResourceResponse LookupDoctype(string name)
     {
         return LookupDoctype(name, null, null, null);
     }
 
-    public ResourceResponse LookupDoctype(String name, string? publicId, string? systemId)
+    public IResourceResponse LookupDoctype(string name, string? publicId, string? systemId)
     {
         return LookupDoctype(name, publicId, systemId, null);
     }
 
-    public ResourceResponse LookupDoctype(String name, string? publicId, string? systemId, string? baseUri)
+    public IResourceResponse LookupDoctype(string name, string? publicId, string? systemId, string? baseUri)
     {
-        ResourceRequest request =
-            new ResourceRequest(Config, ResolverConstants.DTD_NATURE, ResolverConstants.ANY_PURPOSE)
-            {
-                EntityName = name,
-                Uri = systemId,
-                BaseUri = baseUri,
-                PublicId = publicId
-            };
-        
-        return Lookup(request);
+        var req = GetRequest(systemId, ResolverConstants.DTD_NATURE, ResolverConstants.ANY_PURPOSE);
+        req.EntityName = name;
+        req.BaseUri = baseUri;
+        req.PublicId = publicId;
+        return Lookup(req);
     }
 
-    public ResourceResponse LookupUri(string href)
+    public IResourceResponse LookupUri(string href, string? baseUri = null)
     {
-        return LookupUri(href, null);
+        var req = GetRequest(href, ResolverConstants.ANY_NATURE, ResolverConstants.ANY_PURPOSE);
+        req.BaseUri = baseUri;
+        return Lookup(req);
     }
 
-    public ResourceResponse LookupUri(string? href, string? baseUri)
+    public IResourceResponse ResolveUri(string uri, string? baseUri = null)
     {
-        ResourceRequest request =
-            new ResourceRequest(Config, ResolverConstants.ANY_NATURE, ResolverConstants.ANY_PURPOSE)
-            {
-                Uri = href,
-                BaseUri = baseUri
-            };
-
-        return Lookup(request);
+        var resp = LookupUri(uri, baseUri);
+        return ResourceAccess.GetResource(resp);
+    }    
+    
+    public IResourceResponse LookupNamespace(string href, string? nature, string? purpose)
+    {
+        var req = GetRequest(href, nature, purpose);
+        return Lookup(req);
     }
 
-    public ResourceResponse LookupNamespace(string href, string? nature, string? purpose)
+    public IResourceResponse Lookup(IResourceRequest request)
     {
-        ResourceRequest request = new ResourceRequest(Config, nature, purpose)
+        CatalogManager manager = (CatalogManager) Configuration.GetFeature(ResolverFeature.CATALOG_MANAGER);
+
+        if (ResolverConstants.DTD_NATURE == request.Nature)
         {
-            Uri = href
-        };
-
-        return Lookup(request);
-    }
-
-    public ResourceResponse Lookup(ResourceRequest request)
-    {
-        CatalogManager manager = (CatalogManager)Config.GetFeature(ResolverFeature.CATALOG_MANAGER)!;
-
-        if (ResolverConstants.DTD_NATURE.Equals(request.Nature))
-        {
-            return _lookupDtd(request, manager);
+            return LookupDtd(request, manager);
         }
 
-        if (ResolverConstants.EXTERNAL_ENTITY_NATURE.Equals(request.Nature))
+        if (ResolverConstants.EXTERNAL_ENTITY_NATURE == request.Nature)
         {
-            return _lookupEntity(request, manager);
+            return LookupEntity(request, manager);
         }
 
-        ResourceResponse response = _lookupUri(request, manager);
+        var response = LookupUri(request, manager);
 
-        if (!response.IsResolved && ResolverConstants.ANY_NATURE == request.Nature)
+        if (response.Resolved)
+        {
+            return response;
+        }
+
+        if (request.Nature == ResolverConstants.ANY_NATURE)
         {
             // What about an entity?
-            response = _lookupEntity(request, manager);
-            if (!response.IsResolved && request.EntityName != null)
+            response = LookupEntity(request, manager);
+            if (!response.Resolved && request.EntityName != null)
             {
-                // What about a DTD then?
-                response = _lookupDtd(request, manager);
+                // What about a DTD?
+                response = LookupDtd(request, manager);
             }
         }
 
         return response;
     }
 
-    private ResourceResponse _lookupDtd(ResourceRequest request, CatalogManager manager)
+    private IResourceResponse LookupDtd(IResourceRequest request, CatalogManager manager)
     {
-        if (request.EntityName == null)
-        {
-            throw new NullReferenceException("Name must not be null for DTD lookup");
-        }
+        var name = request.EntityName;
+        var publicId = request.PublicId;
+        var systemId = request.SystemId;
+        var baseUri = request.BaseUri;
 
-        Uri? found = manager.LookupDoctype(request.EntityName, request.SystemId, request.PublicId);
-        if (found == null && request.BaseUri != null)
+        if (name == null)
         {
-            Uri? absuri = request.GetAbsoluteUri();
+            throw new ArgumentNullException(nameof(name));
+        }
+        
+        Logger.Debug("lookupDoctype: {0} {1} (baseUri: {2}, publicId: {3})", name, systemId,baseUri, publicId);
+
+        var found = manager.LookupDoctype(name, systemId, publicId);
+        if (found == null && baseUri != null)
+        {
+            var absuri = MakeAbsolute(request);
             if (absuri != null)
             {
-                found = manager.LookupDoctype(request.EntityName, absuri.ToString(), request.PublicId);
+                found = manager.LookupDoctype(name, absuri.ToString(), publicId);
             }
+        }
+
+        if (found == null)
+        {
+            Logger.Debug("lookupDoctype: null");
+        }
+        else
+        {
+            Logger.Debug("lookupDoctype: {0}", found);
         }
 
         return new ResourceResponse(request, found);
     }
 
-    private ResourceResponse _lookupEntity(ResourceRequest request, CatalogManager manager)
+    private IResourceResponse LookupEntity(IResourceRequest request, CatalogManager manager)
     {
-        if (request.EntityName == null && request.PublicId == null && request.SystemId == null && request.BaseUri == null)
+        var name = request.EntityName;
+        var publicId = request.PublicId;
+        var systemId = request.SystemId;
+        var baseUri = request.BaseUri;
+        
+        var allowed = (List<string>) Configuration.GetFeature(ResolverFeature.ACCESS_EXTERNAL_ENTITY);
+
+        if (name == null && publicId == null && systemId == null && baseUri == null)
         {
-            Logger.Log(ResolverLogger.Request, "lookupEntity: null");
+            Logger.Debug("lookupEntity: null");
             return new ResourceResponse(request);
         }
 
-        string allowed = (string) Config.GetFeature(ResolverFeature.ACCESS_EXTERNAL_ENTITY)!;
-        bool mergeHttps = (bool) (Config.GetFeature(ResolverFeature.MERGE_HTTPS)??false);
-
-        Uri? systemIdUri = _makeUri(request.SystemId);
-        if (systemIdUri != null)
+        var systemIdUri = MakeUri(systemId);
+        if (systemIdUri != null && systemIdUri.IsAbsoluteUri)
         {
-            if (systemIdUri.IsAbsoluteUri)
+            if (UriUtils.ForbidAccess(allowed, systemId, (bool)Configuration.GetFeature(ResolverFeature.MERGE_HTTPS)))
             {
-                if (UriUtils.ForbidAccess(allowed, systemIdUri.ToString(), mergeHttps))
-                {
-                    Logger.Log(ResolverLogger.Request, "lookupEntity (access denied): {0}", systemIdUri.ToString());
-                    return new ResourceResponse(request, true);
-                }
+                Logger.Debug("lookupEntity (access denied): {0}", systemId);
+                throw new ArgumentException("LookupEntity (access denied): " + systemId);
             }
         }
+        
+        Logger.Debug("lookupEntity: {0}{1} (baseUri: {2}, publicId: {3})", (name == null ? "" : name + " "), systemId, baseUri, publicId);
 
-        Logger.Log(ResolverLogger.Request, "lookupEntity: {0}{1} (baseUri: {2}, publicId: {3})",
-            request.EntityName == null ? "" : request.EntityName + " ", request.SystemId??"null",
-            request.BaseUri??"null", request.PublicId??"null");
-
-        bool uriForSystem = (bool)(Config.GetFeature(ResolverFeature.URI_FOR_SYSTEM) ?? false);
-        Uri? resolved = manager.LookupEntity(request.EntityName, request.SystemId, request.PublicId);
-        if (resolved == null && request.SystemId != null && uriForSystem)
+        Uri? resolved = manager.LookupEntity(name, systemId, publicId);
+        if (resolved == null && systemId != null && (bool) Configuration.GetFeature(ResolverFeature.URI_FOR_SYSTEM))
         {
-            resolved = manager.LookupUri(request.SystemId);
+            resolved = manager.LookupUri(systemId);
         }
 
         if (resolved != null)
         {
+            Logger.Debug("lookupEntity: {0}", resolved);
             return new ResourceResponse(request, resolved);
         }
-
-        Uri? absSystem = _makeAbsolute(request);
+        
+        var absSystem = MakeAbsolute(request);
         if (absSystem != null)
         {
-            if (UriUtils.ForbidAccess(allowed, absSystem.ToString(), mergeHttps))
+            if (UriUtils.ForbidAccess(allowed, absSystem.ToString(), (bool) Configuration.GetFeature(ResolverFeature.MERGE_HTTPS)))
             {
-                Logger.Log(ResolverLogger.Request, "lookupEntity (access denied): {0}", absSystem.ToString());
-                return new ResourceResponse(request, true);
+                Logger.Debug("lookupEntity (access denied): {0}", absSystem);
+                throw new ArgumentException("LookupEntity (access denied): " + absSystem);
             }
-
-            resolved = manager.LookupEntity(request.EntityName, absSystem.ToString(), request.PublicId);
-            if (resolved == null && (bool)(Config.GetFeature(ResolverFeature.URI_FOR_SYSTEM) ?? false))
+            
+            resolved = manager.LookupEntity(name, absSystem.ToString(), publicId);
+            if (resolved == null && (bool) Configuration.GetFeature(ResolverFeature.URI_FOR_SYSTEM))
             {
                 resolved = manager.LookupUri(absSystem.ToString());
             }
         }
 
-        // On .NET, ResolverFeature.ALWAYS_RESOLVE is always true
         if (resolved == null)
         {
             if (absSystem == null)
             {
+                Logger.Debug("lookupEntity: null");
                 return new ResourceResponse(request);
             }
-
+            Logger.Debug("lookupEntity: {0}", absSystem);
             return new ResourceResponse(request, absSystem);
         }
-
+        
+        Logger.Debug("lookupEntity: {0}", resolved);
         return new ResourceResponse(request, resolved);
     }
 
-    private ResourceResponse _lookupUri(ResourceRequest request, CatalogManager manager)
+    private IResourceResponse LookupUri(IResourceRequest request, CatalogManager manager)
     {
-        if (request.SystemId == null && request.BaseUri == null)
+        var systemId = request.SystemId;
+        var baseUri = request.BaseUri;
+   
+        var allowed = (List<string>) Configuration.GetFeature(ResolverFeature.ACCESS_EXTERNAL_ENTITY);
+
+        if (systemId == null && baseUri == null)
         {
-            Logger.Log(ResolverLogger.Request, "lookupUri: null");
+            Logger.Debug("lookupUri: null");
             return new ResourceResponse(request);
         }
 
-        string? systemId = request.SystemId;
-        string? baseUri = request.BaseUri;
+        systemId ??= baseUri;
 
-        if (systemId == null)
+        var systemIdUri = MakeUri(systemId);
+        if (systemIdUri != null && systemIdUri.IsAbsoluteUri)
         {
-            systemId = baseUri;
+            if (UriUtils.ForbidAccess(allowed, systemId, (bool)Configuration.GetFeature(ResolverFeature.MERGE_HTTPS)))
+            {
+                Logger.Debug("LookupUri (access denied): {0}", systemId);
+                throw new ArgumentException("LookupUri (access denied): " + systemId);
+            }
         }
         
-        string allowed = (string) Config.GetFeature(ResolverFeature.ACCESS_EXTERNAL_DOCUMENT)!;
-        bool mergeHttps = (bool) (Config.GetFeature(ResolverFeature.MERGE_HTTPS)??false);
-
-        Uri? systemIdUri = _makeUri(systemId);
-        if (systemIdUri != null)
-        {
-            if (systemIdUri.IsAbsoluteUri)
-            {
-                if (UriUtils.ForbidAccess(allowed, systemIdUri.ToString(), mergeHttps))
-                {
-                    Logger.Log(ResolverLogger.Request, "lookupUri (access denied): {0}", systemIdUri.ToString());
-                    return new ResourceResponse(request, true);
-                }
-            }
-        }
-
-        Logger.Log(ResolverLogger.Request, "lookupUri: {0} (baseUri: {1})",
-            request.SystemId??"null", request.BaseUri??"null");
+        Logger.Debug("LookupUri: {0} (baseUri: {1})", systemId, baseUri);
 
         Uri? resolved = manager.LookupNamespaceUri(systemId, request.Nature, request.Purpose);
+        
         if (resolved != null)
         {
+            Logger.Debug("LookupUri: {0}", resolved);
             return new ResourceResponse(request, resolved);
         }
-
-        Uri? absSystem = _makeAbsolute(request);
+        
+        var absSystem = MakeAbsolute(request);
         if (absSystem != null)
         {
-            if (UriUtils.ForbidAccess(allowed, absSystem.ToString(), mergeHttps))
+            if (UriUtils.ForbidAccess(allowed, absSystem.ToString(), (bool) Configuration.GetFeature(ResolverFeature.MERGE_HTTPS)))
             {
-                Logger.Log(ResolverLogger.Request, "lookupUri (access denied): {0}", absSystem.ToString());
-                return new ResourceResponse(request, true);
+                Logger.Debug("LookupUri (access denied): {0}", absSystem);
+                throw new ArgumentException("LookupUri (access denied): " + absSystem);
             }
-
+            
             resolved = manager.LookupNamespaceUri(absSystem.ToString(), request.Nature, request.Purpose);
         }
 
-        // On .NET, ResolverFeature.ALWAYS_RESOLVE is always true
         if (resolved == null)
         {
             if (absSystem == null)
             {
+                Logger.Debug("LookupUri: null");
                 return new ResourceResponse(request);
             }
-
+            Logger.Debug("LookupUri: {0}", absSystem);
             return new ResourceResponse(request, absSystem);
         }
-
+        
+        Logger.Debug("LookupUri: {0}", resolved);
         return new ResourceResponse(request, resolved);
     }
 
-    public ResourceResponse Resolve(ResourceRequest request)
+    public IResourceResponse Resolve(IResourceRequest request)
     {
-        ResourceResponse lookup = Lookup(request);
-        if (lookup.IsRejected)
+        var lookup = Lookup(request);
+        if (lookup.Rejected)
         {
             return lookup;
         }
 
-        bool tryRddl = (bool)(Config.GetFeature(ResolverFeature.PARSE_RDDL) ?? false) &&
-                       lookup.Request is { Nature: not null, Purpose: not null };
+        var tryRddl = (bool)Configuration.GetFeature(ResolverFeature.PARSE_RDDL)
+                      && lookup.Request.Nature != ResolverConstants.ANY_NATURE 
+                      && lookup.Request.Purpose != ResolverConstants.ANY_PURPOSE;
+
         if (tryRddl)
         {
-            if (lookup.IsResolved && lookup.ResolvedUri != null)
+            if (lookup.Resolved)
             {
-                lookup = _rddlLookup(lookup, lookup.ResolvedUri);
+                lookup = RddlLookup(lookup);
             }
             else
             {
-                var absUri = lookup.Request.GetAbsoluteUri();
-                if (absUri != null)
+                var absuri = lookup.Request.GetAbsoluteUri();
+                if (absuri != null)
                 {
-                    lookup = _rddlLookup(lookup, absUri);
+                    lookup = RddlLookup(lookup, absuri);
                 }
             }
         }
 
-        return ResourceAccess.GetResource(lookup);
+        return Configuration.GetResource(lookup);
     }
 
-    private Uri? _makeUri(string? uri)
+    private IResourceResponse RddlLookup(IResourceResponse lookup)
     {
-        if (uri != null)
+        var resolved = lookup.ResolvedUri;
+        if (resolved != null)
         {
-            try
-            {
-                return new Uri(uri);
-            }
-            catch (UriFormatException)
-            {
-                return null;
-            }
+            return RddlLookup(lookup, resolved);
         }
 
-        return null;
+        return lookup;
     }
 
-    private Uri? _makeAbsolute(ResourceRequest request)
+    private IResourceResponse RddlLookup(IResourceResponse lookup, Uri resolved)
     {
-        Uri? absUri = request.GetAbsoluteUri();
-        if (absUri != null && absUri.ToString() != request.Uri)
-        {
-            return absUri;
-        }
-
-        return null;
-    }
-
-    private ResourceResponse _rddlLookup(ResourceResponse lookup)
-    {
-        if (lookup.Uri == null)
-        {
-            return lookup;
-        }
-        return _rddlLookup(lookup, lookup.Uri);
-    }
-
-    private ResourceResponse _rddlLookup(ResourceResponse lookup, Uri resolved)
-    {
-        Uri? rddl = checkRddl(resolved, lookup.Request.Nature!, lookup.Request.Purpose!);
+        var rddl = CheckRddl(resolved, lookup.Request.Nature!, lookup.Request.Purpose!);
         if (rddl == null)
         {
             return lookup;
         }
 
-        ResourceRequest rddlRequest =
-            new ResourceRequest(Config, ResolverConstants.ANY_NATURE, ResolverConstants.ANY_PURPOSE);
+        var rddlRequest = new ResourceRequest(Configuration, ResolverConstants.ANY_NATURE, ResolverConstants.ANY_NATURE);
         rddlRequest.Uri = rddl.ToString();
+        rddlRequest.BaseUri = resolved.ToString();
         
-        ResourceResponse resp = Lookup(rddlRequest);
-        if (!resp.IsResolved)
+        var resp = Lookup(rddlRequest);
+        if (!resp.Resolved)
         {
-            Logger.Log(ResolverLogger.Response, "RDDL {0}: {1}", resolved.ToString(), rddl.ToString());
-            return ResourceAccess.GetResource(resp);
+            Logger.Debug("RDDL {0}: {1}", resolved, rddl);
+            return new ResourceResponse(lookup.Request, rddl);
         }
         
-        Logger.Log(ResolverLogger.Response, "RDDL {0}: {1}", resolved.ToString(), resp.Uri!.ToString());
+        // FIXME: In Java, that's resp.getURI()...
+        Logger.Debug("RDDL {0}: {1}", resolved, resp.ResolvedUri);
         return resp;
     }
 
-    private Uri? checkRddl(Uri resolved, string nature, string purpose)
+    private Uri? CheckRddl(Uri uri, string nature, string purpose)
     {
-        ResourceRequest req = new ResourceRequest(Config, nature, purpose);
-        req.Uri = resolved.ToString();
-
-        ResourceResponse resp = ResourceAccess.GetResource(req);
-        string contentType = resp.ContentType ?? "application/octet-stream";
-
-        Uri? found = null;
-
-        if (contentType is "text/html" or "application/html+xml" or "application/xhtml+xml")
+        ResourceRequest req = new ResourceRequest(Configuration, nature, purpose)
         {
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.DtdProcessing = DtdProcessing.Parse;
-            ResolvingXmlReader reader = new ResolvingXmlReader(resp.ResolvedUri!, settings, this);
-            try
+            Uri = uri.ToString()
+        };
+        IResourceResponse rsrc = ResourceAccess.GetResource(req);
+        string? contentType = rsrc.ContentType;
+
+        if (contentType != null &&
+            (contentType.StartsWith("text/html") || contentType.StartsWith("application/html+xml")))
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(rsrc.ResolvedUri!.ToString());
+            if (doc.DocumentElement == null)
             {
-                while (reader.Read())
+                return null;
+            }
+                
+            NameTable nt = new NameTable();
+            XmlNamespaceManager nsmanage = new XmlNamespaceManager(nt);
+            nsmanage.AddNamespace("rddl", "http://www.rddl.org/");
+            XmlNodeList? resources = doc.DocumentElement.SelectNodes("//rddl:resource", nsmanage);
+            if (resources != null)
+            {
+                foreach (XmlNode node in resources)
                 {
-                    if (reader.IsStartElement())
+                    if (node.Attributes is not null)
                     {
-                        if (found == null && reader.NamespaceURI == ResolverConstants.RDDL_NS &&
-                            reader.LocalName == "resource")
+                        XmlNode? anode = node.Attributes.GetNamedItem("nature", ResolverConstants.XLINK_NS);
+                        string? rnature = anode?.InnerText;
+                        anode = node.Attributes.GetNamedItem("purpose", ResolverConstants.XLINK_NS);
+                        string? rpurpose = anode?.InnerText;
+                        anode = node.Attributes.GetNamedItem("href");
+                        string? href = anode?.InnerText;
+                        if (nature == rnature && purpose == rpurpose && href != null)
                         {
-                            string? rnature = reader.GetAttribute("role", ResolverConstants.XLINK_NS);
-                            string? rpurpose = reader.GetAttribute("arcrole", ResolverConstants.XLINK_NS);
-                            string? href = reader.GetAttribute("href", ResolverConstants.XLINK_NS);
-                            if (nature == rnature && purpose == rpurpose && href != null)
-                            {
-                                Uri baseUri = new Uri(reader.BaseURI);
-                                found = new Uri(baseUri, href);
-                            }
+                            var baseUri = new Uri(node.BaseURI);
+                            return new Uri(baseUri, href);
                         }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Logger.Log(ResolverLogger.Response, "Error parsing RDDL: {0} ({1})", 
-                    resolved.ToString(), ex.Message);
-            }
         }
 
-        return found;
+        return null;
+    }
+
+    public System.Xml.XmlResolver GetXmlResolver()
+    {
+        return new SystemResolver(this);
     }
     
-    private class SystemXmlResolver : System.Xml.XmlResolver
+    private static Uri? MakeUri(string? uri)
     {
-        private readonly XmlResolver _resolver;
-
-        public SystemXmlResolver(XmlResolver resolver)
+        if (uri == null)
         {
-            _resolver = resolver;
-        }
-        
-        public override object? GetEntity(Uri absoluteUri, string? role, Type? ofObjectToReturn)
-        {
-            ResourceRequest request = _resolver.GetRequest(absoluteUri.ToString());
-            ResourceResponse resp = _resolver.Resolve(request);
-
-            if (resp.IsResolved)
-            {
-                return resp.Stream;
-            }
-
             return null;
         }
+
+        try
+        {
+            return new Uri(uri);
+        }
+        catch (UriFormatException)
+        {
+            return null;
+        }
+        
     }
     
+    private static Uri? MakeAbsolute(IResourceRequest request)
+    {
+        var absuri = request.GetAbsoluteUri();
+        if (absuri != null && absuri.ToString() != request.Uri)
+        {
+            return absuri;
+        }
+
+        return null;
+    }
 }

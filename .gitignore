@@ -1,8 +1,8 @@
 /.gradle
-/.idea
-/*/bin
-/*/obj
-/build
+.idea/
+bin/
+obj/
+build/
 *.DotSettings.user
 .DS_Store
 /XmlResolverData/Data

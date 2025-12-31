@@ -3,7 +3,7 @@ using XmlResolver;
 using XmlResolver.Features;
 using XmlResolver.Utils;
 
-namespace UnitTests;
+namespace DataTests;
 
 public class ResolverTest : BaseTestRoot
 {

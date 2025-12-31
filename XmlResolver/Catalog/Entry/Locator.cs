@@ -1,8 +1,9 @@
-namespace XmlResolver.Catalog.Entry;
+using System;
 
-public class Locator 
-{
-    public Uri? BaseUri = null;
-    public int LineNumber = -1;
-    public int LinePosition = -1;
+namespace XmlResolver.Catalog.Entry {
+    public class Locator {
+        public Uri BaseUri = null;
+        public int LineNumber = -1;
+        public int LinePosition = -1;
+    }
 }

@@ -14,7 +14,7 @@ files, or from assemblies bundled with your application.
 ## Version 6.x
 
 Version 6.x is a significant refactoring and is not backwards compatible with version 2.x.
-(The underlying functionality is the same, but the API is slightly different.)
+(The underlying functionality is the same, but the API is different.)
 The version 2.x sources are now in the
 [legacy_v2](https://github.com/xmlresolver/xmlresolvercs/tree/legacy_v2) branch. Important
 bug fixes will be applied to the 2.x release for some time, but new development is

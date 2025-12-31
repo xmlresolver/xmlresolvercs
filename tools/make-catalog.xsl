@@ -30,7 +30,7 @@ using NUnit.Framework;
 using XmlResolver;
 using XmlResolver.Features;
 
-namespace UnitTests;
+namespace DataTests;
 
 public class DataTest : ResolverTest
 {

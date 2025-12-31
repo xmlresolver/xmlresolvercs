@@ -1,91 +1,65 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
 using NLog;
 using XmlResolver.Catalog.Entry;
-using XmlResolver.Utils;
+using XmlResolver;
 
 namespace XmlResolver.Loaders;
 
-public class ValidatingXmlLoader : ICatalogLoader
-{
-    protected static ResolverLogger logger = new ResolverLogger(LogManager.GetCurrentClassLogger());
-    protected readonly Dictionary<Uri, EntryCatalog> catalogMap;
+public class ValidatingXmlLoader : ICatalogLoader {
+    private static readonly ResolverLogger Logger = new(LogManager.GetCurrentClassLogger());
+    private readonly Dictionary<Uri,EntryCatalog> _catalogMap = new();
+    private EntryCatalog _catalog = null;
+    private readonly XmlLoader _underlyingLoader = new();
 
-    private EntryCatalog? catalog = null;
-
-    private readonly XmlResolver resolver;
-    private readonly XmlLoader underlyingLoader;
-
-    public ValidatingXmlLoader()
-    {
-        underlyingLoader = new XmlLoader();
-        resolver = underlyingLoader.LoaderResolver;
-        catalogMap = new Dictionary<Uri, EntryCatalog>();
-    }
-
-    public EntryCatalog LoadCatalog(Uri caturi)
-    {
-        if (catalogMap.ContainsKey(caturi))
-        {
-            return catalogMap[caturi];
-        }
-
-        Stream? stream = null;
-        try
-        {
-            stream = ResourceAccess.GetStream(underlyingLoader.Config, caturi);
-            if (stream != null) {
-                EntryCatalog thisCat = LoadCatalog(caturi, stream);
-                stream.Close();
-                return thisCat;
-            }
-
-            return new EntryCatalog(caturi, null, false);
-        }
-        catch (Exception)
-        {
-            // FIXME: the validating loader should throw an exception for anything other than
-            // a file-not-found exception.
-            logger.Log(ResolverLogger.Error, "Failed to load catalog {0}", caturi.ToString());
-            catalog = new EntryCatalog(caturi, null, false);
-            catalogMap.Add(caturi, catalog);
-            if (stream != null)
-            {
-                stream.Close();
-            }
+    public EntryCatalog LoadCatalog(Uri caturi) {
+        if (_catalogMap.TryGetValue(caturi, out var catalog)) {
             return catalog;
         }
+
+        Stream stream = null;
+        try {
+            stream = ResourceAccess.GetStream(caturi);
+            return LoadCatalog(caturi, stream);
+        }
+        catch (Exception) {
+            // FIXME: the validating loader should throw an exception for anything other than
+            // a file-not-found exception.
+            Logger.Debug("Failed to load catalog {0}", caturi.ToString());
+            _catalog = new EntryCatalog(caturi, null, false);
+            _catalogMap.Add(caturi, _catalog);
+            stream?.Close();
+            return _catalog;
+        }
     }
 
-    public EntryCatalog LoadCatalog(Uri caturi, Stream data)
-    {
+    public EntryCatalog LoadCatalog(Uri caturi, Stream data) {
         // This is a bit of a hack, but I don't expect catalogs to be huge and I have
         // to make sure that the stream can be read twice.
         MemoryStream memStream = new MemoryStream();
         data.CopyTo(memStream);
         memStream.Position = 0;
-
-        logger.Log(ResolverLogger.Warning, "XML Resolver does not support catalog validation; assuming valid");
-
+        
+        Logger.Debug("XmlResolver does not support catalog validation; assuming valid");
+        
         // FIXME: do validation!
-        return underlyingLoader.LoadCatalog(caturi, memStream);
+        return _underlyingLoader.LoadCatalog(caturi, memStream);
     }
 
-    public void SetPreferPublic(bool prefer)
-    {
-        underlyingLoader.SetPreferPublic(prefer);
+    public void SetPreferPublic(bool prefer) {
+        _underlyingLoader.SetPreferPublic(prefer);
     }
 
-    public bool GetPreferPublic()
-    {
-        return underlyingLoader.GetPreferPublic();
+    public bool GetPreferPublic() {
+        return _underlyingLoader.GetPreferPublic();
     }
 
-    public void SetArchivedCatalogs(bool archived)
-    {
-        underlyingLoader.SetArchivedCatalogs(archived);
+    public void SetArchivedCatalogs(bool archived) {
+        _underlyingLoader.SetArchivedCatalogs(archived);
     }
 
-    public bool GetArchivedCatalogs()
-    {
-        return underlyingLoader.GetArchivedCatalogs();
+    public bool GetArchivedCatalogs() {
+        return _underlyingLoader.GetArchivedCatalogs();
     }
 }

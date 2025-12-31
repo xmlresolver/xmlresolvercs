@@ -1,19 +1,17 @@
-namespace XmlResolver.Catalog.Entry;
+using System;
 
-public class EntryDocument : EntryResource
-{
-    public EntryDocument(Uri baseUri, string? id, string uri) : base(baseUri, id, uri)
-    {
-        // nop
-    }
+namespace XmlResolver.Catalog.Entry {
+    public class EntryDocument : EntryResource {
+        public EntryDocument(Uri baseUri, string id, string uri) : base(baseUri, id, uri) {
+            // nop
+        }
 
-    public override EntryType GetEntryType()
-    {
-        return EntryType.Document;
-    }
+        public override Catalog.Entry.Entry.EntryType GetEntryType() {
+            return Catalog.Entry.Entry.EntryType.DOCUMENT;
+        }
 
-    public override string ToString()
-    {
-        return $"document {Entry.Rarr} {ResourceUri}";
+        public override string ToString() {
+            return $"document {Entry.Rarr} {ResourceUri}";
+        }
     }
 }

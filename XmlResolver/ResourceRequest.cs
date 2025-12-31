@@ -1,75 +1,131 @@
-using System.Reflection;
+using System;
+using XmlResolver.Features;
+using XmlResolver.Utils;
 
 namespace XmlResolver;
 
-public class ResourceRequest
+#nullable enable
+
+public class ResourceRequest: IResourceRequest
 {
-    public readonly IResolverConfiguration Config;
-    public readonly string? Nature;
-    public readonly string? Purpose;
+    private string? _uri = null;
+    private string? _baseUri = null;
 
-    public ResourceRequest(IResolverConfiguration config): this(config, ResolverConstants.ANY_NATURE, ResolverConstants.ANY_PURPOSE)
+    internal ResourceRequest(IResolverConfiguration config,
+        string? nature = null /*ResolverConstants.ANY_NATURE*/,
+        string? purpose = null /*ResolverConstants.ANY_PURPOSE*/)
     {
+        Configuration = config;
+        Nature = nature ?? ResolverConstants.ANY_NATURE;
+        Purpose = purpose ?? ResolverConstants.ANY_PURPOSE;
+        ResolvingAsEntity = nature == ResolverConstants.DTD_NATURE || nature == ResolverConstants.EXTERNAL_ENTITY_NATURE;
     }
 
-    public ResourceRequest(IResolverConfiguration config, string? nature, string? purpose)
+    public IResolverConfiguration Configuration
     {
-        Config = config;
-        Nature = nature;
-        Purpose = purpose;
-        IsResolvingAsEntity = ResolverConstants.EXTERNAL_ENTITY_NATURE.Equals(nature) ||
-                              ResolverConstants.DTD_NATURE.Equals(nature);
+        get;
+    }
+    
+    public string? Nature
+    {
+        get;
     }
 
-    public string? Uri { get; set; } = null;
-
-    // SystemId is an alias for Uri
-    public string? SystemId
+    public string? Purpose
     {
-        get => Uri;
-        set => Uri = value;
+        get;
     }
-    public string? BaseUri { get; set; } = null;
-    public string? EntityName { get; set; } = null;
-    public string? PublicId { get; set; } = null;
-    public string? Encoding { get; set; } = null;
-    public bool IsResolvingAsEntity { get; set; } = false;
-    public bool IsOpenStream { get; set; } = true;
-    public Assembly Assembly { get; internal set; } = Assembly.GetExecutingAssembly();
+
+    public string? Uri
+    {
+        get => _uri;
+        set => SetUri(value);
+    }
+
+    private void SetUri(string? newUri)
+    {
+        _uri = newUri;
+        if (_uri != null && (bool)Configuration.GetFeature(ResolverFeature.FIX_WINDOWS_SYSTEM_IDENTIFIERS))
+        {
+            _uri = UriUtils.WindowsPathUri(_uri);
+        }
+    }
+
+    public void SetUri(Uri newUri)
+    {
+        _uri = newUri.ToString();
+    }
+
+    public string? BaseUri
+    {
+        get => _baseUri;
+        set => SetBaseUri(value);
+    }
+
+    private void SetBaseUri(string? newBaseUri)
+    {
+        _baseUri = newBaseUri;
+        if (_baseUri != null && (bool)Configuration.GetFeature(ResolverFeature.FIX_WINDOWS_SYSTEM_IDENTIFIERS))
+        {
+            _baseUri = UriUtils.WindowsPathUri(_baseUri);
+        }
+    }
+
+    public void SetBaseUri(Uri newBaseUri)
+    {
+        _baseUri = newBaseUri.ToString();
+    }
 
     public Uri? GetAbsoluteUri()
     {
-        if (BaseUri != null)
+        Uri? abs = null;
+        
+        if (_baseUri != null)
         {
-            Uri abs = new Uri(BaseUri);
+            abs = new Uri(_baseUri);
             if (abs.IsAbsoluteUri)
             {
-                return Uri is null or "" ? abs : new Uri(abs, Uri);
+                return string.IsNullOrEmpty(_uri) ? abs : UriUtils.Resolve(abs, _uri);
             }
         }
 
-        if (Uri != null)
+        if (_uri == null)
         {
-            Uri abs = new Uri(Uri);
-            if (abs.IsAbsoluteUri)
-            {
-                return abs;
-            }
+            return null;
         }
 
-        return null;
+        abs = new Uri(_uri);
+        return abs.IsAbsoluteUri ? abs : null;
     }
 
-    public override string ToString()
+    public string? EntityName
     {
-        string str = EntityName == null ? "" : EntityName + ": ";
-        str += Uri;
-        if (BaseUri != null)
-        {
-            str += " (" + BaseUri + ")";
-        }
+        get;
+        set;
+    }
 
-        return str;
+    public string? SystemId => _uri;
+
+    public string? PublicId
+    {
+        get;
+        set;
+    }
+
+    public string? Encoding
+    {
+        get;
+        set;
+    }
+
+    public bool ResolvingAsEntity
+    {
+        get;
+    }
+
+    public bool OpenStream
+    {
+        get;
+        set;
     }
 }
- 

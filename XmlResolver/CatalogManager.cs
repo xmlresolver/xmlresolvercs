@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
 using NLog;
 using XmlResolver.Catalog.Entry;
 using XmlResolver.Catalog.Query;
@@ -26,36 +29,30 @@ namespace XmlResolver;
 ///
 /// <para>This class is a utility class used by the primary public API, the Resolver.</para>
 ///
-public class CatalogManager : IXmlCatalogResolver
-{
+public class CatalogManager : IXmlCatalogResolver {
     protected static ResolverLogger logger = new(LogManager.GetCurrentClassLogger());
     protected readonly IResolverConfiguration _resolverConfiguration;
-    protected ICatalogLoader? _catalogLoader = null;
+    protected ICatalogLoader _catalogLoader;
 
     /// <summary>
     /// Creates a new CatalogManager using the specified configuration.
     /// </summary>
     /// <param name="config">The resolver configuration.</param>
     /// <exception cref="NullReferenceException">If no catalog loader can be instantiated.</exception>
-    public CatalogManager(IResolverConfiguration config)
-    {
+    public CatalogManager(IResolverConfiguration config) {
         _resolverConfiguration = config;
-        String? loaderClassName = (String?)config.GetFeature(ResolverFeature.CATALOG_LOADER_CLASS);
-        if (loaderClassName == null || "".Equals(loaderClassName.Trim()))
-        {
+        String loaderClassName = (String) config.GetFeature(ResolverFeature.CATALOG_LOADER_CLASS);
+        if (loaderClassName == null || "".Equals(loaderClassName.Trim())) {
             loaderClassName = ResolverFeature.CATALOG_LOADER_CLASS.GetDefaultValue();
         }
 
         // FIXME: what if this doesn't work?
-        var loaderType = Type.GetType(loaderClassName);
-        _catalogLoader = loaderType == null ? null : (ICatalogLoader?)Activator.CreateInstance(loaderType);
-        if (_catalogLoader == null)
-        {
+        _catalogLoader = (ICatalogLoader) Activator.CreateInstance(Type.GetType(loaderClassName));
+        if (_catalogLoader == null) {
             throw new NullReferenceException("Failed to create catalog loader from " + loaderClassName);
         }
-
-        _catalogLoader.SetPreferPublic((bool)(config.GetFeature(ResolverFeature.PREFER_PUBLIC) ?? false));
-        _catalogLoader.SetArchivedCatalogs((bool)(config.GetFeature(ResolverFeature.ARCHIVED_CATALOGS) ?? false));
+        _catalogLoader.SetPreferPublic((bool) config.GetFeature(ResolverFeature.PREFER_PUBLIC));
+        _catalogLoader.SetArchivedCatalogs((bool) config.GetFeature(ResolverFeature.ARCHIVED_CATALOGS));
     }
 
     /// <summary>
@@ -65,8 +62,7 @@ public class CatalogManager : IXmlCatalogResolver
     /// initial manager, but uses the specified configuration otherwise.</para>
     /// <param name="current">A current CatalogManager to use as a base.</param>
     /// <param name="config">The resolver configuration.</param>
-    public CatalogManager(CatalogManager current, IResolverConfiguration config)
-    {
+    public CatalogManager(CatalogManager current, IResolverConfiguration config) {
         _catalogLoader = current._catalogLoader;
         _resolverConfiguration = config;
     }
@@ -82,18 +78,12 @@ public class CatalogManager : IXmlCatalogResolver
     /// </summary>
     /// <para>This is a convenience method that returns absolute URIs for all the catalogs.</para>
     /// <returns>The list of catalog files, as absolute URIs.</returns>
-    public List<Uri> Catalogs()
-    {
+    public List<Uri> Catalogs() {
         List<Uri> catlist = new();
-        List<string>? configList = (List<string>?)_resolverConfiguration.GetFeature(ResolverFeature.CATALOG_FILES);
-        if (configList != null)
+        foreach (var cat in (List<string>) _resolverConfiguration.GetFeature(ResolverFeature.CATALOG_FILES))
         {
-            foreach (var cat in configList)
-            {
-                catlist.Add(new Uri(UriUtils.Cwd(), cat));
-            }
+            catlist.Add(new Uri(UriUtils.Cwd(), cat));
         }
-
         return catlist;
     }
 
@@ -102,16 +92,11 @@ public class CatalogManager : IXmlCatalogResolver
     /// </summary>
     /// <param name="catalog">The absolute URI of the catalog to load.</param>
     /// <returns>The EntryCatalog that represents the entries from the catalog file.</returns>
-    public EntryCatalog LoadCatalog(Uri catalog)
-    {
-        if (_catalogLoader == null)
-        {
-            throw new NullReferenceException("CatalogManager has no catalog loader");
-        }
-        
-        return _catalogLoader.LoadCatalog(catalog);
+    public EntryCatalog LoadCatalog(Uri catalog) {
+        EntryCatalog cat = _catalogLoader.LoadCatalog(catalog);
+        return cat;
     }
-
+        
     /// <summary>
     /// Loads an XML catalog from an open Stream.
     /// </summary>
@@ -120,38 +105,27 @@ public class CatalogManager : IXmlCatalogResolver
     /// <param name="catalog">The absolute URI of the catalog to load.</param>
     /// <param name="data">An open data from which to read the catalog.</param>
     /// <returns>The EntryCatalog that represents the entries from the catalog file.</returns>
-    public EntryCatalog LoadCatalog(Uri catalog, Stream data)
-    {
-        if (_catalogLoader == null)
-        {
-            throw new NullReferenceException("CatalogManager has no catalog loader");
-        }
-        
+    public EntryCatalog LoadCatalog(Uri catalog, Stream data) {
         return _catalogLoader.LoadCatalog(catalog, data);
     }
 
-    private string? fixWindowsSystemIdentifier(string? systemId)
+    private String fixWindowsSystemIdentifier(String systemId)
     {
-        if (systemId != null)
+        if (UriUtils.isWindows() && (bool) _resolverConfiguration.GetFeature(ResolverFeature.FIX_WINDOWS_SYSTEM_IDENTIFIERS))
         {
-            if (UriUtils.IsWindows() &&
-                (bool)(_resolverConfiguration.GetFeature(ResolverFeature.FIX_WINDOWS_SYSTEM_IDENTIFIERS) ?? false))
-            {
-                return systemId.Replace("\\", "/");
-            }
+            return systemId.Replace("\\", "/");
         }
 
         return systemId;
     }
-
+        
     /// <summary>
     /// Lookup a URI.
     /// </summary>
     /// <para>This method matches <c>uri</c> entries in the catalog.</para>
     /// <param name="uri">The URI to find</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public virtual Uri? LookupUri(string? uri)
-    {
+    public virtual Uri LookupUri(string uri) {
         return LookupNamespaceUri(uri, null, null);
     }
 
@@ -170,11 +144,10 @@ public class CatalogManager : IXmlCatalogResolver
     /// <param name="nature">The desired nature URI, may be null.</param>
     /// <param name="purpose">The desired purpose URI, may be null</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public virtual Uri? LookupNamespaceUri(string? uri, string? nature, string? purpose)
-    {
+    public virtual Uri LookupNamespaceUri(string uri, string nature, string purpose) {
         return new QueryUri(uri, nature, purpose).Search(this).ResultUri();
     }
-
+        
     /// <summary>
     /// Lookup an entity by its public and system identifiers.
     /// </summary>
@@ -187,7 +160,7 @@ public class CatalogManager : IXmlCatalogResolver
     /// <param name="systemId">The system identifier for the entity.</param>
     /// <param name="publicId">The public identifier for the entity.</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public virtual Uri? LookupPublic(string? systemId, string? publicId)
+    public virtual Uri LookupPublic(string systemId, string publicId)
     {
         systemId = fixWindowsSystemIdentifier(systemId);
         ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, publicId);
@@ -205,15 +178,15 @@ public class CatalogManager : IXmlCatalogResolver
     /// corresponding public identifier and against <c>public</c> entries.</para>
     /// <param name="systemId">The system identifier for the entity.</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public virtual Uri? LookupSystem(string? systemId)
+    public virtual Uri LookupSystem(string systemId) 
     {
         systemId = fixWindowsSystemIdentifier(systemId);
         ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, null);
-        if (external.SystemId != null)
-        {
-            return new QuerySystem(external.SystemId).Search(this).ResultUri();
+        if (external.SystemId == null) {
+            return null;
         }
-        return null;
+
+        return new QuerySystem(systemId).Search(this).ResultUri();
     }
 
     /// <summary>
@@ -226,7 +199,7 @@ public class CatalogManager : IXmlCatalogResolver
     /// <param name="systemId">The system identifier, may be null.</param>
     /// <param name="publicId">The public identifier, may be null.</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public virtual Uri? LookupDoctype(string? entityName, string? systemId, string? publicId)
+    public virtual Uri LookupDoctype(string entityName, string systemId, string publicId) 
     {
         systemId = fixWindowsSystemIdentifier(systemId);
         ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, publicId);
@@ -243,7 +216,7 @@ public class CatalogManager : IXmlCatalogResolver
     /// <param name="systemId">The system identifier, may be null.</param>
     /// <param name="publicId">The public identifier, may be null.</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public virtual Uri? LookupEntity(string? entityName, string? systemId, string? publicId)
+    public virtual Uri LookupEntity(string entityName, string systemId, string publicId)
     {
         systemId = fixWindowsSystemIdentifier(systemId);
         ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, publicId);
@@ -261,7 +234,7 @@ public class CatalogManager : IXmlCatalogResolver
     /// <param name="systemId">The system identifier, may be null.</param>
     /// <param name="publicId">The public identifier, may be null.</param>
     /// <returns>The resolved URI or null if no matching entry could be found.</returns>
-    public Uri? LookupNotation(string? notationName, string? systemId, string? publicId)
+    public Uri LookupNotation(string notationName, string systemId, string publicId) 
     {
         systemId = fixWindowsSystemIdentifier(systemId);
         ExternalIdentifiers external = NormalizeExternalIdentifiers(systemId, publicId);
@@ -273,8 +246,7 @@ public class CatalogManager : IXmlCatalogResolver
     /// </summary>
     /// <para>This method matches <c>document</c> entries in the catalog.
     /// <returns>The default document URI or null if no default document was specified.</returns>
-    public virtual Uri? LookupDocument()
-    {
+    public virtual Uri LookupDocument() {
         return new QueryDocument().Search(this).ResultUri();
     }
 
@@ -283,61 +255,52 @@ public class CatalogManager : IXmlCatalogResolver
     /// </summary>
     /// <para>This method attempts to generate a normalized or canonical version of a URI for comparison.
     /// If the URI begins with <c>classpath:/</c>, the initial slash is removed. If the
-    /// <c>ResolverFeature.MERGE_HTTPS</c> feature is enabled and the URI starts with</para>
+    /// <c>ResolverFeature.MERGE_HTTPS</c> feature is enabled and the URI starts with 
     /// <param name="uri"></param>
     /// <returns></returns>
-    public string? NormalizedForComparison(string? uri)
-    {
-        if (uri != null)
-        {
-            if (uri.StartsWith("classpath:/"))
-            {
-                return "classpath:" + uri[11..];
+    public string NormalizedForComparison(string uri) {
+        if (uri != null) {
+            if (uri.StartsWith("classpath:/")) {
+                return "classpath:" + uri.Substring(11);
             }
 
-            if (((bool)(_resolverConfiguration.GetFeature(ResolverFeature.MERGE_HTTPS) ?? false)) &&
-                uri.StartsWith("http:"))
-            {
-                return "https:" + uri[5..];
+            if (((bool) _resolverConfiguration.GetFeature(ResolverFeature.MERGE_HTTPS)) && uri.StartsWith("http:")) {
+                return "https:" + uri.Substring(5);
             }
         }
 
         return uri;
     }
-
-    private class ExternalIdentifiers
-    {
-        public readonly string? SystemId;
-        public readonly string? PublicId;
-
-        public ExternalIdentifiers(string? systemId, string? publicId)
-        {
+    
+    private class ExternalIdentifiers {
+        public readonly String SystemId;
+        public readonly String PublicId;
+        public ExternalIdentifiers(String systemId, String publicId) {
             SystemId = systemId;
             PublicId = publicId;
         }
     }
 
-    private static ExternalIdentifiers NormalizeExternalIdentifiers(string? systemId, string? publicId)
-    {
-        systemId = UriUtils.NormalizeUri(systemId);
-        publicId = PublicId.DecodeUrn(publicId);
+    private static ExternalIdentifiers NormalizeExternalIdentifiers(String systemId, String publicId) {
+        if (systemId != null) {
+            systemId = UriUtils.NormalizeUri(systemId);
+        }
 
-        if (systemId != null && systemId.StartsWith("urn:publicid:"))
-        {
-            string? decodedSysId = PublicId.DecodeUrn(systemId);
-            if (publicId != null && !publicId.Equals(decodedSysId))
-            {
-                logger.Log(ResolverLogger.Error,
-                    "urn:publicid: system identifier differs from public identifier; using public identifier");
-            }
-            else
-            {
+        if (publicId != null && publicId.StartsWith("urn:publicid:")) {
+            publicId = PublicId.DecodeUrn(publicId);
+        }
+
+        if (systemId != null && systemId.StartsWith("urn:publicid:")) {
+            String decodedSysId = PublicId.DecodeUrn(systemId);
+            if (publicId != null && !publicId.Equals(decodedSysId)) {
+                logger.Debug("urn:publicid: system identifier differs from public identifier; using public identifier");
+            } else {
                 publicId = decodedSysId;
             }
-
             systemId = null;
         }
 
         return new ExternalIdentifiers(systemId, publicId);
     }
 }
+

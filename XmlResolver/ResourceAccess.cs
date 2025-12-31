@@ -1,29 +1,70 @@
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Web;
+using NLog;
 using XmlResolver.Utils;
 
 namespace XmlResolver;
 
+/// <summary>
+/// Static class containing methods to access resources.
+/// </summary>
+/// <para>Supports http, https, file, data, and pack URI schemes.</para>
 public static class ResourceAccess
 {
-    public const int FollowRedirectLimit = 64;
-    private static HttpClient _httpClient = new HttpClient();
+    /// <summary>
+    /// Maximum number of redirects to follow.
+    /// </summary>
+    public static readonly int FOLLOW_REDIRECT_LIMIT = 64;
+
+    private static readonly ResolverLogger Logger = new(LogManager.GetCurrentClassLogger());
+    private static readonly HttpClient HttpClient = new HttpClient();
     
-    public static ResourceResponse GetResource(ResourceRequest request)
+    /// <summary>
+    /// Get the resource represented by a request.
+    /// </summary>
+    /// <param name="request">The request</param>
+    /// <returns>The resource response</returns>
+    public static IResourceResponse GetResource(IResourceRequest request)
     {
-        Uri? uri = request.GetAbsoluteUri();
+        return GetResource(request, Assembly.GetExecutingAssembly());
+    }
+    
+    /// <summary>
+    /// Get the resource represented by a response.
+    /// </summary>
+    /// <param name="response">The response</param>
+    /// <returns>The resource response, with a Stream</returns>
+    public static IResourceResponse GetResource(IResourceResponse response)
+    {
+        return GetResource(response, Assembly.GetExecutingAssembly());
+    }
+    
+    /// <summary>
+    /// Get the resource represented by a request in the context of a particular Assembly.
+    /// </summary>
+    /// <param name="request">The request</param>
+    /// <param name="asm">The assembly</param>
+    /// <returns>The response, with a Stream</returns>
+    /// <exception cref="NullReferenceException">If the request URI is null</exception>
+    public static IResourceResponse GetResource(IResourceRequest request, Assembly asm)
+    {
+        var uri = request.GetAbsoluteUri();
         if (uri == null && request.Uri != null)
         {
-            uri = new Uri(request.Uri);
+            uri = new Uri(request.Uri!);
         }
 
         if (uri == null)
         {
-            throw new NullReferenceException("URI must not be null in GetResource");
+            throw new NullReferenceException("Uri must not be null in GetResource");
         }
 
         if (!uri.IsAbsoluteUri)
@@ -31,37 +72,35 @@ public static class ResourceAccess
             uri = UriUtils.Resolve(UriUtils.Cwd(), uri.ToString());
         }
 
-        switch (uri.Scheme)
-        {
-            case "data":
-                return _getDataResource(request, uri);
-            case "file":
-                return _getFileResource(request, uri);
-            case "http":
-            case "https":
-                return _getHttpResource(request, uri);
-            case "pack":
-                return _getPackResource(request, uri);
-            default:
-                throw new ArgumentException("Unexpected URI scheme: " + request.Uri);
-        }
+        var resp = GetResource(request, uri);
+        
+        // FIXME: in Java this is getURI()
+        Logger.Debug("GetResource: {0}: {1}", resp.Resolved, resp.ResolvedUri);
+        return resp;
     }
 
-    public static ResourceResponse GetResource(ResourceResponse response)
+    /// <summary>
+    /// Get the resource represented by a response in the context of a particular Assembly.
+    /// </summary>
+    /// <param name="response">The response</param>
+    /// <param name="asm">The assembly</param>
+    /// <returns>The response, with a Stream</returns>
+    /// <exception cref="NullReferenceException">If the response URI is null</exception>
+    public static IResourceResponse GetResource(IResourceResponse response, Assembly asm)
     {
-        Uri? uri = response.ResolvedUri;
+        var uri = response.ResolvedUri;
         if (uri == null)
         {
             uri = response.Request.GetAbsoluteUri();
             if (uri == null && response.Request.Uri != null)
             {
-                uri = new Uri(response.Request.Uri);
+                uri = new Uri(response.Request.Uri!);
             }
         }
 
         if (uri == null)
         {
-            throw new NullReferenceException("URI must not be null in GetResource");
+            throw new NullReferenceException("Uri must not be null in GetResource");
         }
 
         if (!uri.IsAbsoluteUri)
@@ -69,73 +108,75 @@ public static class ResourceAccess
             uri = UriUtils.Resolve(UriUtils.Cwd(), uri.ToString());
         }
 
-        try
-        {
-            switch (uri.Scheme)
-            {
-                case "data":
-                    return _getDataResource(response.Request, uri);
-                case "file":
-                    return _getFileResource(response.Request, uri);
-                case "http":
-                case "https":
-                    return _getHttpResource(response.Request, uri);
-                case "pack":
-                    return _getPackResource(response.Request, uri);
-                default:
-                    throw new ArgumentException("Unexpected URI scheme: " + uri);
-            }
-        }
-        catch (Exception)
-        {
-            return response;
-        }
-    }
-
-    private static ResourceResponse _getFileResource(ResourceRequest request, Uri resourceUri)
-    {
-        string uri = resourceUri.ToString();
-        string fn;
-
-        if (uri.StartsWith("file:///"))
-        {
-            fn = uri[7..];
-        }
-        else if (uri.StartsWith("file://"))
-        {
-            fn = uri[6..];
-        }
-        else
-        {
-            fn = uri[5..];
-        }
-
-        // What about /C:/path/to/thing?
-        if (fn.Length >= 3 && fn[2] == ':')
-        {
-            fn = fn.Substring(1);
-        }
-
-        // If this looks like /C:/path/to/thing, make it C:/path/to/thing
-        if (fn.Length >= 3 && fn[0] == '/' && fn[2] == ':')
-        {
-            fn = fn.Substring(1);
-        }
-
-        ResourceResponse resp = new ResourceResponse(request, resourceUri);
-        if (request.IsOpenStream)
-        {
-            resp.Stream = File.OpenRead(fn);
-        }
-
+        var resp = GetResource(response.Request, uri, asm);
+        
+        Logger.Debug("GetResource: {0}: {1}", resp.Resolved, resp.ResolvedUri);
         return resp;
     }
 
-    private static ResourceResponse _getHttpResource(ResourceRequest request, Uri resourceUri)
+    private static IResourceResponse GetResource(IResourceRequest request, Uri uri)
+    {
+        return GetResource(request, uri, Assembly.GetExecutingAssembly());
+    }
+
+    private static IResourceResponse GetResource(IResourceRequest request, Uri uri, Assembly asm)
+    {
+        switch (uri.Scheme)
+        {
+            case "http":
+            case "https":
+                return _getHttpResource(request, uri);
+            case "file":
+                return _getFileResource(request, uri);
+            case "data":
+                return _getDataResource(request, uri);
+            case "pack":
+                return _getPackResource(request, uri, asm);
+            default:
+                throw new ArgumentException("Unexpected URI scheme: " + uri);
+        }
+    }
+
+    private static IResourceResponse _getHttpResource(IResourceRequest request, Uri uri)
+    {
+        var (resolvedUri, resp) = _getHttpResponse(uri);
+        
+        // If the status code wasn't 200, _getHttpResponse would have thrown an exception
+        
+        var headers = new Dictionary<string, List<string>>();
+        foreach (var header in resp.Headers)
+        {
+            List<string> value = new List<string>();
+            foreach (var hvalue in header.Value)
+            {
+                value.Add(hvalue);
+            }
+
+            headers.Add(header.Key, value);
+        }
+
+        string ctype;
+        if (resp.Content.Headers.ContentType is null)
+        {
+            ctype = "application/octet-stream";
+        }
+        else
+        {
+            ctype = resp.Content.Headers.ContentType.ToString();
+        }
+
+        var rsrc = new ResourceResponse(request, resolvedUri);
+        rsrc.SetHeaders(headers);
+        rsrc.Stream = resp.Content.ReadAsStream();
+        rsrc.StatusCode = 200;
+        return rsrc;
+    }
+
+    private static (Uri resolvedUri, HttpResponseMessage resp) _getHttpResponse(Uri uri)
     {
         var seen = new HashSet<Uri>();
-        var count = FollowRedirectLimit;
-        var resolvedUri = resourceUri;
+        var count = FOLLOW_REDIRECT_LIMIT;
+        var resolvedUri = uri;
         HttpStatusCode status = HttpStatusCode.OK;
         bool done = false;
 
@@ -143,10 +184,9 @@ public static class ResourceAccess
         {
             count--;
             done = count <= 0;
-
-            var httpClient = _httpClient;
-            var req = new HttpRequestMessage(HttpMethod.Get, resolvedUri);
-            var resp = httpClient.Send(req);
+                
+            HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get, resolvedUri);
+            HttpResponseMessage resp = HttpClient.Send(req);
 
             status = resp.StatusCode;
             if (seen.Contains(resolvedUri))
@@ -158,43 +198,13 @@ public static class ResourceAccess
 
             if (resp.StatusCode == HttpStatusCode.OK)
             {
-                var headers = new Dictionary<string, List<string>>();
-                foreach (var header in resp.Headers)
-                {
-                    List<string> value = new List<string>();
-                    foreach (var hvalue in header.Value)
-                    {
-                        value.Add(hvalue);
-                    }
-
-                    headers.Add(header.Key, value);
-                }
-
-                string ctype;
-                if (resp.Content.Headers.ContentType is null)
-                {
-                    ctype = "application/octet-stream";
-                }
-                else
-                {
-                    ctype = resp.Content.Headers.ContentType.ToString();
-                }
-
-                ResourceResponse rresp = new ResourceResponse(request, resp.RequestMessage!.RequestUri);
-                if (request.IsOpenStream)
-                {
-                    rresp.Stream = resp.Content.ReadAsStream();
-                }
-
-                rresp.ContentType = ctype;
-                rresp.Headers = headers;
-                rresp.StatusCode = 200;
-                return rresp;
+                return (resolvedUri, resp);
             }
 
-            if (resp.StatusCode is HttpStatusCode.Moved or HttpStatusCode.Redirect)
+            if (resp.StatusCode == HttpStatusCode.Moved || resp.StatusCode == HttpStatusCode.Redirect)
             {
-                resolvedUri = resp.Content.Headers.ContentLocation ?? throw new HttpRequestException("Redirect without location", null, status);
+                resolvedUri = resp.Content.Headers.ContentLocation
+                              ?? throw new HttpRequestException("Redirect without location", null, status); 
             }
             else
             {
@@ -209,76 +219,151 @@ public static class ResourceAccess
 
         throw new HttpRequestException("Failed to read resource", null, status);
     }
-
-    private static ResourceResponse _getPackResource(ResourceRequest request, Uri resourceUri)
+    
+    private static IResourceResponse _getFileResource(IResourceRequest request, Uri uri)
     {
-        string uri = resourceUri.ToString();
+        var resp = new ResourceResponse(request, uri);
+        resp.Stream = _getFileStream(uri.ToString());
+        return resp;
+    }
+
+    private static FileStream _getFileStream(string uri)
+    {
+        var fn = "";
+        if (uri.StartsWith("file:///"))
+        {
+            fn = uri.Substring(7);
+        } 
+        else if (uri.StartsWith("file://"))
+        {
+            fn = uri.Substring(6);
+        }
+        else
+        {
+            fn = uri.Substring(5);
+        }
+
+        // If this looks like /C:/path/to/thing, make it C:/path/to/thing
+        if (fn.Length >= 3 && fn[0] == '/' && fn[2] == ':') {
+            fn = fn.Substring(1);
+        }
+
+        return File.OpenRead(fn);
+    }
+
+    private static IResourceResponse _getDataResource(IResourceRequest request, Uri reqUri)
+    {
+        var resp = new ResourceResponse(request, reqUri);
+        var (mediaType, stream) = _getDataStream(reqUri);
+        resp.Stream = stream;
+        resp.ContentType = mediaType;
+        return resp;
+    }
+
+    private static (string mediaType, Stream stream) _getDataStream(Uri reqUri)
+    {
+        // This is a little bit crude; see RFC 2397
+        var uri = reqUri.ToString();
+        
+        // Can't use URI accessors because they percent decode the string incorrectly.
+        var path = uri.Substring(5);
+        var pos = path.IndexOf(',', StringComparison.Ordinal);
+
+        if (pos < 0)
+        {
+            throw new UriFormatException(uri + ": comma separator missing");
+        }
+            
+        var mediaType = path[..pos];
+        var data = path[(pos + 1)..];
+        if (mediaType.EndsWith(";base64")) {
+            // Base64 decode it
+            mediaType = mediaType.Substring(0, mediaType.Length - 7);
+            var base64Bytes = Convert.FromBase64String(data);
+            return (mediaType, new MemoryStream(base64Bytes));
+        }
+
+        // URL decode it
+        var charset = "UTF-8";
+        pos = mediaType.IndexOf(";charset=", StringComparison.Ordinal);
+        if (pos > 0) {
+            charset = mediaType.Substring(pos + 9);
+            mediaType = mediaType.Substring(0, pos);
+            pos = charset.IndexOf(';', StringComparison.Ordinal);
+            if (pos >= 0) {
+                charset = charset.Substring(0, pos);
+            }
+        }
+
+        data = HttpUtility.UrlDecode(data, Encoding.GetEncoding(charset));
+        return (mediaType, new MemoryStream(Encoding.UTF8.GetBytes(data)));
+    }
+
+    private static IResourceResponse _getPackResource(IResourceRequest request, Uri reqUri, Assembly asm)
+    {
+        var resp = new ResourceResponse(request, reqUri)
+        {
+            Stream = _getPackStream(reqUri, asm)
+        };
+        return resp;
+    }
+
+    private static Stream _getPackStream(Uri reqUri, Assembly asm)
+    {
+        var uri = reqUri.ToString();
         
         // https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?view=netframeworkdesktop-4.8
-        if (uri.StartsWith("pack://application:,,,"))
-        {
-            Assembly asm = request.Assembly;
-
+        if (uri.StartsWith("pack://application:,,,")) {
             string fn = uri.Substring(22);
             int pos = fn.IndexOf(";component/", StringComparison.Ordinal);
-            if (pos >= 0)
-            {
-                string asmparts = fn[..pos];
-                fn = fn[(pos + 10)..];
+            if (pos >= 0) {
+                string asmparts = fn.Substring(0, pos);
+                fn = fn.Substring(pos + 10);
 
-                string? name = null;
-                string? version = null;
-                string? key = null;
+                string name = null;
+                string version = null;
+                string key = null;
 
-                pos = asmparts.IndexOf(";", StringComparison.Ordinal);
-                if (pos >= 0)
-                {
-                    name = asmparts[..pos];
-                    asmparts = asmparts[(pos + 1)..];
+                pos = asmparts.IndexOf(';', StringComparison.Ordinal);
+                if (pos >= 0) {
+                    name = asmparts.Substring(0, pos);
+                    asmparts = asmparts.Substring(pos + 1);
 
-                    pos = asmparts.IndexOf(";", StringComparison.Ordinal);
-                    if (pos >= 0)
-                    {
-                        version = asmparts[..pos];
-                        asmparts = asmparts[(pos + 1)..];
+                    pos = asmparts.IndexOf(';', StringComparison.Ordinal);
+                    if (pos >= 0) {
+                        version = asmparts.Substring(0, pos);
+                        asmparts = asmparts.Substring(pos + 1);
                     }
-                    else
-                    {
-                        if (!"".Equals(asmparts))
-                        {
+                    else {
+                        if (!"".Equals(asmparts)) {
                             version = asmparts;
                             asmparts = "";
                         }
                     }
 
-                    if (!"".Equals(asmparts))
-                    {
+                    if (!"".Equals(asmparts)) {
                         key = asmparts;
                     }
                 }
-                else
-                {
+                else {
                     name = asmparts;
                 }
 
-                if (name.StartsWith("/"))
-                {
+                if (name.StartsWith('/')) {
                     name = name.Substring(1);
                 }
 
                 AssemblyName asmname = new AssemblyName(name);
-                if (version != null)
-                {
+                if (version != null) {
                     asmname.Version = new Version(version);
                 }
 
-                if (key != null)
-                {
-                    int byteCount = key.Length / 2;
-                    byte[] keyToken = new byte[byteCount];
-                    for (int i = 0; i < byteCount; i++)
+                if (key != null) {
+                    var byteCount = key.Length / 2;
+                    var keyToken = new byte[byteCount];
+                    for (var i = 0; i < byteCount; i++)
                     {
-                        string byteString = key.Substring(i * 2, 2);
+                        var byteString = key.Substring(i * 2, 2);
                         keyToken[i] = byte.Parse(byteString, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                     }
 
@@ -288,126 +373,49 @@ public static class ResourceAccess
                 asm = Assembly.Load(asmname);
             }
 
-            if (fn.StartsWith("/"))
-            {
+            if (fn.StartsWith('/')) {
                 fn = fn.Substring(1);
             }
 
             fn = fn.Replace("/", ".");
 
-            Uri rsrcUri = new Uri(uri);
-            ResourceResponse resp = new ResourceResponse(request, rsrcUri);
-            if (request.IsOpenStream)
-            {
-                resp.Stream = asm.GetManifestResourceStream(fn);
-            }
-
-            resp.ContentType = "application/octet-stream";
-            return resp;
-        }
-        else if (uri.StartsWith("pack:///siteoforigin:,,,"))
-        {
+            return asm.GetManifestResourceStream(fn);
+        } else if (uri.StartsWith("pack:///siteoforigin:,,,")) {
             throw new ArgumentException("The siteoforigin authority is not supported: " + uri);
+        } else if (uri.StartsWith("pack://file%3")) {
+            return _getPackFileStream(uri);
         }
-        else if (uri.StartsWith("pack://file%3"))
-        {
-            return _getPackFileResource(request, resourceUri);
-        }
-
         throw new ArgumentException("Unexpected pack: URI format: " + uri);
+        
     }
-
-    private static ResourceResponse _getPackFileResource(ResourceRequest request, Uri resourceUri)
+    
+    private static Stream _getPackFileStream(string uri)
     {
-        string uri = resourceUri.ToString();
-        string fileStr = uri[7..];
-        int pos = fileStr.IndexOf("/", StringComparison.Ordinal);
-        if (pos < 0)
-        {
+        string filestr = uri.Substring(7);
+        int pos = filestr.IndexOf('/',  StringComparison.Ordinal);
+        if (pos < 0) {
             throw new ArgumentException("Unsupported pack: URI format: " + uri);
         }
 
-        string path = fileStr[(pos + 1)..];
-        fileStr = fileStr[..pos];
-        fileStr = fileStr.Replace("%3a", ":");
-        fileStr = fileStr.Replace("%3A", ":");
-        fileStr = fileStr.Replace(",", "/");
+        string path = filestr.Substring(pos + 1);
+        filestr = filestr.Substring(0, pos);
+        filestr = filestr.Replace("%3a", ":");
+        filestr = filestr.Replace("%3A", ":");
+        filestr = filestr.Replace(",", "/");
 
-        Uri fileuri = UriUtils.NewUri(fileStr);
-        fileStr = fileuri.AbsolutePath;
-
+        Uri fileuri = UriUtils.NewUri(filestr);
+        filestr = fileuri.AbsolutePath;
+        
         // Assume this is a zip file...
-        ZipArchive zipRead = ZipFile.OpenRead(fileStr);
-        foreach (ZipArchiveEntry entry in zipRead.Entries)
-        {
+        ZipArchive zipRead = ZipFile.OpenRead(filestr);
+        foreach (ZipArchiveEntry entry in zipRead.Entries) {
             if (entry.FullName.Equals(path))
             {
-                ResourceResponse resp = new ResourceResponse(request, fileuri);
-                if (request.IsOpenStream)
-                {
-                    resp.Stream = entry.Open();
-                }
-
-                resp.ContentType = "application/octet-stream";
-                return resp;
+                return entry.Open();
             }
         }
 
-        return new ResourceResponse(request, fileuri);
-    }
-
-    private static ResourceResponse _getDataResource(ResourceRequest request, Uri resourceUri)
-    {
-        string uri = resourceUri.ToString();
-        
-        // This is a little bit crude; see RFC 2397
-        var reqUri = new Uri(uri);
-
-        // Can't use URI accessors because they percent decode the string incorrectly.
-        var path = uri[5..];
-        var pos = path.IndexOf(",", StringComparison.Ordinal);
-
-        if (pos < 0)
-        {
-            throw new UriFormatException(uri + ": comma separator missing");
-        }
-
-        Stream? inputStream = null;
-        var mediaType = path[..pos];
-        String data = path[(pos + 1)..];
-        if (mediaType.EndsWith(";base64"))
-        {
-            // Base64 decode it
-            var base64Bytes = Convert.FromBase64String(data);
-            inputStream = new MemoryStream(base64Bytes);
-        }
-        else
-        {
-            // URL decode it
-            string charset = "UTF-8";
-            pos = mediaType.IndexOf(";charset=", StringComparison.Ordinal);
-            if (pos > 0)
-            {
-                charset = mediaType[(pos + 9)..];
-                pos = charset.IndexOf(";", StringComparison.Ordinal);
-                if (pos >= 0)
-                {
-                    charset = charset[..pos];
-                }
-            }
-
-            data = HttpUtility.UrlDecode(data, Encoding.GetEncoding(charset));
-            inputStream = new MemoryStream(Encoding.UTF8.GetBytes(data));
-        }
-
-        ResourceResponse resp = new ResourceResponse(request, reqUri);
-        if (request.IsOpenStream)
-        {
-            resp.Stream = inputStream;
-        }
-
-        resp.ContentType = mediaType;
-        return resp;
+        throw new ArgumentException("Could not get pack file stream: " + uri);
     }
 
     /// <summary>
@@ -419,15 +427,8 @@ public static class ResourceAccess
     /// or open the stream.</para>
     /// <param name="uri">The URI.</param>
     /// <returns>The stream, or null if the stream could not be opened.</returns>
-    public static Stream? GetStream(IResolverConfiguration config, Uri uri)
-    {
-        ResourceRequest request = new ResourceRequest(config)
-        {
-            Uri = uri.ToString(),
-            IsOpenStream = true
-        };
-
-        return _getStream(request);
+    public static Stream GetStream(Uri uri) {
+        return GetStream(uri.ToString(), Assembly.GetExecutingAssembly());
     }
 
     /// <summary>
@@ -440,15 +441,8 @@ public static class ResourceAccess
     /// <param name="uri">The URI.</param>
     /// <param name="asm">The relevant assembly.</param>
     /// <returns>The stream, or null if the stream could not be opened.</returns>
-    public static Stream? GetStream(IResolverConfiguration config, Uri uri, Assembly asm)
-    {
-        ResourceRequest request = new ResourceRequest(config)
-        {
-            Uri = uri.ToString(),
-            Assembly = asm,
-            IsOpenStream = true
-        };
-        return _getStream(request);
+    public static Stream GetStream(Uri uri, Assembly asm) {
+        return GetStream(uri.ToString(), asm);
     }
 
     /// <summary>
@@ -460,9 +454,8 @@ public static class ResourceAccess
     /// or open the stream.</para>
     /// <param name="uri">The URI.</param>
     /// <returns>The stream, or null if the stream could not be opened.</returns>
-    public static Stream? GetStream(IResolverConfiguration config, string uri)
-    {
-        return GetStream(config, new Uri(uri));
+    public static Stream GetStream(string uri) {
+        return GetStream(uri, Assembly.GetExecutingAssembly());
     }
 
     /// <summary>
@@ -480,14 +473,28 @@ public static class ResourceAccess
     /// <param name="asm">The relevant assembly.</param>
     /// <returns>The stream, or null if the stream could not be opened.</returns>
     /// <exception cref="ArgumentException">If the URI is not absolute or has an unsupported scheme.</exception>
-    public static Stream? GetStream(IResolverConfiguration config, string uri, Assembly asm)
+    public static Stream GetStream(string uri, Assembly asm)
     {
-        return GetStream(config, new Uri(uri), asm);
-    }
+        if (uri.StartsWith("file:/")) {
+            return _getFileStream(uri);
+        }
+            
+        if (uri.StartsWith("http:/") || uri.StartsWith("https:/")) {
+            var httpUri = new Uri(uri);
+            var (resolvedUri, resp) = _getHttpResponse(httpUri);
+            return resp.Content.ReadAsStream();
+        } 
+            
+        if (uri.StartsWith("pack:/")) {
+            return _getPackStream(new Uri(uri), asm);
+        }
 
-    private static Stream? _getStream(ResourceRequest request)
-    {
-        ResourceResponse resp = GetResource(request);
-        return resp.Stream;
+        if (uri.StartsWith("data:"))
+        {
+            var (_, stream) = _getDataStream(new Uri(uri));
+            return stream;
+        }
+
+        throw new ArgumentException("Unexpected URI scheme: " + uri);
     }
 }
