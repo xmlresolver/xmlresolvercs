@@ -22,7 +22,6 @@ namespace UnitTests {
             {
                 while (xmlReader.Read())
                 {
-                    Console.WriteLine(xmlReader.ReadOuterXml());
                 }
             }
         }
