@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using XmlResolver.Utils;
 
 namespace UnitTests {
@@ -8,9 +9,13 @@ namespace UnitTests {
 
         public BaseTestRoot() {
             // FIXME: Deal with Windows paths
-            string path = Environment.GetEnvironmentVariable("CSHARP_XMLRESOLVER_ROOT");
+            var path = Environment.GetEnvironmentVariable("GITHUB_WORKSPACE");
             if (string.IsNullOrEmpty(path)) {
-                path = "/Users/ndw/Projects/xmlresolver/cs"; // It won't work for you, but ...
+                path = Environment.GetEnvironmentVariable("CSHARP_XMLRESOLVER_ROOT");
+                if (string.IsNullOrEmpty(path))
+                {
+                    path = "/tmp"; // It won't work, but it's somewhere...
+                }
             }
 
             while (path.EndsWith("/")) {
