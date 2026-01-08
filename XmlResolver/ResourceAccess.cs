@@ -191,7 +191,7 @@ public static class ResourceAccess
             status = resp.StatusCode;
             if (seen.Contains(resolvedUri))
             {
-                throw new HttpRequestException("Redirect loop", null, status);
+                throw CreateHttpRequestException("Redirect loop", status);
             }
 
             seen.Add(resolvedUri);
@@ -204,7 +204,7 @@ public static class ResourceAccess
             if (resp.StatusCode == HttpStatusCode.Moved || resp.StatusCode == HttpStatusCode.Redirect)
             {
                 resolvedUri = resp.Content.Headers.ContentLocation
-                              ?? throw new HttpRequestException("Redirect without location", null, status); 
+                              ?? throw CreateHttpRequestException("Redirect without location", status); 
             }
             else
             {
@@ -214,10 +214,19 @@ public static class ResourceAccess
 
         if (count <= 0)
         {
-            throw new HttpRequestException("Too many redirects", null, status);
+            throw CreateHttpRequestException("Too many redirects", status);
         }
 
-        throw new HttpRequestException("Failed to read resource", null, status);
+        throw CreateHttpRequestException("Failed to read resource", status);
+
+        HttpRequestException CreateHttpRequestException(string text, HttpStatusCode statusCode)
+        {
+#if NETSTANDARD2_0
+            return new HttpRequestException($"{text} ({statusCode})");
+#else
+            return new HttpRequestException(text, null, statusCode);
+#endif
+        }
     }
     
     private static IResourceResponse _getFileResource(IResourceRequest request, Uri uri)

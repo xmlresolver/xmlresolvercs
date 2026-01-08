@@ -2,7 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
+    <LangVersion>14</LangVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Norman Walsh</Authors>
     <Description>The xmlresolver project provides an implementation of the System.Xml.XmlResolver. It uses the OASIS XML Catalogs V1.1 Standard to provide a mapping from external identifiers and URIs to local resources.</Description>
@@ -22,11 +23,24 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="10.0.1" />
     <PackageReference Include="NLog" Version="6.0.7" />
-    <PackageReference Include="NuGet.Frameworks" Version="7.0.1" />
     <PackageReference Include="System.IO.Packaging" Version="10.0.1" />
   </ItemGroup>
 
+  <Choose>
+    <When Condition="'$(TargetFramework)' == 'netstandard2.0'">
+      <ItemGroup>
+        <PackageReference Include="System.Collections.Immutable" Version="10.0.1" />
+        <PackageReference Include="IndexRange" Version="1.1.0" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="NuGet.Frameworks" Version="7.0.1" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+
   <ItemGroup>
-    <None Include="readme.md" Pack="true" PackagePath=""/>
+    <None Include="readme.md" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>
