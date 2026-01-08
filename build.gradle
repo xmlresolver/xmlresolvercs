@@ -130,13 +130,13 @@ tasks.register("dotnetBuildXmlResolver") {
   doLast {
     exec {
       workingDir = projectDir
-      commandLine dotnetex, 'restore', 'XmlResolver.sln', '--verbosity', 'Normal'
+      commandLine dotnetex, 'restore', 'XmlResolver.slnf', '--verbosity', 'Normal'
     }
   }
   doLast {
     exec {
       workingDir = projectDir
-      commandLine dotnetex, 'build', 'XmlResolver.sln', '--verbosity', 'Normal',
+      commandLine dotnetex, 'build', 'XmlResolver.slnf', '--verbosity', 'Normal',
         '--configuration', 'Release',  '/nodereuse:false', '--no-restore',
         "-p:Version=${resolverVersion}", "-p:PackageVersion=${resolverVersion}"
     }
@@ -152,13 +152,13 @@ tasks.register("dotnetBuildXmlResolverData") {
   doLast {
     exec {
       workingDir = projectDir
-      commandLine dotnetex, 'restore', 'XmlResolverData.sln', '--verbosity', 'Normal'
+      commandLine dotnetex, 'restore', 'XmlResolverData.slnf', '--verbosity', 'Normal'
     }
   }
   doLast {
     exec {
       workingDir = projectDir
-      commandLine dotnetex, 'build', 'XmlResolverData.sln', '--verbosity', 'Normal',
+      commandLine dotnetex, 'build', 'XmlResolverData.slnf', '--verbosity', 'Normal',
         '--configuration', 'Release',  '/nodereuse:false', '--no-restore',
         "-p:Version=${resolverVersion}", "-p:PackageVersion=${resolverVersion}"
     }
@@ -175,7 +175,7 @@ tasks.register("dotnetTestXmlResolver") {
     exec {
       workingDir = projectDir
       environment "CSHARP_XMLRESOLVER_PATH", projectDir
-      commandLine dotnetex, 'test', 'XmlResolver.sln',
+      commandLine dotnetex, 'test', 'XmlResolver.slnf',
         '--verbosity', 'Normal', '--configuration', 'Release',
         '--no-build',
         '/p:CollectCoverage=true',
@@ -196,7 +196,7 @@ tasks.register("dotnetNugetPush") {
   doLast {
     exec {
       workingDir = projectDir
-      commandLine dotnetex, "restore", "XmlResolver.sln", "--verbosity", "Normal"
+      commandLine dotnetex, "restore", "XmlResolver.slnf", "--verbosity", "Normal"
     }
   }
 
@@ -212,7 +212,7 @@ tasks.register("dotnetNugetPush") {
   doLast {
     exec {
       workingDir = projectDir
-      commandLine dotnetex, "restore", "XmlResolverData.sln", "--verbosity", "Normal"
+      commandLine dotnetex, "restore", "XmlResolverData.slnf", "--verbosity", "Normal"
     }
   }
 

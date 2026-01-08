@@ -8,7 +8,7 @@
     <Authors>Norman Walsh</Authors>
     <Description>The xmlresolver project provides an implementation of the System.Xml.XmlResolver. It uses the OASIS XML Catalogs V1.1 Standard to provide a mapping from external identifiers and URIs to local resources.</Description>
     <PackageTags>XML,XmlResolver</PackageTags>
-    <Copyright>Copyright © 2021-2025 Norman Walsh. Portions Copyright © 2022-2025 Saxonica, Ltd.</Copyright>
+    <Copyright>Copyright © 2021-2026 Norman Walsh. Portions Copyright © 2022-2026 Saxonica, Ltd.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://xmlresolver.org/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/xmlresolver/xmlresolvercs</RepositoryUrl>
