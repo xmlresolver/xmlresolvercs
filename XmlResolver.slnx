@@ -1,5 +1,9 @@
 <Solution>
-  <Project Path="SampleApp/SampleApp.csproj" />
-  <Project Path="UnitTests/UnitTests.csproj" />
+  <Folder Name="/Test/">
+    <Project Path="DataTests/DataTests.csproj" />
+    <Project Path="UnitTests/UnitTests.csproj" />
+    <Project Path="SampleApp/SampleApp.csproj" />
+  </Folder>
   <Project Path="XmlResolver/XmlResolver.csproj" />
+  <Project Path="XmlResolverData/XmlResolverData.csproj" />
 </Solution>

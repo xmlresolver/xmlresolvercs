@@ -1,5 +1,0 @@
-<Solution>
-  <Project Path="DataTests/DataTests.csproj" />
-  <Project Path="XmlResolver/XmlResolver.csproj" />
-  <Project Path="XmlResolverData/XmlResolverData.csproj" />
-</Solution>
