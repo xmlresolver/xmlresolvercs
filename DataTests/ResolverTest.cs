@@ -43,62 +43,41 @@ public class ResolverTest : BaseTestRoot
     [Test]
     public void LookupSystem()
     {
-        try
-        {
-            Uri result = UriUtils.Resolve(TestRootDirectory, "DataTests/resources/sample10/sample.dtd");
-            var req = Resolver.GetRequest("https://example.com/sample/1.0/sample.dtd");
-            var resp = Resolver.Resolve(req);
+        Uri result = UriUtils.Resolve(TestRootDirectory, "DataTests/resources/sample10/sample.dtd");
+        var req = Resolver.GetRequest("https://example.com/sample/1.0/sample.dtd");
+        var resp = Resolver.Resolve(req);
             
-            Assert.That(resp.Stream, Is.Not.Null);
-            Assert.That(resp.Uri, Is.EqualTo(result));
-        }
-        catch (Exception)
-        {
-            Assert.Fail();
-        }
+        Assert.That(resp.Stream, Is.Not.Null);
+        Assert.That(resp.Uri, Is.EqualTo(result));
     }
 
     [Test]
     public void LookupSystemAsUri()
     {
-        try
-        {
-            Uri result = UriUtils.Resolve(TestRootDirectory, "DataTests/resources/sample10/sample.dtd");
-            var req = Resolver.GetRequest("https://example.com/sample/1.0/uri.dtd");
-            var resp = Resolver.Resolve(req);
+        Uri result = UriUtils.Resolve(TestRootDirectory, "DataTests/resources/sample10/sample.dtd");
+        var req = Resolver.GetRequest("https://example.com/sample/1.0/uri.dtd");
+        var resp = Resolver.Resolve(req);
 
-            Assert.That(resp.Stream, Is.Not.Null);
-            Assert.That(resp.Uri, Is.EqualTo(result));
-        }
-        catch (Exception)
-        {
-            Assert.Fail();
-        }
+        Assert.That(resp.Stream, Is.Not.Null);
+        Assert.That(resp.Uri, Is.EqualTo(result));
     }
 
     [Test]
     public void SequenceTest()
     {
-        try
-        {
-            var catalogs = new List<string>
+        var catalogs = new List<string>
             {
                 TestRootPath + "/DataTests/resources/seqtest1.xml",
                 TestRootPath + "/DataTests/resources/seqtest2.xml"
             };
-            
-            XmlResolverConfiguration localConfig = new XmlResolverConfiguration(new List<Uri>(), catalogs);
-            localConfig.SetFeature(ResolverFeature.URI_FOR_SYSTEM, true);
 
-            XmlResolver.XmlResolver localResolver = new XmlResolver.XmlResolver(localConfig);
-            var req = localResolver.GetRequest("https://xmlresolver.org/ns/sample-as-uri/sample.dtd");
-            var resp = localResolver.Resolve(req);
+        XmlResolverConfiguration localConfig = new XmlResolverConfiguration(new List<Uri>(), catalogs);
+        localConfig.SetFeature(ResolverFeature.URI_FOR_SYSTEM, true);
 
-            Assert.That(resp.Stream, Is.Not.Null);
-        }
-        catch (Exception)
-        {
-            Assert.Fail();
-        }
+        XmlResolver.XmlResolver localResolver = new XmlResolver.XmlResolver(localConfig);
+        var req = localResolver.GetRequest("https://xmlresolver.org/ns/sample-as-uri/sample.dtd");
+        var resp = localResolver.Resolve(req);
+
+        Assert.That(resp.Stream, Is.Not.Null);
     }
 }
