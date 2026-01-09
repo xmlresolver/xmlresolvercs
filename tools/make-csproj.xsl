@@ -21,7 +21,7 @@
       <PackageProjectUrl>https://xmlresolver.org/</PackageProjectUrl>
       <RepositoryUrl>https://github.com/xmlresolver/xmlresolverdata</RepositoryUrl>
       <RepositoryType>git</RepositoryType>
-      <PackageReleaseNotes>Experimental release. Probably buggy. Caveat emptor.</PackageReleaseNotes>
+      <PackageReleaseNotes>Standard resources for the catalog-based XML Resolver API for .NET</PackageReleaseNote
       <PackageSummary>This is a standard set of useful XML resources for use with the XML Resolver.</PackageSummary>
     </PropertyGroup>
 

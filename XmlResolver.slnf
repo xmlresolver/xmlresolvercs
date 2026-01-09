@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "XmlResolver.slnx",
+    "projects": [
+      "SampleApp\\SampleApp.csproj",
+      "UnitTests\\UnitTests.csproj",
+      "XmlResolver\\XmlResolver.csproj"
+    ]
+  }
+}
