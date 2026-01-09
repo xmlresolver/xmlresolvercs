@@ -19,8 +19,8 @@
       <PackageTags>XML,XmlResolver</PackageTags>
       <PackageLicenseExpression>MIT</PackageLicenseExpression>
       <PackageProjectUrl>https://xmlresolver.org/</PackageProjectUrl>
-      <RepositoryUrl>https://github.com/xmlresolver/xmlresolverdata</RepositoryUrl>
       <RepositoryType>git</RepositoryType>
+      <RepositoryUrl>https://github.com/xmlresolver/xmlresolverdata</RepositoryUrl>
       <PackageReleaseNotes>Standard resources for the catalog-based XML Resolver API for .NET</PackageReleaseNotes>
       <PackageSummary>This is a standard set of useful XML resources for use with the XML Resolver.</PackageSummary>
     </PropertyGroup>
