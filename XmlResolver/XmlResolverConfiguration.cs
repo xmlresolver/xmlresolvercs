@@ -407,7 +407,7 @@ namespace XmlResolver;
 
             property = section.GetSection("catalogs");
             if (property.Value != null) {
-                String[] tokens = property.Value.Split(";");
+                var tokens = property.Value.Split(";");
                 catalogs.Clear();
                 if (showConfigChanges) {
                     logger.Debug("Catalog list cleared");
@@ -429,7 +429,7 @@ namespace XmlResolver;
             
             property = section.GetSection("catalogAdditions");
             if (property.Value != null) {
-                String[] tokens = property.Value.Split(";");
+                var tokens = property.Value.Split(";");
                 foreach (var token in tokens) {
                     if (!"".Equals(token)) {
                         string caturi = token;
