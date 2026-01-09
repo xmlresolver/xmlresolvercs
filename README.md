@@ -67,6 +67,15 @@ developed or significant changes are undertaken, those will be
 published in a series of 6.2.x releases before stabalizing in a 6.3.0
 release. Etc.
 
+## ChangeLog
+
+### 6.0.21
+
+* Now targets `netstandard2.0` for broader compatibility
+* A number of build and test improvements
+* /hattip @bernd5
+
+
 ## Cloning
 
 The build now includes a collection of schemas and resources that can

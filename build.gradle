@@ -123,8 +123,7 @@ tasks.register('dotnetBuild') {
 tasks.register("dotnetBuildXmlResolver") {
   dependsOn = ['make_data_csproj']
 
-  inputs.files fileTree(dir: "${projectDir}/XmlResolver")
-  outputs.file "${projectDir}/XmlResolver/bin/Release/net6.0/XmlResolver.dll"
+  inputs.files fileTree(dir: "${projectDir}/XmlResolver", excludes: ["bin/**", "obj/**"])
   outputs.file "${projectDir}/XmlResolver/bin/Release/XmlResolver.${resolverVersion}.nupkg"
 
   doLast {
@@ -145,8 +144,7 @@ tasks.register("dotnetBuildXmlResolver") {
 
 tasks.register("dotnetBuildXmlResolverData") {
   dependsOn = ['make_data_csproj', 'make_data_tests']
-  inputs.files fileTree(dir: "${projectDir}/XmlResolverData")
-  outputs.file "${projectDir}/XmlResolverData/bin/Release/net6.0/XmlResolver.dll"
+  inputs.files fileTree(dir: "${projectDir}/XmlResolverData", excludes: ["bin/**", "obj/**"])
   outputs.file "${projectDir}/XmlResolverData/bin/Release/XmlResolver.${resolverVersion}.nupkg"
 
   doLast {
