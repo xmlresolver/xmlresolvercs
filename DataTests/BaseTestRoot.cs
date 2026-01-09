@@ -16,7 +16,12 @@ public class BaseTestRoot
             path = Environment.GetEnvironmentVariable("CSHARP_XMLRESOLVER_ROOT");
             if (string.IsNullOrEmpty(path))
             {
-                path = "/tmp"; // It won't work, but it's somewhere...
+                //the path is for example C:\work\xmlresolvercs\DataTests\bin\Debug\net8.0
+                path = Path.GetFullPath("./../../../..");
+                if (!Directory.Exists(path))
+                {
+                    path = "/tmp"; // It won't work, but it's somewhere...
+                }
             }
         }
 
